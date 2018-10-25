@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Kalvin Tools</title>
-    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <!--&lt;!&ndash; 新 Bootstrap 核心 CSS 文件 &ndash;&gt;
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
+    &lt;!&ndash; 可选的Bootstrap主题文件（一般不用引入） &ndash;&gt;
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    &lt;!&ndash; jQuery文件。务必在bootstrap.min.js 之前引入 &ndash;&gt;
     <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    &lt;!&ndash; 最新的 Bootstrap 核心 JavaScript 文件 &ndash;&gt;
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+    <script th:replace="comm/base::static"></script>
 </head>
 <body>
     <div class="jumbotron text-center" style="margin-bottom:0">
@@ -36,7 +37,7 @@
             </div>
         </div>
     </nav>
-    <div class="container">
+    <div class="container" style="background: blanchedalmond">
         <div class="row">
             <div class="col-sm-4">
                 <h2>关于我</h2>
@@ -64,11 +65,20 @@
                 <div class="fakeimg">图像</div>
                 <p>一些文本..</p>
                 <p>菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！</p>
+                <h2>标题</h2>
+                <h5>副标题</h5>
+                <div class="fakeimg">图像</div>
+                <p>一些文本..</p>
+                <p>菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！</p>
+                <br>
+                <h2>标题</h2>
+                <h5>副标题</h5>
+                <div class="fakeimg">图像</div>
+                <p>一些文本..</p>
+                <p>菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！</p>
             </div>
         </div>
     </div>
-    <div class="jumbotron text-center" style="margin-bottom:0">
-        <p>Copyright © 2013-2018 KalvinTools</p>
-    </div>
+    <footer th:replace="comm/base::footer"></footer>
 </body>
 </html>
