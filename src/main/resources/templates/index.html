@@ -5,60 +5,58 @@
     <title>Kalvin Tools</title>
     <!-- 新 Bootstrap 核心 CSS 文件 -->
     <!--<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
-    <link rel="stylesheet" href="/static/plugin/bootstrap4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/plugin/bootstrap4/fileinput/css/fileinput.min.css">
+    <!--<link rel="stylesheet" href="/static/plugin/bootstrap4/css/bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="/static/plugin/bootstrap4/fileinput/css/fileinput.min.css">-->
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
           integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">-->
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="/static/plugin/bootstrap4/js/jquery.min.js"></script>
+    <!--<script src="/static/plugin/bootstrap4/js/jquery.min.js"></script>-->
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="/static/plugin/bootstrap4/js/tether.min.js"></script>
+    <!--<script src="/static/plugin/bootstrap4/js/tether.min.js"></script>-->
     <!--<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>-->
-    <script src="/static/plugin/bootstrap4/js/bootstrap.min.js"></script>
-    <script src="/static/plugin/bootstrap4/fileinput/js/fileinput.min.js"></script>
+    <!--<script src="/static/plugin/bootstrap4/js/bootstrap.min.js"></script>-->
+    <!--<script src="/static/plugin/bootstrap4/fileinput/js/fileinput.min.js"></script>-->
+    <!--<script src="/static/plugin/bootstrap4/fileinput/js/zh.js"></script>-->
     <!--<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+    <static th:replace="comm/base::static"></static>
+
     <style>
         .fakeimg {
-            height: 200px;
+            height: 300px;
             background: #aaa;
+        }
+        .ktools {
+            font-style: oblique;
+            font-family: fantasy;
+            font-size: 90px;
+        }
+        .k_border {
+            border: 1px solid #989191;
+        }
+        .file-preview {
+            border-radius: 5px;
+            border: 1px solid #989191;
+            padding: 8px;
+            width: 100%;
+            margin-bottom: 5px;
+            height: 300px;
+        }
+        .file-drop-zone {
+            margin: -1px 15px 12px 12px;
         }
     </style>
 </head>
-<body>
-    <div class="jumbotron text-center" style="margin-bottom:0">
-        <h1>Kalvin Tools</h1>
-        <p>重置浏览器窗口大小查看效果！</p>
-    </div>
-    <!--<nav class="navbar navbar-inverse navbar-expand-sm bg-faded navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">KTools</a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">主页</a></li>
-                    <li><a href="#">图片工具</a></li>
-                    <li><a href="#">文字工具</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
-                </ul>
-                <form class="navbar-form navbar-right" role="search">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search">
-                    </div>
-                    <button type="submit" class="btn btn-outline-success">搜索</button>
-                </form>
-            </div>
-        </div>
-    </nav>-->
+<body style="background: #f5ecec">
 
+    <!--网页头部-->
+    <div class="jumbotron text-center font-weight-bold text-white mb-0" style="background: #4b8d78;height: 250px;">
+        <div class="">
+            <span class="ktools">Kalvin Tools</span>
+            <p>图片、视频、文字等转化及美化工具！</p>
+        </div>
+    </div>
+
+    <!--Ktools导航栏-->
     <nav class="navbar navbar-toggleable-md bg-inverse navbar-inverse">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -80,7 +78,7 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                        更新工具
+                        更多工具
                     </a>
                     <div class="dropdown-menu bg-inverse">
                         <a class="dropdown-item text-white" href="#">Tool 1</a>
@@ -96,35 +94,115 @@
             </form>
             <button type="button" class="btn btn-sm btn-outline-success glyphicon glyphicon-user">注册</button>
             <button type="button" class="btn btn-sm btn-outline-success glyphicon glyphicon-log-in">登录</button>
-
         </div>
     </nav>
 
-    <div class="container">
-        <div class="row h-50">
-            <div class="col-sm-6">
-                <input id="input1" type="file" name="image" class="" value="image.png"/>
-                <hr class="hidden-sm hidden-md hidden-lg">
-            </div>
-            <div class="col-sm-6">
-                <!--<input id="input2" type="file" name="image" class="" value="image.png"/>-->
-                <img src="/static/image/test01.jpg" class="rounded img-fluid" alt="pic">
-                <hr class="hidden-sm hidden-md hidden-lg">
-                <!--<figure class="figure">
-                        <img src="/static/image/test01.jpg" class="img-rounded" alt="A generic square placeholder image with rounded corners in a figure.">
-                        <figcaption class="figure-caption">A caption for the above image.</figcaption>
-                    </figure>-->
+    <!--面包悄-->
+    <div class="container p-0">
+        <nav>
+            <ol class="breadcrumb mb-0" style="background: #ffffff">
+                <li class="breadcrumb-item"><a href="#">KTools</a></li>
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">图片工具</a></li>
+                <li class="breadcrumb-item active">图片转换</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!--tab页签-->
+    <div class="container p-0">
+        <ul class="nav nav-tabs" style="background: white">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#art">转化艺术图</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#ascll">转化字符画</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane container p-0 active" id="art">
+            <!--主要内容块-->
+            <div class="container" style="background: white">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="p-lg-5">
+                            <input id="input1" type="file" name="image" class="file-loading" value="image.png"/>
+                            <hr class="hidden-sm hidden-md hidden-lg">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-lg-5">
+                            <!--转化后显示图片区块-->
+                            <div class="row k_border">
+                                <div class="col-sm-12" style="height: 300px">
+                                    <img src="/static/image/p2.jpg" class="rounded fakeimg" alt="pic">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-12">
+                                    <select name="type" id="picType" class="custom-select">
+                                        <option>请选择转化风格</option>
+                                        <option value="">漫画</option>
+                                        <option value="">反色</option>
+                                        <option value="">素描</option>
+                                    </select>
+                                    <button class="btn" style="background: #20c997;color: white;margin-left: 5rem;">开始转化</button>
+                                    <button class="btn btn-primary" style="margin-left: 2rem;">下载</button>
+                                </div>
+                            </div>
+                            <hr class="hidden-sm hidden-md hidden-lg">
+                        </div>
+                    </div>
+                </div>
+
+                <!--文字说明块-->
+                <div class="container">
+                    <h2>图片转换介绍</h2>
+                    <hr>
+                    <p>The blockquote element is used to present content from another source:</p>
+                    <h5>转换图片类型</h5>
+                    <ul>
+                        <li>
+                            <h6>漫画</h6>
+                            <ul class="list-inline">
+                                <li>转化示例：</li>
+                                <li>原图：<img src="/static/image/p2.jpg" class="rounded fakeimg" alt="pic">
+                                    <i class="glyphicon glyphicon-chevron-right"></i><i class="glyphicon glyphicon-chevron-right"></i>
+                                    <img src="/static/image/trans01.jpg" class="rounded fakeimg" alt="pic"></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h6>反色</h6>
+                            <ul class="list-inline">
+                                <li>转化示例：</li>
+                                <li>原图：<img src="/static/image/p2.jpg" class="rounded fakeimg" alt="pic">
+                                    <i class="glyphicon glyphicon-chevron-right"></i><i class="glyphicon glyphicon-chevron-right"></i>
+                                    <img src="/static/image/trans01.jpg" class="rounded fakeimg" alt="pic"></li>
+                            </ul>
+                        </li>
+                        <li>素描</li>
+                        <li>......</li>
+                    </ul>
+                    <!--<blockquote class="blockquote">
+                        <p>For 50 years, WWF has been protecting the future of nature. The world's leading conservation organization, WWF works in 100 countries and is supported by 1.2 million members in the United States and close to 5 million globally.</p>
+                        <footer class="blockquote-footer">From WWF's website</footer>
+                    </blockquote>-->
+                </div>
             </div>
         </div>
+        <div class="tab-pane container p-0" id="ascll">2222</div>
     </div>
 
-    <div class="jumbotron text-center" style="margin-bottom:0">
-        <p>Copyright © 2018-2020 KalvinTools</p>
-    </div>
 
+    <!--网页footer-->
+    <footer th:replace="comm/base::footer"></footer>
+
+    <!--js脚本-->
     <script>
         var control = $('#input1');
-        var control2 = $('#input2');
 
         control.fileinput({
             language: 'zh', // 设置语言
@@ -133,18 +211,19 @@
             showUpload: false, // 是否显示上传按钮
             showCaption: false,// 是否显示标题
             browseClass: "btn btn-primary", // 按钮样式
-            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>"
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            //dropZoneEnabled: false,//是否显示拖拽区域
+            //minImageWidth: 50, //图片的最小宽度
+            //minImageHeight: 50,//图片的最小高度
+            //maxImageWidth: 1000,//图片的最大宽度
+            //maxImageHeight: 1000,//图片的最大高度
+            //maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
+            //minFileCount: 0,
+            // maxFileCount: 10, //表示允许同时上传的最大文件个数
+            // enctype: 'multipart/form-data',
+            // validateInitialCount:true,
+            // msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
         });
-
-        /*control2.fileinput({
-            language: 'zh', // 设置语言
-            // uploadUrl: '', // 上传的地址
-            // allowedFileExtensions : ['jpg', 'png','gif'],// 接收的文件后缀
-            showUpload: false, // 是否显示上传按钮
-            showCaption: false,// 是否显示标题
-            browseClass: "btn btn-primary", // 按钮样式
-            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>"
-        });*/
 
         // 上传完成后事件
         control.on("fileuploaded", function (event, data, previewId, index) {
