@@ -21,4 +21,9 @@ public class IndexController {
     public String getData() {
         return "{code:200,msg:'请求成功'}";
     }
+
+    @GetMapping(value = "test")
+    public ModelAndView test() {
+        return new ModelAndView("test");
+    }
 }

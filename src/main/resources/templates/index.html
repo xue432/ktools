@@ -4,20 +4,32 @@
     <meta charset="UTF-8">
     <title>Kalvin Tools</title>
     <!-- 新 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <!--<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="/static/plugin/bootstrap4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/plugin/bootstrap4/fileinput/css/fileinput.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">-->
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/static/plugin/bootstrap4/js/jquery.min.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="/static/plugin/bootstrap4/js/tether.min.js"></script>
+    <!--<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>-->
+    <script src="/static/plugin/bootstrap4/js/bootstrap.min.js"></script>
+    <script src="/static/plugin/bootstrap4/fileinput/js/fileinput.min.js"></script>
+    <!--<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+    <style>
+        .fakeimg {
+            height: 200px;
+            background: #aaa;
+        }
+    </style>
 </head>
 <body>
     <div class="jumbotron text-center" style="margin-bottom:0">
         <h1>Kalvin Tools</h1>
         <p>重置浏览器窗口大小查看效果！</p>
     </div>
-    <nav class="navbar navbar-inverse">
+    <!--<nav class="navbar navbar-inverse navbar-expand-sm bg-faded navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -30,45 +42,115 @@
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">主页</a></li>
-                    <li><a href="#">页面 2</a></li>
-                    <li><a href="#">页面 3</a></li>
+                    <li><a href="#">图片工具</a></li>
+                    <li><a href="#">文字工具</a></li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+                </ul>
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-outline-success">搜索</button>
+                </form>
             </div>
+        </div>
+    </nav>-->
+
+    <nav class="navbar navbar-toggleable-md bg-inverse navbar-inverse">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+            <img src="" width="30" height="30" class="d-inline-block align-top glyphicon glyphicon-briefcase" alt="">
+            KTools
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">图片工具</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">文字工具</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                        更新工具
+                    </a>
+                    <div class="dropdown-menu bg-inverse">
+                        <a class="dropdown-item text-white" href="#">Tool 1</a>
+                        <a class="dropdown-item text-white" href="#">Tool 2</a>
+                        <a class="dropdown-item text-white" href="#">Tool 3</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search">
+                <button class="btn btn-info my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <button type="button" class="btn btn-sm btn-outline-success glyphicon glyphicon-user">注册</button>
+            <button type="button" class="btn btn-sm btn-outline-success glyphicon glyphicon-log-in">登录</button>
+
         </div>
     </nav>
+
     <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <h2>关于我</h2>
-                <h5>我的照片:</h5>
-                <div class="fakeimg">这边插入图像</div>
-                <p>关于我的介绍..</p>
-                <h3>链接</h3>
-                <p>描述文本。</p>
-                <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#">链接 1</a></li>
-                    <li><a href="#">链接 2</a></li>
-                    <li><a href="#">链接 3</a></li>
-                </ul>
+        <div class="row h-50">
+            <div class="col-sm-6">
+                <input id="input1" type="file" name="image" class="" value="image.png"/>
                 <hr class="hidden-sm hidden-md hidden-lg">
             </div>
-            <div class="col-sm-8">
-                <h2>标题</h2>
-                <h5>副标题</h5>
-                <div class="fakeimg">图像</div>
-                <p>一些文本..</p>
-                <p>菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！</p>
-                <br>
-                <h2>标题</h2>
-                <h5>副标题</h5>
-                <div class="fakeimg">图像</div>
-                <p>一些文本..</p>
-                <p>菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！菜鸟教程，学的不仅是技术，更是梦想！！！</p>
+            <div class="col-sm-6">
+                <!--<input id="input2" type="file" name="image" class="" value="image.png"/>-->
+                <img src="/static/image/test01.jpg" class="rounded img-fluid" alt="pic">
+                <hr class="hidden-sm hidden-md hidden-lg">
+                <!--<figure class="figure">
+                        <img src="/static/image/test01.jpg" class="img-rounded" alt="A generic square placeholder image with rounded corners in a figure.">
+                        <figcaption class="figure-caption">A caption for the above image.</figcaption>
+                    </figure>-->
             </div>
         </div>
     </div>
+
     <div class="jumbotron text-center" style="margin-bottom:0">
-        <p>Copyright © 2013-2018 KalvinTools</p>
+        <p>Copyright © 2018-2020 KalvinTools</p>
     </div>
+
+    <script>
+        var control = $('#input1');
+        var control2 = $('#input2');
+
+        control.fileinput({
+            language: 'zh', // 设置语言
+            uploadUrl: '', // 上传的地址
+            allowedFileExtensions : ['jpg', 'png','gif'],// 接收的文件后缀
+            showUpload: false, // 是否显示上传按钮
+            showCaption: false,// 是否显示标题
+            browseClass: "btn btn-primary", // 按钮样式
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>"
+        });
+
+        /*control2.fileinput({
+            language: 'zh', // 设置语言
+            // uploadUrl: '', // 上传的地址
+            // allowedFileExtensions : ['jpg', 'png','gif'],// 接收的文件后缀
+            showUpload: false, // 是否显示上传按钮
+            showCaption: false,// 是否显示标题
+            browseClass: "btn btn-primary", // 按钮样式
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>"
+        });*/
+
+        // 上传完成后事件
+        control.on("fileuploaded", function (event, data, previewId, index) {
+            console.log("fileuploaded..........");
+        });
+
+    </script>
 </body>
 </html>
