@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "index")
 public class IndexController {
 
-    @GetMapping(value = "")
+    @GetMapping(value = "do/not/tell/otherOne")
     public ModelAndView index() {
         return new ModelAndView("index");
     }

@@ -9,9 +9,9 @@ import java.io.Serializable;
  */
 public class R implements Serializable {
 
-    private long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
 
-    private int errorCode;
+    private Integer errorCode;
     private String msg;
     private Object data;
 
@@ -25,16 +25,24 @@ public class R implements Serializable {
         return new R(Constant.OK_CODE, Constant.OK_MSG, null);
     }
 
-    public static R ok(String msg) {
-        return new R(Constant.OK_CODE, msg, null);
-    }
+//    public static R ok(String msg) {
+//        return new R(Constant.OK_CODE, msg, null);
+//    }
 
     public static R ok(Object data) {
         return new R(Constant.OK_CODE, Constant.OK_MSG, data);
     }
 
+    public static R ok(String msg, Object data) {
+        return new R(Constant.OK_CODE, msg, data);
+    }
+
     public static R fail(String msg) {
         return new R(Constant.FAIL_CODE, msg, null);
+    }
+
+    public static R fail(int errorCode, String msg) {
+        return new R(errorCode, msg, null);
     }
 
     public int getErrorCode() {
