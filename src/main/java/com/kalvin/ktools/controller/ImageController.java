@@ -110,7 +110,6 @@ public class ImageController {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("filename", upload.getData());
         String post = HttpUtil.post(kApiImageToAsciiUrl, hashMap);
-        System.out.println(post);
         return KApiKit.respone2R(post);
     }
 
