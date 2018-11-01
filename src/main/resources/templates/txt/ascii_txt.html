@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalvin Tools</title>
+    <!--引入静态文件-->
+    <static th:replace="comm/base::static"></static>
+
+</head>
+<body class="kt-body">
+
+<!--网页头部-->
+<div th:replace="comm/base::head"></div>
+
+<!--Ktools导航栏-->
+<div th:replace="comm/base::navbar"></div>
+
+<!--面包悄-->
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="breadcrumb-item kt-fs13"><a href="#">KTools</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">文字工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">转换ascii艺术字</li>
+        </ol>
+    </nav>
+</div>
+
+<!--tab页签-->
+<div class="container p-0 mt-2">
+    <ul class="nav nav-tabs kt-tab-bg">
+        <li class="nav-item">
+            <a class="nav-link kt-fs13 active" th:href="@{/txt/ascii}">转换ascii艺术字</a>
+        </li>
+        <!--<li class="nav-item">
+            <a class="nav-link kt-fs13" href="#">待开发</a>
+        </li>-->
+    </ul>
+</div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-tab-ctx-bg">
+            <div class="row">
+                <div class="col-sm-6 mt-3">
+                    <label for="txt" class="kt-fc-title">请输入文字:</label>
+                    <input type="text" class="form-control" id="txt">
+                </div>
+                <div class="col-sm-3 mt-3">
+                    <label for="font" class="kt-fc-title">推荐字体类型:</label>
+                    <select class="form-control" id="font">
+                    </select>
+                </div>
+                <div class="col-sm-3 mt-3">
+                    <label for="allFont" class="kt-fc-title">所有字体类型(<span style="color: red;">选择后会优先被使用</span>):</label>
+                    <select class="form-control" id="allFont">
+                        <option value="">可选</option>
+
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-sm-12">
+                    <button class="btn" id="transpic" style="background: #20c997;color: white; margin-left: 0;">开始转化</button>
+                    <label for="comment" class="kt-fc-title">ascii字体预览:</label>
+                    <!--<textarea class="ascii" disabled rows="5" id="comment"></textarea>-->
+                    <pre id="comment" class="ascii-font14 kt-border"></pre>
+                </div>
+            </div>
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-tab-ctx-bg mt-2 pt-2">
+            <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">文字(字母或数字)转ascii艺术字工具，不支持中文不支持中文不支持中文；重要事，说三遍！</p>
+            </blockquote>
+        </div>
+    </div>
+    <!--<div class="tab-pane container p-0" id="ascii">2222</div>-->
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script>
+    $(document).ready(function() {
+
+        // 初始化建议字体
+        ktConfig.suggestFontArr.forEach(function (value) {
+            $('#font').append('<option value="'+value+'">'+value+'</option>')
+        });
+
+        // 初始化所有font字体下拉列表
+        ktConfig.allFontArr.forEach(function (value) {
+            $('#allFont').append('<option value="'+value+'">'+value+'</option>')
+        });
+
+        $('#transpic').on('click', function () {
+            var txt = $('#txt').val();
+            var font = $('#font').find('option:selected').val();
+            var allFont = $('#allFont').find('option:selected').val();
+            log(txt);
+            log(allFont);
+            if (allFont) {
+                font = allFont;
+            }
+            if (!txt) {
+                ktUtils.alert('txt', '请填写文字');
+                return false;
+            }
+            $.ajax({
+                type: 'POST',
+                data: {txt: txt, font: font},
+                url: ktConfig.api.txtAscii,
+                success: function (r) {
+                    log(r.data);
+                    $('#comment').text(r.data);
+                }
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>

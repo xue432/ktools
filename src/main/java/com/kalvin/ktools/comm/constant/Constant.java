@@ -19,5 +19,8 @@ public class Constant {
     public final static String HANDLE_IMAGE_REF_DIR = "static/image/handle/";
     // python handle image dir
     public final static String KAPI_HANDLE_IMAGE_DIR = "D:\\Project\\PycharmProjects\\kapi\\static\\images\\handle/";
-
+    // 上传文件名前缀
+    public final static String UPLOAD_PREFIX_FILENAME = "upload";
+    // 处理文件名前缀
+    public final static String HANDLE_PREFIX_FILENAME = "handle";
 }

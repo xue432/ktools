@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+	<property name="LOG_FILE_NAME" value="ktools"></property>
+	<!-- 日志文件目录（按环境分） -->
+	<springProfile name="dev">
+		<property name="LOG_PATH" value="D://logs"></property>
+	</springProfile>
+	<springProfile name="test">
+		<property name="LOG_PATH" value="/tmp/ktools-log/${LOG_FILE_NAME}"></property>
+	</springProfile>
+	<springProfile name="prod">
+		<property name="LOG_PATH" value="/tmp/ktools-log/${LOG_FILE_NAME}"></property>
+	</springProfile>
+
+	<!-- 日志样式 -->
+	<property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%p][%c][%M][%L] - %m%n"></property>
+
+	<contextName>${LOG_FILE_NAME}</contextName>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<!--日志格式 -->
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!--<include resource="org/springframework/boot/logging/logback/base.xml"/> -->
+
+	<!-- 日志记录器，日期滚动记录 -->
+	<appender name="FILEAPPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 正在记录的日志文件的路径及文件名 -->
+		<file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+		<!-- 日志记录器的滚动策略，按日期，按大小记录 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 归档的日志文件的路径。%d{yyyy-MM-dd}指定日期格式，%i指定索引 -->
+			<fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}_%d{yyyyMMdd}.log</fileNamePattern>
+			<maxHistory>90</maxHistory>
+		</rollingPolicy>
+		<!-- 追加方式记录日志 -->
+		<append>true</append>
+		<!-- 日志格式 -->
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+		
+		<!-- 按级别分文件时用 -->
+<!-- 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>error</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter> -->
+	</appender>
+
+	<logger name="com.kalvin.ktools" level="INFO" />
+	<!--<logger name="org.springframework.data.mybatis" level="INFO" />-->
+	<logger name="org.springframework.aop.aspectj" level="ERROR" />
+
+	<springProfile name="dev">
+		<root level="INFO">
+			<appender-ref ref="STDOUT" />
+			<!-- <appender-ref ref="FILEAPPENDER" /> -->
+		</root>
+	</springProfile>
+	<springProfile name="test">
+		<root level="INFO">
+			<appender-ref ref="STDOUT" />
+			<appender-ref ref="FILEAPPENDER" />
+		</root>
+	</springProfile>
+	<springProfile name="prod">
+		<root level="INFO">
+			<appender-ref ref="STDOUT" />
+			<appender-ref ref="FILEAPPENDER" />
+		</root>
+	</springProfile>
+
+</configuration>

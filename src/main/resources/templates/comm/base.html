@@ -2,25 +2,91 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <body>
+    <!-- 系统信息  -->
+    <script th:fragment="config" th:inline="javascript">
+        var ktcfg = {
+            /* 上下文路径  */
+            ctx:[[${#httpServletRequest.getContextPath()}]]
+        };
+    </script>
 
     <!-- 共用css/js静态资源 -->
     <static th:fragment="static">
+        <!--Bootstrap 核心css-->
         <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/css/bootstrap.min.css}">
         <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/fileinput/css/fileinput.min.css}">
+        <!--KTools.css-->
+        <link rel="stylesheet" th:href="@{/static/css/ktools.css}">
         <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-        <script th:src="@{/static/plugin/bootstrap4/js/jquery.min.js}"></script>
+        <!--<script th:src="@{/static/plugin/bootstrap4/js/jquery.min.js}"></script>-->
+        <script th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
         <script th:src="@{/static/plugin/bootstrap4/js/tether.min.js}"></script>
         <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
         <script th:src="@{/static/plugin/bootstrap4/js/bootstrap.min.js}"></script>
         <script th:src="@{/static/plugin/bootstrap4/fileinput/js/fileinput.min.js}"></script>
         <script th:src="@{/static/plugin/bootstrap4/fileinput/js/zh.js}"></script>
-        <!--ktUtils-->
-        <script th:src="@{/static/js/ktUtils.js}"></script>
     </static>
+
+    <!--网页头部-->
+    <!--background: #4b8d78-->
+    <div th:fragment="head" class="jumbotron text-center font-weight-bold text-white mb-0" style="background: #4b8d78;height: 250px;">
+        <div class="">
+            <span class="kt-banner">Kalvin Tools</span>
+            <p>图片、视频、文字等转化及美化工具！</p>
+        </div>
+    </div>
+
+    <!--Ktools导航栏-->
+    <nav th:fragment="navbar" class="navbar navbar-toggleable-md bg-inverse navbar-inverse">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+            <img src="" width="30" height="30" class="d-inline-block align-top glyphicon glyphicon-briefcase" alt="">
+            KTools
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item ">
+                    <a class="nav-link " th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/image/artPic}">图片工具</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/txt/ascii}">文字工具</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                        更多工具
+                    </a>
+                    <div class="dropdown-menu bg-inverse">
+                        <a class="dropdown-item text-white" href="#">Tool 1</a>
+                        <a class="dropdown-item text-white" href="#">Tool 2</a>
+                        <a class="dropdown-item text-white" href="#">Tool 3</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search">
+                <button class="btn btn-info my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <button type="button" class="btn btn-sm btn-outline-success glyphicon glyphicon-user">注册</button>
+            <button type="button" class="btn btn-sm btn-outline-success glyphicon glyphicon-log-in">登录</button>
+        </div>
+    </nav>
+
 
     <!-- 网站footer -->
     <div th:fragment="footer" class="jumbotron text-center" style="margin-bottom:0">
         <p>Copyright © 2013-2018 KalvinTools</p>
+    </div>
+
+    <div th:fragment="publicjs">
+        <script th:src="@{/static/js/ktConfig.js}"></script>
+        <script th:src="@{/static/js/ktUtils.js}"></script>
+        <script th:src="@{/static/js/ktPublic.js}"></script>
     </div>
 
 </body>

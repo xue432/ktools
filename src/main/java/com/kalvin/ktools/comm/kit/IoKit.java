@@ -1,12 +1,13 @@
 package com.kalvin.ktools.comm.kit;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.date.DateUtil;
 import com.kalvin.ktools.comm.constant.Constant;
 import com.kalvin.ktools.exception.KTException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * IO工具类
@@ -14,23 +15,25 @@ import java.io.IOException;
 public class IoKit {
 
     /**
-     * multipartFile转File
+     * multipartFile写入磁盘文件
      * @param multipartFile m
+     * @param dest 目标目录
      * @return file
      */
-    public static File multipartFile2File(MultipartFile multipartFile) {
+    public static File writeMultipartFile(MultipartFile multipartFile, String dest) {
         File file;
         assert multipartFile != null;
         String fileName = multipartFile.getOriginalFilename();
         assert fileName != null;
         String suffix = fileName.substring(fileName.lastIndexOf("."));
-        fileName = fileName.substring(0, fileName.lastIndexOf(".") - 1);
+        fileName = Constant.UPLOAD_PREFIX_FILENAME + DateUtil.format(new Date(), "yyMMddhhmmss") + suffix;
         try {
-            file = File.createTempFile(fileName, suffix);
+            file = new File(dest + fileName);
+            file.createNewFile();
             multipartFile.transferTo(file);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new KTException("multipartFile转file发生异常");
+            throw new KTException("写入文件时发生异常");
         }
         return file;
     }

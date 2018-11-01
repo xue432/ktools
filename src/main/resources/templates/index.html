@@ -3,350 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Kalvin Tools</title>
-    <!-- 新 Bootstrap 核心 CSS 文件 -->
-    <!--<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
-    <!--<link rel="stylesheet" href="/static/plugin/bootstrap4/css/bootstrap.min.css">-->
-    <!--<link rel="stylesheet" href="/static/plugin/bootstrap4/fileinput/css/fileinput.min.css">-->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">-->
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <!--<script src="/static/plugin/bootstrap4/js/jquery.min.js"></script>-->
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <!--<script src="/static/plugin/bootstrap4/js/tether.min.js"></script>-->
-    <!--<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>-->
-    <!--<script src="/static/plugin/bootstrap4/js/bootstrap.min.js"></script>-->
-    <!--<script src="/static/plugin/bootstrap4/fileinput/js/fileinput.min.js"></script>-->
-    <!--<script src="/static/plugin/bootstrap4/fileinput/js/zh.js"></script>-->
-    <!--<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+    <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
 
-    <style>
-        .fakeimg {
-            height: 300px;
-            background: #aaa;
-        }
-        .ktools {
-            font-style: oblique;
-            font-family: fantasy;
-            font-size: 90px;
-        }
-        .k_border {
-            border: 1px solid #989191;
-        }
-        .file-preview {
-            border-radius: 5px;
-            border: 1px solid #989191;
-            padding: 8px;
-            width: 100%;
-            margin-bottom: 5px;
-            height: 300px;
-        }
-        .file-drop-zone {
-            margin: -1px 15px 12px 12px;
-        }
-        .file-error-message {
-            position: absolute;
-            z-index: 1;
-        }
-    </style>
 </head>
-<body style="background: #f5ecec">
+
+<body class="kt-body">
 
     <!--网页头部-->
-    <div class="jumbotron text-center font-weight-bold text-white mb-0" style="background: #4b8d78;height: 250px;">
-        <div class="">
-            <span class="ktools">Kalvin Tools</span>
-            <p>图片、视频、文字等转化及美化工具！</p>
-        </div>
-    </div>
+    <div th:replace="comm/base::head"></div>
 
     <!--Ktools导航栏-->
-    <nav class="navbar navbar-toggleable-md bg-inverse navbar-inverse">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="#">
-            <img src="" width="30" height="30" class="d-inline-block align-top glyphicon glyphicon-briefcase" alt="">
-            KTools
-        </a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">图片工具</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">文字工具</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                        更多工具
-                    </a>
-                    <div class="dropdown-menu bg-inverse">
-                        <a class="dropdown-item text-white" href="#">Tool 1</a>
-                        <a class="dropdown-item text-white" href="#">Tool 2</a>
-                        <a class="dropdown-item text-white" href="#">Tool 3</a>
-                        <div class="dropdown-divider"></div>
-                    </div>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                <button class="btn btn-info my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            <button type="button" class="btn btn-sm btn-outline-success glyphicon glyphicon-user">注册</button>
-            <button type="button" class="btn btn-sm btn-outline-success glyphicon glyphicon-log-in">登录</button>
-        </div>
-    </nav>
+    <div th:replace="comm/base::navbar"></div>
 
     <!--面包悄-->
     <div class="container p-0">
         <nav>
-            <ol class="breadcrumb mb-0" style="background: #ffffff">
-                <li class="breadcrumb-item"><a href="#">KTools</a></li>
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">图片工具</a></li>
-                <li class="breadcrumb-item active">图片转换</li>
+            <ol class="breadcrumb mb-0 kt-bread-bg">
+                <li class="breadcrumb-item kt-fs13"><a href="#">KTools</a></li>
+                <li class="breadcrumb-item kt-fs13 active"><a href="#">Home</a></li>
             </ol>
         </nav>
     </div>
 
-    <!--tab页签-->
-    <div class="container p-0">
-        <ul class="nav nav-tabs" style="background: white">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#art">转化艺术图</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#ascll">转化字符画</a>
-            </li>
-        </ul>
-    </div>
+    <!--主要内容块-->
+    <div class="container" style="background: white">
+        <div class="row">
 
-    <!-- Tab panes -->
-    <div class="tab-content">
-        <div class="tab-pane container p-0 active" id="art">
-            <!--主要内容块-->
-            <div class="container" style="background: white">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="p-lg-5">
-                            <form enctype="multipart/form-data" method="post">
-                                <input id="input1" type="file" name="image" class="file-loading" value="image.png"/>
-                                <hr class="hidden-sm hidden-md hidden-lg">
-                            </form>
-
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="p-lg-5">
-                            <!--转化后显示图片区块-->
-                            <div class="row k_border">
-                                <div class="col-sm-12" style="height: 300px">
-                                    <img th:src="@{/static/image/handle/bzlmm.jpg}" id="handle" class="rounded fakeimg" alt="pic">
-                                    <input type="text" hidden id="handleFileName" value=""/>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-xl|sm-12">
-                                    <select name="type" id="picType" class="custom-select">
-                                        <option value="">请选择转化风格</option>
-                                        <option value="1">漫画</option>
-                                        <option value="2">素描</option>
-                                        <option value="3">反色</option>
-                                    </select>
-                                    <button class="btn" id="transpic" style="background: #20c997;color: white; margin-left: 0;">开始转化</button>
-                                    <button class="btn btn-primary" id="download" style="margin-left: 1rem;">下载</button>
-                                </div>
-                            </div>
-                            <hr class="hidden-sm hidden-md hidden-lg">
-                        </div>
-                    </div>
-                </div>
-
-                <!--文字说明块-->
-                <div class="container">
-                    <h2>介绍一下，系有必要</h2>
-                    <hr>
-                    <p>It is necessary to introduce them:</p>
-                    <h5>艺术图介绍</h5>
-                    <ul>
-                        <li>
-                            <h6>漫画</h6>
-                            <ul class="list-inline">
-                                <li>转化示例（图片随便放的）：</li>
-                                <li>原图：<img th:src="@{/static/image/yr.png}" class="rounded fakeimg" alt="pic">
-                                    <i class="glyphicon glyphicon-chevron-right"></i><i class="glyphicon glyphicon-chevron-right"></i>
-                                    <img th:src="@{/static/image/trans02.png}" class="rounded fakeimg" alt="pic"></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <h6>反色</h6>
-                            <ul class="list-inline">
-                                <li>转化示例（图片随便放的）：</li>
-                                <li>原图：<img th:src="@{/static/image/p2.jpg}" class="rounded fakeimg" alt="pic">
-                                    <i class="glyphicon glyphicon-chevron-right"></i><i class="glyphicon glyphicon-chevron-right"></i>
-                                    <img th:src="@{/static/image/trans01.jpg}" class="rounded fakeimg" alt="pic"></li>
-                            </ul>
-                        </li>
-                        <li>素描</li>
-                        <li>更多</li>
-                    </ul>
-                    <!--<blockquote class="blockquote">
-                        <p>For 50 years, WWF has been protecting the future of nature. The world's leading conservation organization, WWF works in 100 countries and is supported by 1.2 million members in the United States and close to 5 million globally.</p>
-                        <footer class="blockquote-footer">From WWF's website</footer>
-                    </blockquote>-->
-                </div>
-            </div>
         </div>
-        <div class="tab-pane container p-0" id="ascll">2222</div>
-    </div>
 
+        <!--文字说明块-->
+        <div class="container">
+            <h4 class="kt-fs16">网站简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">一个集图片、视频、文字等转化及美化的在线工具！。。</p>
+                <!--<footer class="blockquote-footer">图片转艺术图</footer>-->
+            </blockquote>
+        </div>
+    </div>
 
     <!--网页footer-->
     <footer th:replace="comm/base::footer"></footer>
+    <script th:replace="comm/base::publicjs"></script>
 
-    <script th:replace="comm/config::config"></script>
     <!--js脚本-->
+    <script th:replace="comm/base::config"></script>
+    <script th:replace="comm/base::publicjs"></script>
     <script>
         $(document).ready(function() {
-            var uploadSucc = false;
-            var control = $('#input1');
-            var handleFileEle = $("#handleFileName");
-            var picType;
-            var obj = {};
-
-            control.fileinput({
-                language: 'zh', // 设置语言
-                uploadUrl: ktcfg.ctx + '/image/uploadAndHandle', // 上传的地址
-                enctype: 'multipart/form-data',
-                allowedFileExtensions : ['jpg', 'png','gif'],// 接收的文件后缀
-                showUpload: false, // 是否显示上传按钮
-                showCaption: false,// 是否显示标题
-                showRemove:false,
-                browseClass: "btn btn-primary", // 按钮样式
-                previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
-                autoReplace: true,
-                //dropZoneEnabled: false,//是否显示拖拽区域
-                //minImageWidth: 50, //图片的最小宽度
-                //minImageHeight: 50,//图片的最小高度
-                //maxImageWidth: 1000,//图片的最大宽度
-                //maxImageHeight: 1000,//图片的最大高度
-                //maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
-                minFileCount: 1,
-                maxFileCount: 1, //表示允许同时上传的最大文件个数
-                // enctype: 'multipart/form-data',
-                // validateInitialCount:true,
-                // msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
-                uploadExtraData:function (previewId, index) {
-                    //向后台传递id作为额外参数，是后台可以根据id修改对应的图片地址。
-                    obj.type = picType;
-                    return obj;
-                },
-                layoutTemplates :{
-                    // actionDelete:'', //去除上传预览的缩略图中的删除图标
-                    actionUpload:'',//去除上传预览缩略图中的上传图片；
-                    actionZoom:''   //去除上传预览缩略图中的查看详情预览的缩略图标。
-                }
-
-            });
-
-            // 选择文件后事件
-            control.on("filebatchselected", function(event, files) {
-                // control.fileinput("upload");
-            });
-
-            // 上传前事件
-            control.on('filepreajax', function(event, previewId, index) {
-                $(".file-preview").next().remove();
-            });
-
-
-            // 开始转化
-            $("#transpic").on('click', function () {
-                picType = $("#picType option:selected").val();
-                if (!picType) {
-                    ktUtils.alert("transpic", "请先选择转换类型哟~~！");
-                    // $('[data-toggle="popover"]').popover();
-                    return false;
-                }
-                if (!uploadSucc) {
-                    control.fileinput("upload");
-                } else {
-                    var hfn = handleFileEle.val();
-                    console.log("hfn=", hfn);
-                    var uploadFileName = hfn.replace("handle", "upload");
-                    console.log("fn=", uploadFileName);
-                    $.ajax({
-                        type:'POST',
-                        url: ktcfg.ctx + '/image/handle',
-                        data: {fileName:uploadFileName, type: picType},
-                        success: function (r) {
-                            console.log("r=", r);
-                            var url = r.data;
-                            if (r.errorCode === 200) {
-                                $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
-                            }
-                        }
-                    });
-                }
-            });
-
-            $("#download").on('click', function () {
-                var handleFileName = handleFileEle.val();
-                console.log("download file=", handleFileName);
-                if (!handleFileName) {
-                    ktUtils.alert("download", "木有发现有图片，请先转化哦~~");
-                    return false;
-                }
-                // 开始下载
-                /*$.getJSON(ktcfg.ctx + '/image/download', {fileName: handleFileName}, function (r) {
-
-                });*/
-                window.open(ktcfg.ctx + '/image/download?fileName=' + handleFileName);
-
-
-            });
-
-            // 上传完成后事件
-            control.on("fileuploaded", function (event, data, previewId, index) {
-                console.log(data.response);
-                var url = data.response.data;
-                var handleFileName = url.substring(url.lastIndexOf("/") + 1);
-                handleFileEle.val(handleFileName);   // 保存handle filename
-
-                if (data.response.errorCode === 200) {
-                    uploadSucc = true;
-                    $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
-                }
-            });
-
-            // 若已经上传，先清除图片
-            $("input[name='image']").on('click', function () {
-                if (uploadSucc) {
-                    control.fileinput("clear");
-                    uploadSucc = false;
-                }
-            });
-
-
-            /*control.on('filebatchuploaderror', function(event, data, msg) {
-                console.log("filebatchuploaderror..........");
-
-            });*/
-            // 异步上传错误结果处理
-            /*control.on('fileerror', function(event, data, msg) {
-                console.log("fail..........");
-                // 清除当前的预览图 ，并隐藏 【移除】 按钮
-                $(".file-preview").next().remove();
-                // 打开失败的信息弹窗
-                // me.openAlertModel('请求失败，请稍后重试')
-            });*/
 
         });
     </script>
-
 </body>
 </html>

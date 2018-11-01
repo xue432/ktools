@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalvin Tools</title>
+    <!--引入静态文件-->
+    <static th:replace="comm/base::static"></static>
+
+</head>
+<body class="kt-body">
+
+<!--网页头部-->
+<div th:replace="comm/base::head"></div>
+
+<!--Ktools导航栏-->
+<div th:replace="comm/base::navbar"></div>
+
+<!--面包悄-->
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="breadcrumb-item kt-fs13"><a href="#">KTools</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">图片工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">转换艺术图</li>
+        </ol>
+    </nav>
+</div>
+
+<!--tab页签-->
+<div class="container p-0">
+    <ul class="nav nav-tabs kt-tab-bg">
+        <li class="nav-item">
+            <a class="nav-link kt-fs13" th:href="@{/image/artPic}">转换艺术图</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link kt-fs13 active" th:href="@{/image/asciiPic}">转换字符画</a>
+        </li>
+    </ul>
+</div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-tab-ctx-bg">
+            <div class="row">
+            </div>
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-tab-ctx-bg mt-2 pt-2">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">图片转艺术图工具，可以把任意图片转化成有意思及逼格的艺术图。。</p>
+            </blockquote>
+        </div>
+    </div>
+    <!--<div class="tab-pane container p-0" id="ascii">2222</div>-->
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script>
+    $(document).ready(function() {
+
+    });
+</script>
+
+</body>
+</html>
