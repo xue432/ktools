@@ -19,9 +19,9 @@
 <div class="container p-0">
     <nav>
         <ol class="breadcrumb mb-0 kt-bread-bg">
-            <li class="breadcrumb-item kt-fs13"><a href="#">KTools</a></li>
-            <li class="breadcrumb-item kt-fs13"><a href="#">Home</a></li>
-            <li class="breadcrumb-item kt-fs13"><a href="#">图片工具</a></li>
+            <li class="breadcrumb-item kt-fs13"><a>KTools</a></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/image/artPic}">图片工具</a></li>
             <li class="breadcrumb-item kt-fs13 active">转换字符画</li>
         </ol>
     </nav>
@@ -43,7 +43,7 @@
 <div class="tab-content">
     <div class="tab-pane container p-0 active" id="ascii">
         <!--主要内容块-->
-        <div class="container kt-tab-ctx-bg">
+        <div class="container kt-ctx-bg">
             <div class="row">
                 <div class="col-sm-4 mt-4">
                     <label class="kt-fc-title">请上传图片:</label>
@@ -54,7 +54,7 @@
                     <button class="btn" id="transpic" style="background: #20c997;color: white; margin-left: 0;">开始转化</button>
                     <label class="kt-fc-title">ascii字体预览:</label>
                     <!--<textarea class="ascii" disabled rows="5" id="comment"></textarea>-->
-                    <pre id="comment" class="ascii-font1 kt-border"></pre>
+                    <pre id="comment" class="kt-ascii-font1 kt-border"></pre>
                 </div>
             </div>
             <!--<div class="row">
@@ -66,7 +66,7 @@
             </div>-->
         </div>
         <!--文字说明块-->
-        <div class="container kt-tab-ctx-bg mt-2 pt-2">
+        <div class="container kt-ctx-bg mt-2 pt-2">
             <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
             <hr>
             <blockquote class="blockquote">

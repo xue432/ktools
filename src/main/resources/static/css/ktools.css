@@ -4,6 +4,7 @@
     height: 300px;
     background: #aaa;
 }
+
 /*fileinput样式重写*/
 .file-preview {
     border-radius: 5px;
@@ -13,59 +14,77 @@
     margin-bottom: 5px;
     height: 300px;
 }
+
 .file-drop-zone {
     margin: -1px 15px 12px 12px;
 }
+
 .file-error-message {
     position: absolute;
     z-index: 1;
 }
+
 .kt-body {
-    background: #f5ecec!important;
+    background: #f5ecec !important;
 }
+
 .kt-bread-bg {
-    background: #ffffff!important;
+    background: #ffffff !important;
 }
+
 .kt-tab-bg {
     background: white;
 }
-.kt-tab-ctx-bg {
-    background: white!important;
+
+.kt-ctx-bg {
+    background: white !important;
 }
+
 .kt-banner {
     font-style: oblique;
     font-family: fantasy;
-    font-size: 90px;
+    font-size: 77px;
+    /*color: #23c565;*/
 }
+
 .kt-border {
     border: 1px solid silver;
 }
+
 .kt-fs13 {
     font-size: 13px;
 }
+
 .kt-fs14 {
     font-size: 14px;
 }
+
 .kt-fs16 {
     font-size: 16px;
 }
+
 .kt-fc-desc {
     color: #777777;
 }
+
 .kt-fc-title {
-    color: #06648a;
+    /*color: #06648a;*/
+    color: #a02e2e;
 }
+
 .fig {
     font-size: 10pt;
     font-family: Monospace;
     white-space: pre;
 }
+
 pre {
     display: block;
     font-family: monospace;
     white-space: pre;
     margin: 1em 0px;
 }
+
 .ascii {
     width: 100%;
     height: 600px;
@@ -76,9 +95,51 @@ pre {
     background: #102b46;
     font: 1px "Courier New", Courier, monospace;
 }
-.ascii-font1 {
+
+.kt-ascii-font1 {
     font: 1px "Courier New", Courier, monospace;
 }
-.ascii-font14 {
+
+.kt-ascii-font14 {
     font: 14px "Courier New", Courier, monospace;
+}
+
+.kt-tl-box {
+    height: 160px;
+    width: 242px;
+    margin: 20px 20px 20px 5px;
+    border-radius: 10px;
+}
+.kt-img-box {
+    height: 121px;
+    margin: 5px;
+    overflow: hidden;
+}
+.kt-a-img {
+    display: block; width: 120px; height: 121px; margin-top: 0.108035px;
+}
+.kt-img-head {
+    background-color: rgb(189, 171, 169); width: 120px; height: 121px;
+}
+.kt-img-inf {
+    width: 120px;
+    height: 20px;
+    background: #000;
+    /*filter: alpha(opacity=40);*/
+    z-index: 1;
+    margin-top: 0px;
+    opacity: 0.7;
+    line-height: 19px;
+    overflow: hidden;
+    /*display: none;*/
+}
+.kt-img-inf span {
+    color: white;font-size: 12px;vertical-align: middle;padding-left: 8px;
+}
+.kt-img-inf a {
+    background: white;float: right;margin-top: 1px;
+}
+a:hover {
+    color: #1c7430;
+    /*font-size: 17px;*/
 }

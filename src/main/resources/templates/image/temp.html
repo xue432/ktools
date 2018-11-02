@@ -19,8 +19,8 @@
 <div class="container p-0">
     <nav>
         <ol class="breadcrumb mb-0 kt-bread-bg">
-            <li class="breadcrumb-item kt-fs13"><a href="#">KTools</a></li>
-            <li class="breadcrumb-item kt-fs13"><a href="#">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a>KTools</a></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
             <li class="breadcrumb-item kt-fs13"><a href="#">图片工具</a></li>
             <li class="breadcrumb-item kt-fs13 active">转换艺术图</li>
         </ol>
@@ -31,10 +31,10 @@
 <div class="container p-0">
     <ul class="nav nav-tabs kt-tab-bg">
         <li class="nav-item">
-            <a class="nav-link kt-fs13" th:href="@{/image/artPic}">转换艺术图</a>
+            <a class="nav-link kt-fs13 active" th:href="@{/image/artPic}">转换艺术图</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link kt-fs13 active" th:href="@{/image/asciiPic}">转换字符画</a>
+            <a class="nav-link kt-fs13" th:href="@{/image/asciiPic}">转换字符画</a>
         </li>
     </ul>
 </div>
@@ -43,12 +43,13 @@
 <div class="tab-content">
     <div class="tab-pane container p-0 active" id="ascii">
         <!--主要内容块-->
-        <div class="container kt-tab-ctx-bg">
+        <div class="container kt-ctx-bg">
             <div class="row">
+                主要内容块
             </div>
         </div>
         <!--文字说明块-->
-        <div class="container kt-tab-ctx-bg mt-2 pt-2">
+        <div class="container kt-ctx-bg mt-2 pt-2">
             <h4 class="kt-fs16">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
