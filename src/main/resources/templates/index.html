@@ -59,7 +59,7 @@
         </div>
         <div class="row ml-1 mr-1 mt-3">
             <label class="kt-fc-title mb-0" style="background: #f5ecec">头像大全</label>
-            <div class="col-sm-12 kt-border">
+            <div class="col-sm-12 kt-border border-bottom-0 mb-2">
                 <div class="kt-img-box float-left">
                     <a href="" target="_blank" name="pn0" class="kt-a-img">
                         <img class="kt-img-head img-hover" th:src="@{/static/image/elm.jpg}">
@@ -160,7 +160,16 @@
                     </div>
                 </div>
             </div>
+            <!--查看更多-->
+            <div class="col-sm-12 kt-border border-top-0">
+                <div style="text-align: center; width: 100%;background: #adffb4"><a th:href="@{/head}">查看更多</a></div>
+            </div>
         </div>
+
+        <!--<div class="row">
+            <div style="text-align: center; width: 100%"><a href="">查看更多</a></div>
+        </div>-->
+
     </div>
     <!--文字说明块-->
     <div class="container kt-ctx-bg mt-3">

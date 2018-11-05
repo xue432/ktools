@@ -50,8 +50,16 @@
                 <li class="nav-item ">
                     <a class="nav-link " th:href="@{/}">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/image/artPic}">图片工具</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" th:href="@{/image/artPic}">
+                        图片工具
+                    </a>
+                    <div class="dropdown-menu mt-0">
+                        <a class="dropdown-item" th:href="@{/image/artPic}">转艺术图</a>
+                        <a class="dropdown-item" th:href="@{/image/asciiPic}">转ascii字符画</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                    <!--<a class="nav-link" th:href="@{/image/artPic}">图片工具</a>-->
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/txt/ascii}">文字工具</a>
@@ -60,13 +68,13 @@
                     <a class="nav-link" th:href="@{/head}">头像大全</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop">
                         更多工具
                     </a>
-                    <div class="dropdown-menu bg-inverse">
-                        <a class="dropdown-item text-white" href="#">Tool 1</a>
-                        <a class="dropdown-item text-white" href="#">Tool 2</a>
-                        <a class="dropdown-item text-white" href="#">Tool 3</a>
+                    <div class="dropdown-menu mt-0">
+                        <a class="dropdown-item" href="#">Tool 1</a>
+                        <a class="dropdown-item" href="#">Tool 2</a>
+                        <a class="dropdown-item" href="#">Tool 3</a>
                         <div class="dropdown-divider"></div>
                     </div>
                 </li>

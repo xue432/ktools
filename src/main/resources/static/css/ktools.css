@@ -143,3 +143,14 @@ a:hover {
     color: #1c7430;
     /*font-size: 17px;*/
 }
+
+/*导航栏下拉菜单样式*/
+.nav-item > .dropdown-menu {
+    background: #000a04;opacity: 0.8;
+}
+.nav-item > .dropdown-menu > .dropdown-item {
+    color: #bdd8e6;
+}
+.nav-item > .dropdown-menu > a:hover {
+    color: #333333;
+}
