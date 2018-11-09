@@ -40,6 +40,9 @@ public class ImageController {
     @Value(value = "${kt.image.upload.dir}")
     private String imageUploadDir;
 
+    @Value(value = "${kt.image.handle.dir}")
+    private String imageHandleDir;
+
     @Value(value = "${kt.kapi.image.toGif.url}")
     private String kApiImageToGifUrl;
 
@@ -128,7 +131,7 @@ public class ImageController {
         String fileUrl = Constant.CLASSPATH_HANDLE_IMAGE_DIR + fileName;
         File file = new File(fileUrl);
         if (!file.exists()) {
-            fileUrl = imageUploadDir + fileName;
+            fileUrl = imageHandleDir + fileName;
             file = new File(fileUrl);
         }
         ServletUtil.write(HttpServletContextKit.getHttpServletResponse(), file);
