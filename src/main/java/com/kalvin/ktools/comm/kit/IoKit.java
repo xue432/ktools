@@ -1,6 +1,7 @@
 package com.kalvin.ktools.comm.kit;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.kalvin.ktools.comm.constant.Constant;
 import com.kalvin.ktools.exception.KTException;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +27,9 @@ public class IoKit {
         String fileName = multipartFile.getOriginalFilename();
         assert fileName != null;
         String suffix = fileName.substring(fileName.lastIndexOf("."));
-        fileName = Constant.UPLOAD_PREFIX_FILENAME + DateUtil.format(new Date(), "yyMMddhhmmss") + suffix;
+        fileName = Constant.UPLOAD_PREFIX_FILENAME +
+                DateUtil.format(new Date(), "yyMMddhhmmss") + "_" +
+                RandomUtil.randomString(3) + suffix;
         try {
             file = new File(dest + fileName);
             file.createNewFile();

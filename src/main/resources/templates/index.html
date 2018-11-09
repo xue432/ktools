@@ -28,9 +28,11 @@
 
     <!--主要内容块-->
     <div class="container" style="background: white">
+
         <div class="row ml-1 mr-1 mt-2">
             <label class="kt-fc-title mb-0 mt-3" style="background: #f5ecec">在线工具</label>
-            <div class="col-sm-12 kt-border">
+            <div id="toolsBox" class="col-sm-12 kt-border">
+                <!--&lt;!&ndash;box&ndash;&gt;
                 <div class="kt-border float-left kt-tl-box">
                     <div style="width: auto; height: 90px;" class=" mt-2 ml-2 mr-2">
                         <img th:src="@{/static/image/ktpysj.png}" style="width:100%; height: 100%;">
@@ -39,6 +41,7 @@
                         <a class="kt-fc-title" th:href="@{/image/artPic}" target="_blank">图片转艺术图工具&nbsp;<i class="glyphicon glyphicon-forward"></i></a>
                     </div>
                 </div>
+                &lt;!&ndash;box&ndash;&gt;
                 <div class="kt-border float-left kt-tl-box">
                     <div style="width: auto; height: 90px;" class=" mt-2 ml-2 mr-2">
                         <img th:src="@{/static/image/ktzfh.png}" style="width:100%; height: 100%;">
@@ -54,9 +57,10 @@
                     <div style="width: auto; height: 50px;text-align: center;padding-top: 10px;background: #f5ecec" class="kt-border ml-2 mr-2">
                         <a class="kt-fc-title" th:href="@{/txt/ascii}" target="_blank">文字转ascii艺术字工具&nbsp;<i class="glyphicon glyphicon-forward"></i></a>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
+
         <div class="row ml-1 mr-1 mt-3">
             <label class="kt-fc-title mb-0" style="background: #f5ecec">头像大全</label>
             <div class="col-sm-12 kt-border border-bottom-0 mb-2">
@@ -190,6 +194,20 @@
     <script>
         $(document).ready(function() {
 
+            // 在线工具box渲染
+            var allTools = ktConfig.navTabs.image.concat(ktConfig.navTabs.txt);
+            var kfc = ktcfg.ctx;
+            allTools.forEach(function (obj) {
+                $('#toolsBox').append('<div class="kt-border float-left kt-tl-box">\n' +
+                    '                    <div style="width: auto; height: 90px;" class=" mt-2 ml-2 mr-2">\n' +
+                    '                        <img src="' + kfc + obj.pic + '" style="width:100%; height: 100%;">\n' +
+                    '                    </div>\n' +
+                    '                    <div style="width: auto; height: 50px;text-align: center;padding-top: 10px;background: #f5ecec" class="kt-border ml-2 mr-2">\n' +
+                    '                        <a class="kt-fc-title" href="'+obj.url+'" target="_blank">'+obj.name+'工具&nbsp;<i class="glyphicon glyphicon-forward"></i></a>\n' +
+                    '                    </div>\n' +
+                    '                </div>');
+
+            });
         });
     </script>
 </body>

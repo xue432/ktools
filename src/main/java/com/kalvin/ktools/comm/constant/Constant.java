@@ -1,5 +1,7 @@
 package com.kalvin.ktools.comm.constant;
 
+import cn.hutool.core.util.ClassUtil;
+
 /**
  * 常量类
  */
@@ -14,7 +16,7 @@ public class Constant {
     // ktools handle image url
     public final static String HANDLE_IMAGE_URL = "/static/image/handle/";
     // ktools classpath handle image url
-    public final static String CLASSPATH_HANDLE_IMAGE_URL = "WEB-INF/classes/static/image/handle/";
+    public final static String CLASSPATH_HANDLE_IMAGE_DIR = ClassUtil.getClassPath() + "static/image/handle/";
     // ktools handle image dir
     public final static String HANDLE_IMAGE_REF_DIR = "static/image/handle/";
     // python handle image dir
@@ -23,4 +25,7 @@ public class Constant {
     public final static String UPLOAD_PREFIX_FILENAME = "upload";
     // 处理文件名前缀
     public final static String HANDLE_PREFIX_FILENAME = "handle";
+    public final static String HANDLE_PREFIX_FILENAME_GIF = "gif";
+    public final static String HANDLE_PREFIX_FILENAME_CHAR_GIF = "char_gif";
+    public final static String HANDLE_PREFIX_FILENAME_CHAR_PIC = "char_pic";
 }

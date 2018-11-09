@@ -1,22 +1,72 @@
 /**
  * 工具
- * @type {{alert: alert}}
+ * @type {{alert: ktUtils.alert, initFileUploadControl: (function(*, *=, *=, *=): (jQuery|HTMLElement))}}
  */
 var ktUtils = {
-    alert: alert,
-    initFileUploadControl: function(id, uploadUrl, params) {
+    /**
+     * 信息提示框（注意：使用它后面需要加 return false; 否则无效）
+     * @param elementId 需要在下面弹出的那个元素ID
+     * @param message 提示内容
+     */
+    alert: function (elementId, message) {
+        var alertId = "alert_" + elementId;
+        var alertEle = $("#" + alertId);
+        var tarEle = $('#' + elementId);
+
+        if (alertEle.length === 0) {
+            tarEle.after(
+                '<div id="' + alertId + '" class="alert alert-info fade show" style="z-index: 1; position: absolute;">' +
+                '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
+                '<strong>小提示：</strong>' + message +
+                '</div>'
+            );
+
+            // 注册点击任意位置移除提示框事件
+            $("body").on("click", function () {
+                var alertAfterEle = $("#" + alertId);
+                if (alertAfterEle.length !== 0) {
+                    alertAfterEle.remove();
+                }
+            });
+        }
+    },
+    showMsg: function (message) {
+        var alertEle = $('.alert');
+        var bodyEle = $('body');
+        if (alertEle.length === 0) {
+            bodyEle.append(
+                '<div class="alert alert-info fade show" style="z-index: 888; position: fixed;top:49%;left:45%;">' +
+                '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
+                '<strong>提示：</strong>' + message +
+                '</div>'
+            );
+
+            // 注册点击任意位置移除提示框事件
+            bodyEle.on("click", function () {
+                var alertAfterEle = $('.alert');
+                if (alertAfterEle.length !== 0) {
+                    alertAfterEle.remove();
+                }
+            });
+        }
+
+    },
+    initFileUploadControl: function(id, uploadUrl, allowFile, params, customParams) {
         var control = $('#' + id);
+        if (!allowFile) {
+            allowFile = ['jpg', 'png', 'jpeg']
+        }
         if (!params) {
             params = {};
         }
-        control.fileinput({
+        var allParams = {
             language: 'zh', // 设置语言
             uploadUrl: uploadUrl, // 上传的地址
             enctype: 'multipart/form-data',
-            allowedFileExtensions : ['jpg', 'png','gif', 'jpeg'],// 接收的文件后缀
+            allowedFileExtensions: allowFile,// 接收的文件后缀
             showUpload: false, // 是否显示上传按钮
             showCaption: false,// 是否显示标题
-            showRemove:false,
+            showRemove: false,
             browseClass: "btn btn-primary", // 按钮样式
             previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
             autoReplace: true,
@@ -25,24 +75,59 @@ var ktUtils = {
             //minImageHeight: 50,//图片的最小高度
             //maxImageWidth: 1000,//图片的最大宽度
             //maxImageHeight: 1000,//图片的最大高度
-            //maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
+            maxFileSize: 10240, //单位为kb，如果为0表示不限制文件大小
             minFileCount: 1,
             maxFileCount: 1, //表示允许同时上传的最大文件个数
-            // enctype: 'multipart/form-data',
-            // validateInitialCount:true,
-            // msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
-            uploadExtraData:function (previewId, index) {
-                //向后台传递id作为额外参数，是后台可以根据id修改对应的图片地址。
+            validateInitialCount: true,
+            msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+            uploadExtraData: function () {
                 return params;
-            },
-            layoutTemplates :{
+            }, // 向后台传递id作为额外参数，是后台可以根据id修改对应的图片地址。
+            layoutTemplates: {
                 // actionDelete:'', //去除上传预览的缩略图中的删除图标
-                actionUpload:'',//去除上传预览缩略图中的上传图片；
-                actionZoom:''   //去除上传预览缩略图中的查看详情预览的缩略图标。
+                actionUpload: '',//去除上传预览缩略图中的上传图片；
+                actionZoom: ''   //去除上传预览缩略图中的查看详情预览的缩略图标。
             }
-        });
+        };
+        if (customParams) {
+            var keys = Object.keys(customParams);
+            keys.forEach(function (key) {
+                allParams[key] = customParams[key]
+            })
+        }
+        control.fileinput(allParams);
         return control;
     },
+    /**
+     * 渲染image tab页签
+     * @param key 用于区分哪个页签(1,2,3,4,5...)
+     * @param navTabType 页签类型(image,txt,video...)
+     */
+    renderNavTab: function (key, navTabType) {
+        var tabArr;
+        if (navTabType === 'image') {
+            tabArr = ktConfig.navTabs.image;
+        } else if (navTabType === 'txt') {
+            tabArr = ktConfig.navTabs.txt;
+        } else if (navTabType === 'video') {
+
+        }
+        if (!tabArr || !key) {
+            error('renderNavTab error: tabArr or key must be not null');
+            return;
+        }
+        tabArr.forEach(function (obj) {
+            if (obj.key === key) {
+                $('.nav-tabs').append('<li class="nav-item">\n' +
+                    '            <a class="nav-link kt-fs13 active" href="' + ktcfg.ctx + obj.url + '">' + obj.name + '</a>\n' +
+                    '        </li>');
+            } else {
+                $('.nav-tabs').append('<li class="nav-item">\n' +
+                    '            <a class="nav-link kt-fs13" href="'+ktcfg.ctx + obj.url+'">'+obj.name+'</a>\n' +
+                    '        </li>');
+            }
+        });
+    }
 };
 
 var log = function () {
@@ -62,33 +147,14 @@ var logv = function (val) {
         console.log('val=', val);
     }
 };
-// ktUtils.prototype.
 
-
-/**
- * 信息提示框（注意：使用它后面需要加 return false; 否则无效）
- * @param elementId 需要在下面弹出的那个元素ID
- * @param message 提示内容
- */
-function alert(elementId, message) {
-    var alertId = "alert_" + elementId;
-    var alertEle = $("#" + alertId);
-    var tarEle = $('#' + elementId);
-
-    if (alertEle.length === 0) {
-        tarEle.after(
-            '<div id="' + alertId + '" class="alert alert-info fade show" style="z-index: 1; position: absolute;">' +
-            '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
-            '<strong>小提示：</strong>' + message +
-            '</div>'
-        );
-
-        // 注册点击任意位置移除提示框事件
-        $("body").on("click", function () {
-            var alertAfterEle = $("#" + alertId);
-            if (alertAfterEle.length !== 0) {
-                alertAfterEle.remove();
-            }
-        });
+var error = function () {
+    var len = arguments.length;
+    if (len === 1) {
+        console.error(arguments[0]);
     }
-}
+    if (len === 2) {
+        console.error(arguments[0], arguments[1]);
+    }
+};
+

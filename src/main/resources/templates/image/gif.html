@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalvin Tools</title>
+    <!--引入静态文件-->
+    <static th:replace="comm/base::static"></static>
+
+</head>
+<body class="kt-body">
+
+<!--网页头部-->
+<div th:replace="comm/base::head"></div>
+
+<!--Ktools导航栏-->
+<div th:replace="comm/base::navbar"></div>
+
+<!--面包悄-->
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="breadcrumb-item kt-fs13"><a>KTools</a></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">图片工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">多张图合成gif动图</li>
+        </ol>
+    </nav>
+</div>
+
+<!--tab页签-->
+<div class="container p-0 mt-2">
+    <ul class="nav nav-tabs kt-tab-bg">
+    </ul>
+</div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="art">
+        <!--主要内容块-->
+        <div class="container kt-ctx-bg">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!--<div class="p-lg-5">
+
+                    </div>-->
+                    <input id="upload" type="file" name="file" multiple class="file-loading" value=""/>
+                    <hr class="hidden-sm hidden-md hidden-lg">
+                </div>
+                <div class="col-sm-12">
+                    <!--<div class="p-lg-5">
+
+                    </div>-->
+                    <div class="row mt-1 ml-1 mb-2 mr-1">
+                        <div class="col-sm-6" style="text-align: center;line-height: 305px;">
+                            <label class="kt-fc-title">时间间隔:</label>
+                            <select name="type" id="duration" class="custom-select">
+                            </select>
+                            <button class="btn" id="transpic" style="background: #20c997;color: white; margin:0 auto;">合成GIF</button>
+                            <button class="btn btn-primary" id="download" style="margin:0 auto;">下载高清图</button>
+                        </div>
+                        <div class="col-sm-6 kt-border" style="height: 305px">
+                            <img th:src="@{/static/image/imgtxt.png}" id="handle" class="rounded fakeimg" style="width: 100%" alt="pic">
+                            <input type="text" hidden id="handleFileName" value=""/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-ctx-bg mt-2 pt-2">
+            <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">图片转艺术图工具，可以把任意图片转化成有意思及逼格的艺术图。。</p>
+                <!--<footer class="blockquote-footer">图片转艺术图</footer>-->
+            </blockquote>
+        </div>
+    </div>
+    <!--<div class="tab-pane container p-0" id="ascll">2222</div>-->
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script>
+    $(document).ready(function() {
+        init();
+        var uploadSucc = false;
+        var handleFileEle = $("#handleFileName");
+        var imageArr = [];
+        var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUpload, null, null,
+            {showUpload: true, showCaption: false, maxFileCount: 50});
+
+        // 选择文件后事件
+        control.on("filebatchselected", function(event, files) {
+            // control.fileinput("upload");
+        });
+        // 上传前事件
+        control.on('filepreajax', function(event, previewId, index) {
+            // $(".file-preview").next().remove();
+        });
+
+        // 开始转化
+        $("#transpic").on('click', function () {
+            if (!uploadSucc) {
+                ktUtils.showMsg("请先上传图片再来合成哟！");
+                return false;
+            } else {
+                $.ajax({
+                    type:'POST',
+                    url: ktConfig.api.image2Gif,
+                    data: {imageArr: imageArr.toString(),
+                        duration: $('#duration').find('option:selected').val()},
+                    success: function (r) {
+                        if (r.errorCode === 200) {
+                            var url = r.data;
+                            var handleFileName = url.substring(url.lastIndexOf("/") + 1);
+                            handleFileEle.val(handleFileName.replace("_sl", ""));   // 保存处理后gif原比例图名称(char_gif1688.gif)
+                            $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
+                        } else {
+                            ktUtils.showMsg("转化图片失败，请重新转化");
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#download").on('click', function () {
+            var handleFileName = handleFileEle.val();
+            log("download file=", handleFileName);
+            if (!handleFileName) {
+                ktUtils.showMsg("请先合成再下载");
+                return false;
+            }
+            // 开始下载
+            window.open(ktConfig.api.imageDownload + '?fileName=' + handleFileName);
+        });
+
+        // 上传完成后事件
+        control.on("fileuploaded", function (event, data, previewId, index) {
+            if (data.response.errorCode === 200) {
+                imageArr.push(data.response.data);
+                uploadSucc = true;
+            } else {
+                // ktUtils.showMsg("转化图片失败，请重新转化");
+            }
+        });
+
+        /**
+         * 初始化代码
+         */
+        function init() {
+
+            // 渲染页签
+            ktUtils.renderNavTab(5, 'image');
+
+            // 初始化时间间隔选项
+            var i = 0.1;
+            while (i < 3) {
+                if (Number(i.toFixed(1)) === 0.4) {
+                    $('#duration').append('<option selected value="' + i.toFixed(1) + '">' + i.toFixed(1) + '秒</option>');
+                } else {
+                    $('#duration').append('<option value="'+i.toFixed(1)+'">'+i.toFixed(1)+'秒</option>');
+                }
+                i = i + 0.1;
+            }
+        }
+
+    });
+</script>
+
+</body>
+</html>

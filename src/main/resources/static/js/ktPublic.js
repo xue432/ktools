@@ -17,9 +17,7 @@ $('.kt-img-box').hover(function(event) {
 
 // 鼠标经过导航栏下拉导航展开效果
 var dropdownEle = $('.dropdown');
-log(dropdownEle);
 dropdownEle.on('mouseover', function (event) {
-    log(event.currentTarget);
     $(event.currentTarget).addClass('show');
 });
 
