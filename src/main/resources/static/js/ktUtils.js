@@ -70,6 +70,7 @@ var ktUtils = {
             browseClass: "btn btn-primary", // 按钮样式
             previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
             autoReplace: true,
+            uploadAsync: true,
             //dropZoneEnabled: false,//是否显示拖拽区域
             //minImageWidth: 50, //图片的最小宽度
             //minImageHeight: 50,//图片的最小高度
@@ -158,3 +159,70 @@ var error = function () {
     }
 };
 
+
+function initLoading(){
+    $("body").append('<!-- 模态框 -->\n' +
+        '    <div class="modal fade" id="myModal" >\n' +
+        '        <div class="modal-dialog">\n' +
+        '            <div class="modal-content">\n' +
+        '                <!-- 模态框头部 -->\n' +
+        '                <div class="modal-header">\n' +
+        '                    <h4 class="modal-title">提示</h4>\n' +
+        '                </div>\n' +
+        '                <!-- 模态框主体 -->\n' +
+        '                <div class="modal-body">\n' +
+        '                    <p>K君正在为您努力转化中，请耐心等候哟...</p>\n' +
+        '                    <div class="progress">\n' +
+        '                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:0"></div>\n' +
+        '                    </div>\n' +
+        '                </div>\n' +
+        '                <!-- 模态框底部 -->\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '    </div>');
+}
+
+function showLoading(){
+    $("body").append('<!-- 模态框 -->\n' +
+        '    <div class="modal fade" style="top:20%;" id="myModal" >\n' +
+        '        <div class="modal-dialog">\n' +
+        '            <div class="modal-content">\n' +
+        '                <!-- 模态框头部 -->\n' +
+        '                <div class="modal-header">\n' +
+        '                    <h4 class="modal-title">提示</h4>\n' +
+        '                </div>\n' +
+        '                <!-- 模态框主体 -->\n' +
+        '                <div class="modal-body">\n' +
+        '                    <p>K君正在为您努力转化中，请耐心等候哟~^_^~</p>\n' +
+        '                    <div class="progress">\n' +
+        '                        <div id="lpg" class="progress-bar progress-bar-striped progress-bar-animated" style="width:0"></div>\n' +
+        '                    </div>\n' +
+        '                </div>\n' +
+        '                <!-- 模态框底部 -->\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '    </div>');
+    $('#myModal').modal({backdrop:"static"}); // --设置为static后可以防止不小心点击其他区域是弹出框消失
+    interval();
+}
+
+var itl;
+function interval() {
+    var pro = 0;
+    var step = 0.5;
+    itl = setInterval(function () {
+        pro += step;
+        var pgbEle = $('#lpg');
+        pgbEle.attr('style', 'width:' + pro + '%');
+        if (pro >= 100) {
+            pro = 0;
+            // clearInterval(interval);
+        }
+    }, 10);
+}
+
+function hideLoading(){
+    $('#lpg').attr('style', 'width:100%');
+    clearInterval(itl);
+    $("#myModal").modal("hide");
+}

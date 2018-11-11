@@ -167,7 +167,7 @@
             </div>
             <!--查看更多-->
             <div class="col-sm-12 kt-border border-top-0">
-                <div style="text-align: center; width: 100%;background: #adffb4"><a th:href="@{/head}">查看更多</a></div>
+                <div style="text-align: center; width: 100%;background: #adffb4"><a th:href="@{/head}" target="_blank">查看更多</a></div>
             </div>
         </div>
 
@@ -189,6 +189,26 @@
     <!--网页footer-->
     <footer th:replace="comm/base::footer"></footer>
 
+    <!-- 模态框 -->
+    <!--<div class="modal fade" id="myModal" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                &lt;!&ndash; 模态框头部 &ndash;&gt;
+                <div class="modal-header">
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                &lt;!&ndash; 模态框主体 &ndash;&gt;
+                <div class="modal-body">
+                    <p>K君正在为您努力转化中，请耐心等候哟...</p>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:0"></div>
+                    </div>
+                </div>
+                &lt;!&ndash; 模态框底部 &ndash;&gt;
+            </div>
+        </div>
+    </div>-->
+
     <!--js脚本-->
     <script th:replace="comm/base::config"></script>
     <script th:replace="comm/base::publicjs"></script>
@@ -209,6 +229,7 @@
                     '                </div>');
 
             });
+
         });
     </script>
 </body>
