@@ -30,14 +30,38 @@ var ktUtils = {
             });
         }
     },
-    showMsg: function (message) {
+    hintMsg: function (msg) {
+        this.showMsg('hint', msg);
+    },
+    warnMsg: function (msg) {
+        this.showMsg('warning', msg);
+    },
+    errorMsg: function (msg) {
+        this.showMsg('danger', msg);
+    },
+    showMsg: function (type, msg) {
+        var title;
+        var cl;
+        if (!msg) {
+            msg = '..........';
+        }
+        if (type === 'warning') {
+            title = '警告：';
+            cl = 'alert-warning';
+        } else if (type === 'danger') {
+            title = '错误：';
+            cl = 'alert-danger';
+        } else {
+            title = '提示：';
+            cl = 'alert-info';
+        }
         var alertEle = $('.alert');
         var bodyEle = $('body');
         if (alertEle.length === 0) {
             bodyEle.append(
-                '<div class="alert alert-info fade show" style="z-index: 888; position: fixed;top:49%;left:45%;">' +
+                '<div class="alert '+cl+' fade show" style="z-index: 888; position: fixed;top:45%;left:41%;">' +
                 '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
-                '<strong>提示：</strong>' + message +
+                '<strong>'+title+'</strong>' + msg +
                 '</div>'
             );
 
@@ -49,7 +73,11 @@ var ktUtils = {
                 }
             });
         }
-
+    },
+    modalMsg: function (message) {
+        var modalEle = $('#myModal');
+        modalEle.find('.modal-body').text(message);
+        modalEle.modal('show');
     },
     initFileUploadControl: function(id, uploadUrl, allowFile, params, customParams) {
         var control = $('#' + id);
@@ -128,6 +156,41 @@ var ktUtils = {
                     '        </li>');
             }
         });
+    },
+    /**
+     * 图片容器自适应(只针对带‘fakeimg’class的img标签有效)
+     * @param src 图片相对地址
+     */
+    fixedImg: function (src) {
+        var fkiEle = $('.fakeimg');
+        if (!src) {
+            return;
+        }
+        var img = new Image();
+        img.src = src;
+        var imgW = img.width;
+        var imgH = img.height;
+        var divH = fkiEle.parent().parent().height();
+        var divW = fkiEle.parent().parent().width();
+        var scaleDivHw= divH / divW;    // 高/宽  比例
+        img.onload = function () {
+            imgW = img.width;
+            imgH = img.height;
+            var scaleImgHw = imgH / imgW;
+            if ((divH - imgH) >= 0 && (divW - imgW) >= 0) { // img宽高都小于外容器
+                fkiEle.attr('style', 'width:auto;height:auto;');
+            } else if ((divH - imgH) >= 0 && (divW - imgW) < 0) {   // img高小于外容器，宽大于外容器
+                fkiEle.attr('style', 'height:auto;width:' + divW + 'px;');
+            } else if ((divH - imgH) < 0 && (divW - imgW) >= 0) {   // img高大于外容器，宽小于外容器
+                fkiEle.attr('style', 'width:auto;height:' + divH + 'px;');
+            } else {    // img宽高都大于外容器
+                if (scaleImgHw > scaleDivHw) {
+                    fkiEle.attr('style', 'height:' + divH + 'px;width:auto');
+                } else {
+                    fkiEle.attr('style', 'height:' + divH + 'px;width:' + divW + 'px;');
+                }
+            }
+        };
     }
 };
 
@@ -159,70 +222,53 @@ var error = function () {
     }
 };
 
-
-function initLoading(){
-    $("body").append('<!-- 模态框 -->\n' +
-        '    <div class="modal fade" id="myModal" >\n' +
-        '        <div class="modal-dialog">\n' +
-        '            <div class="modal-content">\n' +
-        '                <!-- 模态框头部 -->\n' +
-        '                <div class="modal-header">\n' +
-        '                    <h4 class="modal-title">提示</h4>\n' +
-        '                </div>\n' +
-        '                <!-- 模态框主体 -->\n' +
-        '                <div class="modal-body">\n' +
-        '                    <p>K君正在为您努力转化中，请耐心等候哟...</p>\n' +
-        '                    <div class="progress">\n' +
-        '                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:0"></div>\n' +
-        '                    </div>\n' +
-        '                </div>\n' +
-        '                <!-- 模态框底部 -->\n' +
-        '            </div>\n' +
-        '        </div>\n' +
-        '    </div>');
-}
-
-function showLoading(){
-    $("body").append('<!-- 模态框 -->\n' +
-        '    <div class="modal fade" style="top:20%;" id="myModal" >\n' +
-        '        <div class="modal-dialog">\n' +
-        '            <div class="modal-content">\n' +
-        '                <!-- 模态框头部 -->\n' +
-        '                <div class="modal-header">\n' +
-        '                    <h4 class="modal-title">提示</h4>\n' +
-        '                </div>\n' +
-        '                <!-- 模态框主体 -->\n' +
-        '                <div class="modal-body">\n' +
-        '                    <p>K君正在为您努力转化中，请耐心等候哟~^_^~</p>\n' +
-        '                    <div class="progress">\n' +
-        '                        <div id="lpg" class="progress-bar progress-bar-striped progress-bar-animated" style="width:0"></div>\n' +
-        '                    </div>\n' +
-        '                </div>\n' +
-        '                <!-- 模态框底部 -->\n' +
-        '            </div>\n' +
-        '        </div>\n' +
-        '    </div>');
-    $('#myModal').modal({backdrop:"static"}); // --设置为static后可以防止不小心点击其他区域是弹出框消失
-    interval();
-}
-
+/**
+ * 进度条定时器
+ */
 var itl;
 function interval() {
     var pro = 0;
     var step = 0.5;
     itl = setInterval(function () {
         pro += step;
-        var pgbEle = $('#lpg');
-        pgbEle.attr('style', 'width:' + pro + '%');
-        if (pro >= 100) {
-            pro = 0;
-            // clearInterval(interval);
+        var pbaEle = $('#pba');
+        pbaEle.attr('style', 'width:' + pro + '%');
+        pbaEle.text(pro.toFixed(1) + '%');
+        if (pro >= 80) {    // 到90%放慢进度
+            step = 0.1;
+        }
+        if (pro >= 99.8) {    // 如果大于或等于99%就停止定时器
+            clearInterval(itl);
         }
     }, 10);
 }
 
-function hideLoading(){
-    $('#lpg').attr('style', 'width:100%');
+/**
+ * 进度条开始
+ */
+function showLoading(){
+    var ele = $('#pbg');
+    ele.html('<div class="progress">\n' +
+        '                                    <div id="pba" class="progress-bar progress-bar-striped progress-bar-animated" style="width:40%">0%</div>\n' +
+        '                                </div>');
+    interval();
+}
+
+/**
+ * 进度条结束
+ * @param status 状态码(200, 400, 333)
+ */
+function finishLoading(status){
+    var pbaEle = $('#pba');
     clearInterval(itl);
-    $("#myModal").modal("hide");
+    if (status === 200) {
+        pbaEle.attr('style', 'width:100%');
+        pbaEle.text('完成');
+        pbaEle.addClass('bg-success');
+    } else {
+        pbaEle.addClass('bg-danger');
+        pbaEle.text('转化失败');
+    }
+    pbaEle.removeClass('progress-bar-striped');
+    pbaEle.removeClass('progress-bar-animated');
 }

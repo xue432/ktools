@@ -51,8 +51,16 @@
                         <!--转化后显示图片区块-->
                         <div class="row kt-border">
                             <div class="col-sm-12" style="height: 300px">
-                                <img th:src="@{/static/image/artimgtxt.png}" id="handle" class="rounded fakeimg" alt="pic">
+                                <a th:href="@{/static/image/art_pic.jpg}" target="_blank" title="pic">
+                                    <img th:src="@{/static/image/art_pic.jpg}" id="handle" class="rounded fakeimg" alt="pic">
+                                </a>
+                                <input type="text" hidden id="uploadFileName" value=""/>
                                 <input type="text" hidden id="handleFileName" value=""/>
+                            </div>
+                        </div>
+                        <!--进度条-->
+                        <div class="row">
+                            <div id="pbg" class="col-xl|sm-12" style="width: 100%;">
                             </div>
                         </div>
                         <div class="row mt-1">
@@ -121,9 +129,11 @@
         init();
         var uploadSucc = false;
         var handleFileEle = $("#handleFileName");
+        var uploadFileEle = $("#uploadFileName");
         var picType;
+        var base64;
         var obj = {};
-        var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUploadAndHandle, null, obj);
+        var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUpload, null, obj);
 
         // 选择文件后事件
         control.on("filebatchselected", function(event, files) {
@@ -139,7 +149,7 @@
         $("#transpic").on('click', function () {
             picType = $("#picType option:selected").val();
             if (!picType) {
-                ktUtils.alert("transpic", "请先选择转换类型哟~~！");
+                ktUtils.hintMsg('请先选择转换类型哟~~！');
                 // $('[data-toggle="popover"]').popover();
                 return false;
             }
@@ -147,21 +157,8 @@
                 obj.type = picType;
                 control.fileinput("upload");
             } else {
-                var hfn = handleFileEle.val();
-                var uploadFileName = hfn.replace("handle", "upload");
-                $.ajax({
-                    type:'POST',
-                    url: ktConfig.api.imageHandle,
-                    data: {fileName:uploadFileName, type: picType},
-                    success: function (r) {
-                        var url = r.data;
-                        if (r.errorCode === 200) {
-                            $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
-                        } else {
-                            ktUtils.alert("transpic", "转化图片失败，请重新转化");
-                        }
-                    }
-                });
+                var uploadFileName = uploadFileEle.val();
+                handle(uploadFileName, picType);
             }
         });
 
@@ -169,7 +166,8 @@
             var handleFileName = handleFileEle.val();
             log("download file=", handleFileName);
             if (!handleFileName) {
-                ktUtils.alert("download", "木有发现有图片，请先转化哦~~");
+                // ktUtils.alert("download", "木有发现有图片，请先转化哦~~");
+                ktUtils.hintMsg("木有发现有图片，请先转化哦~~");
                 return false;
             }
             // 开始下载
@@ -179,34 +177,30 @@
         // 上传完成后事件
         control.on("fileuploaded", function (event, data, previewId, index) {
             if (data.response.errorCode === 200) {
-                var url = data.response.data;
-                var handleFileName = url.substring(url.lastIndexOf("/") + 1);
-                handleFileEle.val(handleFileName);   // 保存handle filename
+                uploadFileEle.val(data.response.data);   // 保存upload filename
                 uploadSucc = true;
-                $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
+                handle(data.response.data, picType);
+
             } else {
-                ktUtils.alert("transpic", "转化图片失败，请重新转化");
+                // ktUtils.alert("transpic", "上传图片失败，请重新上传");
+                ktUtils.errorMsg('上传图片失败，请重新上传');
             }
+
         });
 
         // 若已经上传，先清除图片
-        $("input[name='image']").on('click', function () {
+        $("input[name='file']").on('click', function () {
             if (uploadSucc) {
                 control.fileinput("clear");
                 uploadSucc = false;
             }
         });
 
-
-        /*control.on('filebatchuploaderror', function(event, data, msg) {
-            console.log("filebatchuploaderror..........");
-
-        });*/
         // 异步上传错误结果处理
         /*control.on('fileerror', function(event, data, msg) {
             console.log("fail..........");
             // 清除当前的预览图 ，并隐藏 【移除】 按钮
-            $(".file-preview").next().remove();
+            // $(".file-preview").next().remove();
             // 打开失败的信息弹窗
             // me.openAlertModel('请求失败，请稍后重试')
         });*/
@@ -215,9 +209,31 @@
          * 初始化代码
          */
         function init() {
-
             // 渲染页签
             ktUtils.renderNavTab(1, 'image');
+        }
+
+        function handle(fileName, type) {
+            showLoading();
+            $.ajax({
+                type:'POST',
+                url: ktConfig.api.imageHandle,
+                data: {fileName:fileName, type: type},
+                success: function (r) {
+                    if (r.errorCode === 200) {
+                        // var handleFileName = url.substring(url.lastIndexOf("/") + 1);
+                        var img = r.data;
+                        handleFileEle.val(img.name);   // 保存handle filename
+                        var url = '/comm/static/image/' + img.name;
+                        $("#handle").attr("src", img.base64);
+                        $('#handle').parent().attr('href', ktcfg.ctx + url);
+                        ktUtils.fixedImg(img.base64);
+                    } else {
+                        ktUtils.errorMsg("转化图片失败，请重新上传转化。");
+                    }
+                    finishLoading(r.errorCode);
+                }
+            });
         }
 
     });

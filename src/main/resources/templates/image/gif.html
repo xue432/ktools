@@ -60,8 +60,15 @@
                             <button class="btn btn-primary" id="download" style="margin:0 auto;">下载高清图</button>
                         </div>
                         <div class="col-sm-6 kt-border" style="height: 305px">
-                            <img th:src="@{/static/image/imgtxt.png}" id="handle" class="rounded fakeimg" style="width: 100%" alt="pic">
+                            <a th:href="@{/static/image/gif123.gif}" target="_blank" title="可点击图片下载缩略图">
+                                <img th:src="@{/static/image/gif123.gif}" id="handle" class="rounded fakeimg" style="height: auto;" alt="pic">
+                            </a>
                             <input type="text" hidden id="handleFileName" value=""/>
+                        </div>
+                    </div>
+                    <!--进度条-->
+                    <div class="row">
+                        <div id="pbg" class="col-xl|sm-12" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -73,7 +80,9 @@
             <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
-                <p class="kt-fs13 kt-fc-desc">图片转艺术图工具，可以把任意图片转化成有意思及逼格的艺术图。。</p>
+                <p class="kt-fs13 kt-fc-desc">1、多张图片合成gif动态图，可控制动图动画速度。</p>
+                <p class="kt-fs13 kt-fc-desc">2、默认批量上传的按钮上传后合成的gif图片是无序的，若需要按自己的顺序生成gif，你只要点击图片下面那个小上传按钮，一个一个上传即可。</p>
+                <p class="kt-fs13 kt-fc-desc">3、尽量使用尺寸相差不大的图片效果更佳哦。</p>
                 <!--<footer class="blockquote-footer">图片转艺术图</footer>-->
             </blockquote>
         </div>
@@ -90,13 +99,13 @@
 <script th:replace="comm/base::publicjs"></script>
 <script>
     $(document).ready(function() {
-        init();
         var uploadSucc = false;
         var handleFileEle = $("#handleFileName");
         var imageArr = [];
+        // 初始化上传控件
         var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUpload, null, null,
-            {showUpload: true, showCaption: false, maxFileCount: 50});
-
+                {showUpload: true, showCaption: false, maxFileCount: 50, layoutTemplates: {actionZoom: ''}});
+        init();
         // 选择文件后事件
         control.on("filebatchselected", function(event, files) {
             // control.fileinput("upload");
@@ -109,10 +118,12 @@
         // 开始转化
         $("#transpic").on('click', function () {
             if (!uploadSucc) {
-                ktUtils.showMsg("请先上传图片再来合成哟！");
+                ktUtils.hintMsg("请先上传图片哟！");
                 return false;
             } else {
-                $.ajax({
+                var duration = $('#duration').find('option:selected').val();
+                handle(imageArr, duration);
+                /*$.ajax({
                     type:'POST',
                     url: ktConfig.api.image2Gif,
                     data: {imageArr: imageArr.toString(),
@@ -128,7 +139,7 @@
                             return false;
                         }
                     }
-                });
+                });*/
             }
         });
 
@@ -136,21 +147,34 @@
             var handleFileName = handleFileEle.val();
             log("download file=", handleFileName);
             if (!handleFileName) {
-                ktUtils.showMsg("请先合成再下载");
+                ktUtils.hintMsg('请先合成GIF再下载');
                 return false;
             }
             // 开始下载
             window.open(ktConfig.api.imageDownload + '?fileName=' + handleFileName);
         });
 
-        // 上传完成后事件
+        // 异步上传完成后事件
         control.on("fileuploaded", function (event, data, previewId, index) {
+            log(data.response);
             if (data.response.errorCode === 200) {
                 imageArr.push(data.response.data);
                 uploadSucc = true;
             } else {
-                // ktUtils.showMsg("转化图片失败，请重新转化");
+                // ktUtils.errorMsg('上传图片失败，请重新上传');
             }
+        });
+
+        // 同步上传成功结果处理
+        control.on('filebatchuploadsuccess', function(event, data, previewId, index) {
+            log(data.response);
+            if (data.response.errorCode === 200) {
+                imageArr.push(data.response.data);
+                uploadSucc = true;
+            } else {
+                // ktUtils.errorMsg('上传图片失败，请重新上传');
+            }
+
         });
 
         /**
@@ -171,6 +195,44 @@
                 }
                 i = i + 0.1;
             }
+
+            // 初始化tooltip
+            var fubEle = $('.fileinput-upload-button');
+            fubEle.attr('data-toggle', 'tooltip');
+            fubEle.attr('data-placement', 'top');
+            fubEle.attr('title', '注意：这个上传后合成GIF是无序的，若想要有序的GIF请点图片下面的上传按钮，按你的顺序上传即可。');
+
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+
+        function handle(imageArr, duration) {
+            showLoading();
+            $.ajax({
+                type:'POST',
+                url: ktConfig.api.image2Gif,
+                async: false,
+                data: {imageArr: imageArr.toString(), duration: duration},
+                success: function (r) {
+                    if (r.errorCode === 200) {
+                        /*var url = r.data;
+                        var handleFileName = url.substring(url.lastIndexOf("/") + 1);
+                        handleFileEle.val(handleFileName.replace("_sl", ""));   // 保存处理后gif原比例图名称(char_gif1688.gif)
+                        $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
+                        $('#handle').parent().attr('href', ktcfg.ctx + url);
+                        ktUtils.fixedImg(ktcfg.ctx + url);*/
+
+                        var img = r.data;
+                        handleFileEle.val(img.name.replace('_sl', ''));   // 保存处理后gif原比例图名称(char_gif1688.gif)
+                        var url = '/comm/static/image/' + img.name;
+                        $("#handle").attr("src", img.base64);
+                        $('#handle').parent().attr('href', ktcfg.ctx + url);
+                        ktUtils.fixedImg(img.base64);
+                    } else {
+                        ktUtils.errorMsg("转化图片失败，请重新上传转化。");
+                    }
+                    finishLoading(r.errorCode);
+                }
+            });
         }
 
     });

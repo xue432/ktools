@@ -11,12 +11,16 @@ var ktConfig = {
         image:[ // 图片工具页签数组
             {name: '转换艺术图', url: '/image/artPic', pic: '/static/image/ktpysj.png', key: 1},
             {name: '转换字符画', url: '/image/asciiPic', pic: '/static/image/ktzfh.png', key: 2},
-            {name: 'GIF转asciiGif', url: '/image/asciiGif', pic: '/static/image/ascgif.gif', key: 3},
-            {name: '转彩色ascii图', url: '/image/colorAsciiPic', pic: '/static/image/clascpic.png', key: 4},
+            {name: 'GIF转换AsciiGif', url: '/image/asciiGif', pic: '/static/image/ascgif.gif', key: 3},
+            {name: '转换彩色Ascii图', url: '/image/colorAsciiPic', pic: '/static/image/clascpic.png', key: 4},
             {name: '合成GIF动图', url: '/image/gif', pic: '/static/image/cpgif.gif', key: 5}
         ],
         txt:[   // 文字工具页签数组
             {name: '转换ascii艺术字', url: '/txt/ascii', pic: '/static/image/ktysj.png', key: 1}
+        ],
+        head:[  // 头像相关页签数组
+            {name: '头像大全', url: '/head', pic: '', key: 1},
+            {name: '生成头像', url: '/head/pixel', pic: '/static/image/ktysj.png', key: 2}
         ]
     },
     api: {  // 网站数据接口api

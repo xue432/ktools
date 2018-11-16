@@ -50,8 +50,8 @@
                     </select>
                 </div>
                 <div class="col-sm-3 mt-3">
-                    <label for="allFont" class="kt-fc-title">所有字体类型(<span style="color: red;">选择后会优先被使用</span>):</label>
-                    <select class="form-control" id="allFont">
+                    <label for="allFont" class="kt-fc-title">所有字体类型:</label>
+                    <select class="form-control" id="allFont" data-toggle="tooltip" data-placement="top" title="选择后会优先被使用!">
                         <option value="">可选</option>
 
                     </select>
@@ -97,7 +97,7 @@
                 font = allFont;
             }
             if (!txt) {
-                ktUtils.alert('txt', '请填写文字');
+                ktUtils.hintMsg('请填写文字');
                 return false;
             }
             $.ajax({
@@ -120,12 +120,12 @@
 
             // 初始化建议字体
             ktConfig.suggestFontArr.forEach(function (value) {
-                $('#font').append('<option value="'+value+'">'+value+'</option>')
+                $('#font').append('<option value="' + value + '">' + value + '</option>')
             });
 
             // 初始化所有font字体下拉列表
             ktConfig.allFontArr.forEach(function (value) {
-                $('#allFont').append('<option value="'+value+'">'+value+'</option>')
+                $('#allFont').append('<option value="' + value + '">' + value + '</option>')
             });
 
             // 默认展示ascii艺术字
@@ -136,6 +136,9 @@
                 '|_|\\_\\__,_|_| \\_/ |_|_| |_|  \\__\\___/ \\___/|_|___/\n' +
                 '                                                  ';
             $('#comment').text(defaultAscii);
+
+            // tooltips
+            $('[data-toggle="tooltip"]').tooltip();
         }
 
     });

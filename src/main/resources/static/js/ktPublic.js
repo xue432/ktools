@@ -42,3 +42,24 @@ $('.skew-title').children('span').hover((function() {
 }), function() {
     return $('.flat').removeClass('flat');
 });
+
+// 初始化模态框
+$("body").append('<!-- 模态框 -->\n' +
+    '  <div class="modal fade" id="myModal" style="top: 31%;">\n' +
+    '    <div class="modal-dialog modal-sm">\n' +
+    '      <div class="modal-content">\n' +
+    '        <!-- 模态框头部 -->\n' +
+    '        <div class="modal-header" style="background: #73a6c1">\n' +
+    '          <h4 class="modal-title">提示</h4>\n' +
+    '          <button type="button" class="close" data-dismiss="modal">&times;</button>\n' +
+    '        </div>\n' +
+    '        <!-- 模态框主体 -->\n' +
+    '        <div class="modal-body kt-fc-title">\n' +
+    '        </div>\n' +
+    '        <!-- 模态框底部 -->\n' +
+    '        <div class="modal-footer">\n' +
+    '          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>\n' +
+    '        </div>\n' +
+    '      </div>\n' +
+    '    </div>\n' +
+    '  </div>');

@@ -51,8 +51,16 @@
                         <!--转化后显示图片区块-->
                         <div class="row kt-border">
                             <div class="col-sm-12" style="height: 300px">
-                                <img th:src="@{/static/image/imgtxt.png}" id="handle" class="rounded fakeimg" alt="pic">
+                                <a th:href="@{/static/image/char_gif.gif}" target="_blank" title="可点击图片下载缩略图">
+                                    <img th:src="@{/static/image/char_gif.gif}" id="handle" class="rounded fakeimg" alt="pic">
+                                </a>
+                                <input type="text" hidden id="uploadFileName" value=""/>
                                 <input type="text" hidden id="handleFileName" value=""/>
+                            </div>
+                        </div>
+                        <!--进度条-->
+                        <div class="row">
+                            <div id="pbg" class="col-xl|sm-12" style="width: 100%;">
                             </div>
                         </div>
                         <div class="row mt-1">
@@ -72,7 +80,7 @@
             <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
-                <p class="kt-fs13 kt-fc-desc">图片转艺术图工具，可以把任意图片转化成有意思及逼格的艺术图。。</p>
+                <p class="kt-fs13 kt-fc-desc">可以将普通的gif动态图转换成Ascii字符gif动态图，逼格满满哦。</p>
                 <!--<footer class="blockquote-footer">图片转艺术图</footer>-->
             </blockquote>
         </div>
@@ -91,8 +99,9 @@
     $(document).ready(function() {
         init();
         var uploadSucc = false;
+        var uploadFileEle = $("#uploadFileName");
         var handleFileEle = $("#handleFileName");
-        var control = ktUtils.initFileUploadControl('upload', ktConfig.api.gif2AsciiGif, ['gif']);
+        var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUpload, ['gif']);
 
         // 选择文件后事件
         control.on("filebatchselected", function(event, files) {
@@ -108,7 +117,8 @@
             if (!uploadSucc) {
                 control.fileinput("upload");
             } else {
-                var hfn = handleFileEle.val();
+                handle(uploadFileEle.val());
+                /*var hfn = handleFileEle.val();
                 var uploadFileName = hfn.replace("char_gif", "upload");
                 $.ajax({
                     type:'POST',
@@ -122,7 +132,7 @@
                             ktUtils.alert("transpic", "转化图片失败，请重新转化");
                         }
                     }
-                });
+                });*/
             }
         });
 
@@ -130,7 +140,7 @@
             var handleFileName = handleFileEle.val();
             log("download file=", handleFileName);
             if (!handleFileName) {
-                ktUtils.alert("download", "木有发现有图片，请先转化哦~~");
+                ktUtils.hintMsg("木有发现有图片，请先转化哦~~");
                 return false;
             }
             // 开始下载
@@ -140,18 +150,21 @@
         // 上传完成后事件
         control.on("fileuploaded", function (event, data, previewId, index) {
             if (data.response.errorCode === 200) {
-                var url = data.response.data;
+                uploadFileEle.val(data.response.data);   // 保存upload filename
+                uploadSucc = true;
+                handle(data.response.data);
+                /*var url = data.response.data;
                 var handleFileName = url.substring(url.lastIndexOf("/") + 1);
                 handleFileEle.val(handleFileName.replace("_sl", ""));   // 保存处理后gif原比例图名称(char_gif1688.gif)
                 uploadSucc = true;
-                $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
+                $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());*/
             } else {
-                ktUtils.alert("transpic", "转化图片失败，请重新转化");
+                ktUtils.errorMsg("转化图片失败，请重新转化");
             }
         });
 
         // 若已经上传，先清除图片
-        $("input[name='image']").on('click', function () {
+        $("input[name='file']").on('click', function () {
             if (uploadSucc) {
                 control.fileinput("clear");
                 uploadSucc = false;
@@ -165,6 +178,36 @@
 
             // 渲染页签
             ktUtils.renderNavTab(3, 'image');
+        }
+
+        function handle(fileName) {
+            showLoading();
+            $.ajax({
+                type:'POST',
+                url: ktConfig.api.gif2AsciiGif,
+                data: {fileName:fileName},
+                success: function (r) {
+                    if (r.errorCode === 200) {
+                        /*var url = r.data;
+                        var handleFileName = url.substring(url.lastIndexOf("/") + 1);
+                        handleFileEle.val(handleFileName.replace("_sl", ""));   // 保存处理后gif原比例图名称(char_gif1688.gif)
+                        $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
+                        $('#handle').parent().attr('href', ktcfg.ctx + url);
+                        ktUtils.fixedImg(ktcfg.ctx + url);*/
+
+                        var img = r.data;
+                        handleFileEle.val(img.name.replace('_sl', ''));   // 保存处理后gif原比例图名称(char_gif1688.gif)
+                        var url = '/comm/static/image/' + img.name;
+                        log(img.base64);
+                        $("#handle").attr("src", img.base64);
+                        $('#handle').parent().attr('href', ktcfg.ctx + url);
+                        ktUtils.fixedImg(img.base64);
+                    } else {
+                        ktUtils.errorMsg("转化图片失败，请重新上传转化。");
+                    }
+                    finishLoading(r.errorCode);
+                }
+            });
         }
 
     });
