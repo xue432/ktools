@@ -1,6 +1,11 @@
 package com.kalvin.ktools.controller;
 
+import cn.hutool.core.util.StrUtil;
+import com.kalvin.ktools.comm.annotation.SiteStats;
+import com.kalvin.ktools.entity.R;
+import com.kalvin.ktools.exception.KTException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -9,17 +14,22 @@ import org.springframework.web.servlet.ModelAndView;
  * 主页控制层
  */
 @RestController
-@RequestMapping(value = "index")
+@RequestMapping(value = "/")
 public class IndexController {
 
-    @GetMapping(value = "do/not/tell/otherOne")
+    @SiteStats
+    @GetMapping(value = "")
     public ModelAndView index() {
-        return new ModelAndView("index");
+        return new ModelAndView("index.html");
     }
 
+    @SiteStats
     @GetMapping(value = "get/data")
-    public String getData() {
-        return "{code:200,msg:'请求成功'}";
+    public R getData(String key) {
+        if (StrUtil.isEmpty(key)) {
+            throw new KTException("key is null");
+        }
+        return R.ok(key);
     }
 
     @GetMapping(value = "test")

@@ -40,12 +40,4 @@ public class IoKit {
         }
         return file;
     }
-
-    public static void delFiles(File... files) {
-        for (File file : files) {
-            if (file.exists()) {
-                file.delete();
-            }
-        }
-    }
 }
