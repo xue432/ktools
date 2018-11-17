@@ -143,7 +143,7 @@ public class SiteInterceptor {
         }
         TrafficRecords records = new TrafficRecords();
         records.setIp(ip);
-        records.setMac("0C-9D-92-BB-D0-BB");    // todo 暂时写死的
+        records.setMac("00-00-00-00-00-00");    // todo 暂时写死的
         records.setGegraphicPos(address);
         records.setIsp(isp);
         records.setReqMethod(name);

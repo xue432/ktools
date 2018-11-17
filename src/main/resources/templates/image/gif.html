@@ -106,9 +106,9 @@
         var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUpload, null, null,
                 {showUpload: true, showCaption: false, maxFileCount: 50, layoutTemplates: {actionZoom: ''}});
         init();
+
         // 选择文件后事件
         control.on("filebatchselected", function(event, files) {
-            // control.fileinput("upload");
         });
         // 上传前事件
         control.on('filepreajax', function(event, previewId, index) {
@@ -123,23 +123,6 @@
             } else {
                 var duration = $('#duration').find('option:selected').val();
                 handle(imageArr, duration);
-                /*$.ajax({
-                    type:'POST',
-                    url: ktConfig.api.image2Gif,
-                    data: {imageArr: imageArr.toString(),
-                        duration: $('#duration').find('option:selected').val()},
-                    success: function (r) {
-                        if (r.errorCode === 200) {
-                            var url = r.data;
-                            var handleFileName = url.substring(url.lastIndexOf("/") + 1);
-                            handleFileEle.val(handleFileName.replace("_sl", ""));   // 保存处理后gif原比例图名称(char_gif1688.gif)
-                            $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
-                        } else {
-                            ktUtils.showMsg("转化图片失败，请重新转化");
-                            return false;
-                        }
-                    }
-                });*/
             }
         });
 
@@ -163,18 +146,6 @@
             } else {
                 // ktUtils.errorMsg('上传图片失败，请重新上传');
             }
-        });
-
-        // 同步上传成功结果处理
-        control.on('filebatchuploadsuccess', function(event, data, previewId, index) {
-            log(data.response);
-            if (data.response.errorCode === 200) {
-                imageArr.push(data.response.data);
-                uploadSucc = true;
-            } else {
-                // ktUtils.errorMsg('上传图片失败，请重新上传');
-            }
-
         });
 
         /**
@@ -205,34 +176,41 @@
             $('[data-toggle="tooltip"]').tooltip();
         }
 
+        var ajax = true;
         function handle(imageArr, duration) {
-            showLoading();
-            $.ajax({
-                type:'POST',
-                url: ktConfig.api.image2Gif,
-                async: false,
-                data: {imageArr: imageArr.toString(), duration: duration},
-                success: function (r) {
-                    if (r.errorCode === 200) {
-                        /*var url = r.data;
-                        var handleFileName = url.substring(url.lastIndexOf("/") + 1);
-                        handleFileEle.val(handleFileName.replace("_sl", ""));   // 保存处理后gif原比例图名称(char_gif1688.gif)
-                        $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
-                        $('#handle').parent().attr('href', ktcfg.ctx + url);
-                        ktUtils.fixedImg(ktcfg.ctx + url);*/
-
-                        var img = r.data;
-                        handleFileEle.val(img.name.replace('_sl', ''));   // 保存处理后gif原比例图名称(char_gif1688.gif)
-                        var url = '/comm/static/image/' + img.name;
-                        $("#handle").attr("src", img.base64);
-                        $('#handle').parent().attr('href', ktcfg.ctx + url);
-                        ktUtils.fixedImg(img.base64);
-                    } else {
-                        ktUtils.errorMsg("转化图片失败，请重新上传转化。");
+            if (ajax) {
+                ajax = false;
+                showLoading();
+                $.ajax({
+                    type:'POST',
+                    url: ktConfig.api.image2Gif,
+                    async: false,
+                    data: {imageArr: imageArr.toString(), duration: duration},
+                    success: function (r) {
+                        if (r.errorCode === 200) {
+                            var img = r.data;
+                            handleFileEle.val(img.name.replace('_sl', ''));   // 保存处理后gif原比例图名称(char_gif1688.gif)
+                            var url = '/comm/static/image/' + img.name;
+                            $("#handle").attr("src", img.base64);
+                            $('#handle').parent().attr('href', ktcfg.ctx + url);
+                            ktUtils.fixedImg(img.base64);
+                        } else {
+                            ktUtils.errorMsg("合成GIF动图失败，请重新合成。" + r.msg);
+                        }
+                    },
+                    complete: function (xmlHttpRequest) {
+                        var r = xmlHttpRequest.responseJSON;
+                        if (r.errorCode) {
+                            finishLoading(r.errorCode);
+                        } else {
+                            finishLoading(r.status);
+                            ktUtils.errorMsg('request fail:' + r.status);
+                        }
+                        ajax = true;
                     }
-                    finishLoading(r.errorCode);
-                }
-            });
+                });
+            }
+
         }
 
     });

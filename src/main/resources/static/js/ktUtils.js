@@ -5,31 +5,8 @@
 var ktUtils = {
     /**
      * 信息提示框（注意：使用它后面需要加 return false; 否则无效）
-     * @param elementId 需要在下面弹出的那个元素ID
-     * @param message 提示内容
+     * @param msg 提示内容
      */
-    alert: function (elementId, message) {
-        var alertId = "alert_" + elementId;
-        var alertEle = $("#" + alertId);
-        var tarEle = $('#' + elementId);
-
-        if (alertEle.length === 0) {
-            tarEle.after(
-                '<div id="' + alertId + '" class="alert alert-info fade show" style="z-index: 1; position: absolute;">' +
-                '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
-                '<strong>小提示：</strong>' + message +
-                '</div>'
-            );
-
-            // 注册点击任意位置移除提示框事件
-            $("body").on("click", function () {
-                var alertAfterEle = $("#" + alertId);
-                if (alertAfterEle.length !== 0) {
-                    alertAfterEle.remove();
-                }
-            });
-        }
-    },
     hintMsg: function (msg) {
         this.showMsg('hint', msg);
     },
@@ -194,6 +171,9 @@ var ktUtils = {
     }
 };
 
+/**
+ * 日志输出
+ */
 var log = function () {
     if (ktConfig.logEnable) {
         var len = arguments.length;
@@ -212,6 +192,9 @@ var logv = function (val) {
     }
 };
 
+/**
+ * 错误日志输出
+ */
 var error = function () {
     var len = arguments.length;
     if (len === 1) {
@@ -240,7 +223,7 @@ function interval() {
         if (pro >= 99.8) {    // 如果大于或等于99%就停止定时器
             clearInterval(itl);
         }
-    }, 10);
+    }, 20);
 }
 
 /**
@@ -267,7 +250,7 @@ function finishLoading(status){
         pbaEle.addClass('bg-success');
     } else {
         pbaEle.addClass('bg-danger');
-        pbaEle.text('转化失败');
+        pbaEle.text('转换失败');
     }
     pbaEle.removeClass('progress-bar-striped');
     pbaEle.removeClass('progress-bar-animated');

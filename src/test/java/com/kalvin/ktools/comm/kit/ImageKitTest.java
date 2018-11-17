@@ -4,8 +4,6 @@ import cn.hutool.http.HttpUtil;
 import com.kalvin.ktools.BaseTest;
 import org.junit.Test;
 
-import java.io.File;
-
 public class ImageKitTest extends BaseTest {
 
     @Test

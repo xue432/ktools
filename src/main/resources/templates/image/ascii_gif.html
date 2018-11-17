@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="p-lg-5">
-                        <!--转化后显示图片区块-->
+                        <!--转换后显示图片区块-->
                         <div class="row kt-border">
                             <div class="col-sm-12" style="height: 300px">
                                 <a th:href="@{/static/image/char_gif.gif}" target="_blank" title="可点击图片下载缩略图">
@@ -65,7 +65,7 @@
                         </div>
                         <div class="row mt-1">
                             <div class="col-xl|sm-12">
-                                <button class="btn" id="transpic" style="background: #20c997;color: white; margin-left: 0;">开始转化</button>
+                                <button class="btn" id="transpic" style="background: #20c997;color: white; margin-left: 0;">开始转换</button>
                                 <button class="btn btn-primary" id="download" style="margin-left: 1rem;">下载高清图</button>
                             </div>
                         </div>
@@ -105,34 +105,19 @@
 
         // 选择文件后事件
         control.on("filebatchselected", function(event, files) {
-            // control.fileinput("upload");
         });
+        
         // 上传前事件
         control.on('filepreajax', function(event, previewId, index) {
             $(".file-preview").next().remove();
         });
 
-        // 开始转化
+        // 开始转换
         $("#transpic").on('click', function () {
             if (!uploadSucc) {
                 control.fileinput("upload");
             } else {
                 handle(uploadFileEle.val());
-                /*var hfn = handleFileEle.val();
-                var uploadFileName = hfn.replace("char_gif", "upload");
-                $.ajax({
-                    type:'POST',
-                    url: ktConfig.api.gif2AsciiGif,
-                    data: {fileName: uploadFileName},
-                    success: function (r) {
-                        var url = r.data;
-                        if (r.errorCode === 200) {
-                            $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
-                        } else {
-                            ktUtils.alert("transpic", "转化图片失败，请重新转化");
-                        }
-                    }
-                });*/
             }
         });
 
@@ -140,7 +125,7 @@
             var handleFileName = handleFileEle.val();
             log("download file=", handleFileName);
             if (!handleFileName) {
-                ktUtils.hintMsg("木有发现有图片，请先转化哦~~");
+                ktUtils.hintMsg("木有发现有图片，请先转换哦~~");
                 return false;
             }
             // 开始下载
@@ -153,13 +138,8 @@
                 uploadFileEle.val(data.response.data);   // 保存upload filename
                 uploadSucc = true;
                 handle(data.response.data);
-                /*var url = data.response.data;
-                var handleFileName = url.substring(url.lastIndexOf("/") + 1);
-                handleFileEle.val(handleFileName.replace("_sl", ""));   // 保存处理后gif原比例图名称(char_gif1688.gif)
-                uploadSucc = true;
-                $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());*/
             } else {
-                ktUtils.errorMsg("转化图片失败，请重新转化");
+                ktUtils.errorMsg("转换图片失败，请重新转换");
             }
         });
 
@@ -180,34 +160,40 @@
             ktUtils.renderNavTab(3, 'image');
         }
 
+        var ajax = true;
         function handle(fileName) {
-            showLoading();
-            $.ajax({
-                type:'POST',
-                url: ktConfig.api.gif2AsciiGif,
-                data: {fileName:fileName},
-                success: function (r) {
-                    if (r.errorCode === 200) {
-                        /*var url = r.data;
-                        var handleFileName = url.substring(url.lastIndexOf("/") + 1);
-                        handleFileEle.val(handleFileName.replace("_sl", ""));   // 保存处理后gif原比例图名称(char_gif1688.gif)
-                        $("#handle").attr("src", ktcfg.ctx + url + "?t=" + Math.random());
-                        $('#handle').parent().attr('href', ktcfg.ctx + url);
-                        ktUtils.fixedImg(ktcfg.ctx + url);*/
-
-                        var img = r.data;
-                        handleFileEle.val(img.name.replace('_sl', ''));   // 保存处理后gif原比例图名称(char_gif1688.gif)
-                        var url = '/comm/static/image/' + img.name;
-                        log(img.base64);
-                        $("#handle").attr("src", img.base64);
-                        $('#handle').parent().attr('href', ktcfg.ctx + url);
-                        ktUtils.fixedImg(img.base64);
-                    } else {
-                        ktUtils.errorMsg("转化图片失败，请重新上传转化。");
+            if (ajax) {
+                ajax = false;
+                showLoading();
+                $.ajax({
+                    type:'POST',
+                    url: ktConfig.api.gif2AsciiGif,
+                    data: {fileName:fileName},
+                    success: function (r) {
+                        if (r.errorCode === 200) {
+                            var img = r.data;
+                            handleFileEle.val(img.name.replace('_sl', ''));   // 保存处理后gif原比例图名称(char_gif1688.gif)
+                            var url = '/comm/static/image/' + img.name;
+                            log(img.base64);
+                            $("#handle").attr("src", img.base64);
+                            $('#handle').parent().attr('href', ktcfg.ctx + url);
+                            ktUtils.fixedImg(img.base64);
+                        } else {
+                            ktUtils.errorMsg("转换图片失败，请重新上传转换。" + r.msg);
+                        }
+                    },
+                    complete: function (xmlHttpRequest) {
+                        var r = xmlHttpRequest.responseJSON;
+                        if (r.errorCode) {
+                            finishLoading(r.errorCode);
+                        } else {
+                            finishLoading(r.status);
+                            ktUtils.errorMsg('request fail:' + r.status);
+                        }
+                        ajax = true;
                     }
-                    finishLoading(r.errorCode);
-                }
-            });
+                });
+            }
         }
 
     });
