@@ -3,6 +3,7 @@ package com.kalvin.ktools.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpUtil;
+import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.constant.Constant;
 import com.kalvin.ktools.comm.kit.HttpServletContextKit;
 import com.kalvin.ktools.comm.kit.ImageKit;
@@ -54,31 +55,37 @@ public class ImageController {
     @Value(value = "${kt.kapi.gif.toAsciiGif.url}")
     private String kApiGifToAsciiGifUrl;
 
+    @SiteStats
     @GetMapping(value = "artPic")
     public ModelAndView artPic() {
         return new ModelAndView("image/art_pic.html");
     }
 
+    @SiteStats
     @GetMapping(value = "asciiPic")
     public ModelAndView asciiPic() {
         return new ModelAndView("image/ascii_pic.html");
     }
 
+    @SiteStats
     @GetMapping(value = "gif")
     public ModelAndView gif() {
         return new ModelAndView("image/gif.html");
     }
 
+    @SiteStats
     @GetMapping(value = "watermark")
     public ModelAndView watermark() {
         return new ModelAndView("image/ascii_pic.html");
     }
 
+    @SiteStats
     @GetMapping(value = "asciiGif")
     public ModelAndView asciiGif() {
         return new ModelAndView("image/ascii_gif.html");
     }
 
+    @SiteStats
     @GetMapping(value = "colorAsciiPic")
     public ModelAndView colorAsciiPic() {
         return new ModelAndView("image/ascii_color_pic.html");
@@ -89,6 +96,7 @@ public class ImageController {
      * @param file f
      * @return r
      */
+    @SiteStats
     @PostMapping(value = "upload")
     public R upload(@RequestParam(value = "file") MultipartFile file) {
         if (file == null) {
@@ -115,6 +123,7 @@ public class ImageController {
      * @param type  转化类型
      * @return r
      */
+    @SiteStats
     @PostMapping(value = "handle")
     public R handle(String fileName, Integer type) {
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -131,6 +140,7 @@ public class ImageController {
         return r;
     }
 
+    @SiteStats
     @PostMapping(value = "uploadAndHandle")
     public R uploadAndHandle(Integer type, @RequestParam(value = "file") MultipartFile file) {
         final R upload = this.upload(file);
@@ -142,6 +152,7 @@ public class ImageController {
      * @param fileName 图片文件名
      * @return r
      */
+    @SiteStats
     @GetMapping(value = "download")
     public R download(String fileName) {
         if (StrUtil.isEmpty(fileName)) {
@@ -166,6 +177,7 @@ public class ImageController {
      * @param file file
      * @return r
      */
+    @SiteStats
     @PostMapping(value = "to/ascii")
     public R toAscii(@RequestParam(value = "file") MultipartFile file) {
         R upload = this.upload(file);
@@ -181,6 +193,7 @@ public class ImageController {
      * @param duration 合成gif动图，每张图片时间间隔；单位（秒）
      * @return r
      */
+    @SiteStats
     @PostMapping(value = "to/gif")
     public R toGif(String[] imageArr, Float duration) {
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -203,6 +216,7 @@ public class ImageController {
      * @param fileName 文件名，如果为空则需要先上传
      * @return r
      */
+    @SiteStats
     @PostMapping(value = "gif/2AsciiGif")
     public R gif2AsciiGif(String fileName) {
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -224,6 +238,7 @@ public class ImageController {
      * @param fileName 文件名，如果为空则需要先上传
      * @return r
      */
+    @SiteStats
     @PostMapping(value = "to/colorAsciiPic")
     public R toColorAsciiPic(String fileName) {
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -246,6 +261,7 @@ public class ImageController {
      * @param file file
      * @return r
      */
+    @SiteStats
     @PostMapping(value = "add/watermark")
     public R addWatermark(@RequestParam(value = "file") MultipartFile file) {
         return R.ok();

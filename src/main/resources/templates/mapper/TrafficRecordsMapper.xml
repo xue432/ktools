@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kalvin.ktools.dao.TrafficRecordsDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kalvin.ktools.entity.TrafficRecords">
+        <id column="id" property="id" />
+        <result column="ip" property="ip" />
+        <result column="mac" property="mac" />
+        <result column="isp" property="isp" />
+        <result column="gegraphic_pos" property="gegraphicPos" />
+        <result column="req_url" property="reqUrl" />
+        <result column="req_url_type" property="reqUrlType" />
+        <result column="req_method" property="reqMethod" />
+        <result column="req_status" property="reqStatus" />
+        <result column="req_time" property="reqTime" />
+        <result column="req_type" property="reqType" />
+        <result column="req_datetime" property="reqDatetime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, ip, mac, isp, gegraphic_pos, req_url, req_url_type, req_method, req_status, req_time, req_type, req_datetime
+    </sql>
+
+</mapper>

@@ -28,4 +28,7 @@ public class Constant {
     public final static String HANDLE_PREFIX_FILENAME_GIF = "gif";
     public final static String HANDLE_PREFIX_FILENAME_CHAR_GIF = "char_gif";
     public final static String HANDLE_PREFIX_FILENAME_CHAR_PIC = "char_pic";
+
+    public final static int REQ_URL_TYPE_PAGE = 0;  // 请求url类型：页面
+    public final static int REQ_URL_TYPE_API = 1;  // 请求url类型：API
 }

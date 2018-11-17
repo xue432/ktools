@@ -1,6 +1,7 @@
 package com.kalvin.ktools.controller;
 
 import cn.hutool.http.HttpUtil;
+import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.kit.KApiKit;
 import com.kalvin.ktools.entity.R;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,11 +23,13 @@ public class TxtController {
     @Value(value = "${kt.kapi.txt.ascii.url}")
     private String kApiTxtAsciiUrl;
 
+    @SiteStats
     @GetMapping(value = "ascii")
     public ModelAndView ascii() {
         return new ModelAndView("txt/ascii_txt.html");
     }
 
+    @SiteStats
     @PostMapping(value = "to/ascii")
     public R toAscii(String txt, String font) {
         HashMap<String, Object> hashMap = new HashMap<>();
