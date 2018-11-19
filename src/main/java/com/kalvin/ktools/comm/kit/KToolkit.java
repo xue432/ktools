@@ -24,13 +24,19 @@ public class KToolkit {
      * @return address
      */
     public static String getIPInfo(String ip) {
-        String get = HttpUtil.get("http://ip.taobao.com/service/getIpInfo.php?ip=" + ip);
-        JSONObject jsonObject = JSONUtil.parseObj(get);
-        if ((int) jsonObject.get("code") == 1) {
-            throw new KTException("无效的IP");
+        try {
+            String get = HttpUtil.get("http://ip.taobao.com/service/getIpInfo.php?ip=" + ip, 2000);
+            JSONObject jsonObject = JSONUtil.parseObj(get);
+            if ((int) jsonObject.get("code") == 1) {
+                throw new KTException("无效的IP");
+            }
+            JSONObject d = (JSONObject) jsonObject.get("data");
+            return "" + d.get("country") + d.get("area") + d.get("region") + d.get("city") + (d.get("county").equals("XX") ? "" : d.get("county")) + " " + d.get("isp");
+        } catch (Exception e) {
+            LOGGER.info("获取IP信息时发生异常:", e.getMessage());
+            return null;
         }
-        JSONObject d = (JSONObject) jsonObject.get("data");
-        return "" + d.get("country") + d.get("area") + d.get("region") + d.get("city") + (d.get("county").equals("XX") ? "" : d.get("county")) + " " + d.get("isp");
+
     }
 
     /**

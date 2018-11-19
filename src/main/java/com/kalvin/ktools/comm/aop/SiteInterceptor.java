@@ -128,8 +128,12 @@ public class SiteInterceptor {
         String url = request.getRequestURI();
         String method = request.getMethod();
         String ipInfo = KToolkit.getIPInfo(ip);   // ip信息
-        String address = ipInfo.split(" ")[0];
-        String isp = ipInfo.split(" ")[1];
+        String address = "";
+        String isp = "";
+        if (ipInfo != null) {
+            address = ipInfo.split(" ")[0];
+            isp = ipInfo.split(" ")[1];
+        }
 //        LOGGER.info("ip={}, url={}, method={}, address={}, isp={}", ip, url, method, address, isp);
 
         MethodSignature signature = (MethodSignature) pjp.getSignature();
