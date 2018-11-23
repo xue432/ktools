@@ -12,6 +12,9 @@ public class Constant {
     public final static int OTHER_FAIL_CODE = 333;    // 其它错误
     public final static String OK_MSG = "请求成功";
     public final static String FAIL_MSG = "请求失败";
+    public final static int STATUS_0 = 0;   // 可用状态
+    public final static int STATUS_1 = 1;   // 禁用状态
+    public final static String CACHE_NAME = "ktCache";  // 缓存名称
 
     // ktools handle image url
     public final static String HANDLE_IMAGE_URL = "/static/image/handle/";

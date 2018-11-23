@@ -17,7 +17,7 @@ public class ExceptHandler {
 
     @ExceptionHandler(KTException.class)
     public R handleKtException(KTException e) {
-        LOGGER.error("KTools异常：", e);
+        LOGGER.error("KTools异常：{}", e);
         if (e.getErrorCode() == null) {
             return R.fail(e.getMsg());
         }
@@ -26,7 +26,7 @@ public class ExceptHandler {
 
     @ExceptionHandler(Exception.class)
     public R handleException(Exception e) {
-        LOGGER.error("KTools异常：", e);
+        LOGGER.error("KTools异常：{}", e);
         return R.fail(Constant.OTHER_FAIL_CODE, e.getMessage());
     }
 }

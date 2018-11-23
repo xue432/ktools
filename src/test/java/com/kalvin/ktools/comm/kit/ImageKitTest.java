@@ -24,7 +24,15 @@ public class ImageKitTest extends BaseTest {
 //        LOGGER.info("taobao_ip1={}", get1);
         String address = KToolkit.getIPInfo(ip);
 //        String address = KToolkit.getStr();
-        LOGGER.info("toolKit={}", address);
 
+        LOGGER.info("toolKit={}", address);
+        LOGGER.info("os.name={}", System.getProperty("os.name"));
+
+
+    }
+
+    public static void main(String[] args) {
+        KToolkit.imageAddWaterMark("H:\\Kalvin\\我的图片\\think.jpg",// 20090910050659531
+                "http://tools.kalvinbg.cn");// http://tools.kalvinbg.cn
     }
 }

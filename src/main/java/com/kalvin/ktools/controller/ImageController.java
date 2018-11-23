@@ -5,10 +5,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpUtil;
 import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.constant.Constant;
-import com.kalvin.ktools.comm.kit.HttpServletContextKit;
-import com.kalvin.ktools.comm.kit.ImageKit;
-import com.kalvin.ktools.comm.kit.IoKit;
-import com.kalvin.ktools.comm.kit.KApiKit;
+import com.kalvin.ktools.comm.kit.*;
 import com.kalvin.ktools.entity.ImageEntity;
 import com.kalvin.ktools.entity.R;
 import com.kalvin.ktools.exception.KTException;
@@ -235,7 +232,7 @@ public class ImageController {
 
     /**
      * 图片转彩色ascii图片
-     * @param fileName 文件名，如果为空则需要先上传
+     * @param fileName 文件名
      * @return r
      */
     @SiteStats
@@ -257,14 +254,16 @@ public class ImageController {
     }
 
     /**
-     * todo 图片加水印功能
-     * @param file file
+     * 图片加水印功能
+     * @param fileName 文件名
+     * @param waterMarkContent 水印文字
      * @return r
      */
     @SiteStats
     @PostMapping(value = "add/watermark")
-    public R addWatermark(@RequestParam(value = "file") MultipartFile file) {
-        return R.ok();
+    public R addWatermark(String fileName, String waterMarkContent) {
+        String handleName = KToolkit.imageAddWaterMark(imageUploadDir + fileName, waterMarkContent);
+        return R.ok(handleName);
     }
 
 }

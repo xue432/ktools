@@ -3,6 +3,34 @@
  * @type {index|BigInt|number|*|jQuery}
  */
 
+// 初始化navbar菜单
+var allMenus = ktUtils.getAllMenus();
+var navbarEle = $('#navbarSupportedContent').find('ul');
+log('allMenus=', allMenus);
+if (allMenus) {
+    var sb = new StringBuilder();
+    allMenus.forEach(function (item) {
+        if (item['menu'].length > 0) {
+            sb.append('                <li class="nav-item dropdown">');
+            sb.append('                    <a class="nav-link dropdown-toggle" href="' + ktUtils.handleUrl(item['url']) + '">'+item['module']+'</a>');
+            sb.append('                    <div class="dropdown-menu mt-0">');
+            // 遍历子菜单
+            item['menu'].forEach(function (itm) {
+                sb.append('                         <a class="dropdown-item" href="' + ktUtils.handleUrl(itm['url']) + '">'+itm['name']+'</a>');
+            });
+            sb.append('                         <div class="dropdown-divider"></div>');
+            sb.append('                     </div>');
+            sb.append('                 </li>');
+        } else {
+            sb.append('                <li class="nav-item">');
+            sb.append('                    <a class="nav-link" href="' + ktUtils.handleUrl(item['url']) + '">'+item['module']+'</a>');
+            sb.append('                </li>');
+        }
+    });
+    navbarEle.append(sb.toString());
+}
+
+
 // 页签选择更新面包悄事件
 $('.nav-tabs').find('.nav-link').on('click', function (event) {
     $('.breadcrumb').find('.active').text($(event.currentTarget).text());

@@ -19,11 +19,11 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 public class Generator {
 
     private static String packageName = "com.kalvin.ktools"; // 生成的包名
-    private static String[] tableNames = {"kt_traffic_records", "kt_traffic_statistics"};   // 表名
-    private static String tablePrefix = "kt_";    // 配置了会自动去掉表名的前缀
+    private static String[] tableNames = {"sys_menu"};   // 表名
+    private static String tablePrefix = "sys_";    // 配置了会自动去掉表名的前缀
     private static boolean serviceNameStartWithI = false;  //user -> UserService, 设置成true: user -> IUserService
     private static String author = "Kalvin";    // 作者
-    private static String outputDir = "D://genCode";   // 代码生成的路径目录
+    private static String outputDir = "H://genCode";   // 代码生成的路径目录
     private static String dbUrl = "jdbc:mysql://localhost:3306/ktools?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&tinyInt1isBit=false";
     private static String dbUsername = "root";
     private static String dbPassword = "root";
@@ -35,28 +35,13 @@ public class Generator {
     private static void generateByTables(boolean serviceNameStartWithI, String packageName, String... tableNames) {
         GlobalConfig config = new GlobalConfig();
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
-        /*new MySqlTypeConvert() {
-            *//**
-             * 自定义数据库表字段类型转换
-             * @param fieldType
-             * @return
-             *//*
-                    *//*@Override
-                    public DbColumnType processTypeConvert(String fieldType) {
-//                        System.out.println("转换类型：" + fieldType);
-                        return super.processTypeConvert(fieldType);
-                    }*//*
-        }*/
         dataSourceConfig.setDbType(DbType.MYSQL).setUrl(dbUrl).setUsername(dbUsername).setPassword(dbPassword)
-                .setDriverName("com.mysql.cj.jdbc.Driver").setTypeConvert(new ITypeConvert() {
-            @Override
-            public IColumnType processTypeConvert(GlobalConfig globalConfig, String s) {
-                if (s.contains("tinyint(1)")) {
-                    return DbColumnType.INTEGER;
-                }
-                return new MySqlTypeConvert().processTypeConvert(globalConfig, s);
-            }
-        });
+                .setDriverName("com.mysql.cj.jdbc.Driver").setTypeConvert((globalConfig, s) -> {
+                    if (s.contains("tinyint(1)")) { // 自定义数据库表字段类型转换
+                        return DbColumnType.INTEGER;
+                    }
+                    return new MySqlTypeConvert().processTypeConvert(globalConfig, s);
+                });
         StrategyConfig strategyConfig = new StrategyConfig();
         strategyConfig
                 .setCapitalMode(true)
@@ -65,7 +50,6 @@ public class Generator {
                 .setTablePrefix(tablePrefix)
                 .setNaming(NamingStrategy.underline_to_camel)
                 .setInclude(tableNames)//修改替换成你需要的表名，多个表名传数组
-//                .setSuperEntityClass("com.kkucar.kkyy.common.base.BasePo")
                 .setRestControllerStyle(true);
         config.setActiveRecord(false)
                 .setAuthor(author)

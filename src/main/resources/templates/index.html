@@ -21,7 +21,7 @@
     <div class="container p-0">
         <nav>
             <ol class="breadcrumb mb-0 kt-bread-bg">
-                <li class="breadcrumb-item kt-fs13"><a>KTools</a></li>
+                <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
                 <li class="breadcrumb-item kt-fs13 active"><a href="#">Home</a></li>
             </ol>
         </nav>
@@ -33,6 +33,7 @@
         <div class="row ml-1 mr-1 mt-2">
             <label class="kt-fc-title mb-0 mt-3" style="background: #f5ecec">在线工具</label>
             <div id="toolsBox" class="col-sm-12 kt-border">
+
             </div>
         </div>
 
@@ -177,6 +178,11 @@
                     '                        <a class="kt-fc-title" href="' + kfc + obj.url + '" target="_blank">'+obj.name+'工具&nbsp;<i class="glyphicon glyphicon-forward"></i></a>\n' +
                     '                    </div>\n' +
                     '                </div>');
+
+            });
+
+            var allMenus = ktUtils.getAllMenus();
+            allMenus.forEach(function (item) {  // todo
 
             });
 

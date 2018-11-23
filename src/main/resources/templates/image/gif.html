@@ -20,7 +20,7 @@
 <div class="container p-0">
     <nav>
         <ol class="breadcrumb mb-0 kt-bread-bg">
-            <li class="breadcrumb-item kt-fs13"><a>KTools</a></li>
+            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
             <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
             <li class="breadcrumb-item kt-fs13"><a href="#">图片工具</a></li>
             <li class="breadcrumb-item kt-fs13 active">图片合成GIF动图</li>
@@ -154,7 +154,7 @@
         function init() {
 
             // 渲染页签
-            ktUtils.renderNavTab(5, 'image');
+            ktUtils.renderNavTab(ktConfig.moduleType.image);
 
             // 初始化时间间隔选项
             var i = 0.1;

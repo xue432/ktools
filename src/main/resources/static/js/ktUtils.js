@@ -106,30 +106,32 @@ var ktUtils = {
     },
     /**
      * 渲染image tab页签
-     * @param key 用于区分哪个页签(1,2,3,4,5...)
+     * @param toolName 工具名称(请务必与数据库保持一致)
      * @param navTabType 页签类型(image,txt,video...)
      */
-    renderNavTab: function (key, navTabType) {
-        var tabArr;
-        if (navTabType === 'image') {
-            tabArr = ktConfig.navTabs.image;
-        } else if (navTabType === 'txt') {
-            tabArr = ktConfig.navTabs.txt;
-        } else if (navTabType === 'video') {
-
-        }
-        if (!tabArr || !key) {
+    renderNavTab: function (navTabType) {
+        var tabArr = [];
+        var toolName = $('.breadcrumb').find('.active').text(); // 工具名称(请务必与数据库保持一致)
+        var allMenus = this.getAllMenus();
+        allMenus.forEach(function (item) {
+            if (item['moduleType'] === navTabType) {
+                item['menu'].forEach(function (itm) {
+                    tabArr.push(itm);
+                });
+            }
+        });
+        if (!tabArr || !toolName) {
             error('renderNavTab error: tabArr or key must be not null');
             return;
         }
         tabArr.forEach(function (obj) {
-            if (obj.key === key) {
+            if (obj.name === toolName) {
                 $('.nav-tabs').append('<li class="nav-item">\n' +
-                    '            <a class="nav-link kt-fs13 active" href="' + ktcfg.ctx + obj.url + '">' + obj.name + '</a>\n' +
+                    '            <a class="nav-link kt-fs13 active" href="' + kfc + obj.url + '">' + obj.name + '</a>\n' +
                     '        </li>');
             } else {
                 $('.nav-tabs').append('<li class="nav-item">\n' +
-                    '            <a class="nav-link kt-fs13" href="'+ktcfg.ctx + obj.url+'">'+obj.name+'</a>\n' +
+                    '            <a class="nav-link kt-fs13" href="'+kfc + obj.url+'">'+obj.name+'</a>\n' +
                     '        </li>');
             }
         });
@@ -168,6 +170,88 @@ var ktUtils = {
                 }
             }
         };
+    },
+    /**
+     * 处理url
+     * @param url
+     * @returns {string}
+     */
+    handleUrl: function (url) {
+        return url ? (kfc + url) : '#';
+    },
+    /**
+     * 同步get
+     * @param url 请求地址：image/ascii
+     * @param params 参数：{name:'kalvin'}
+     */
+    get: function (url, params) {
+        return this.ajx(url, params, 'GET');
+    },
+    /**
+     * 同步post
+     * @param url 请求地址：image/ascii
+     * @param params 参数：{name:'kalvin'}
+     */
+    post: function (url, params) {
+        return this.ajx(url, params, 'POST');
+    },
+    ajx: function (url, params, method) {
+        var result = "";
+        if (!url) {
+            return result;
+        }
+        if (!params) {
+            params = {};
+        }
+        if (!method) {
+            method = 'GET';
+        }
+        $.ajax({
+            type: method,
+            url: kfc + url,
+            data: params,
+            async: false,
+            success: function (r) {
+                result = r;
+            }
+        });
+        return result;
+    },
+    setCookie: function (key, val) {
+        // JSON.stringify(allMenus)
+        // expires：（Number|Date）有效期；设置一个整数时，单位是天；也可以设置一个日期对象作为Cookie的过期日期；
+        // path：（String）创建该Cookie的页面路径；
+        // domain：（String）创建该Cookie的页面域名；
+        // secure：（Booblean）如果设为true，那么此Cookie的传输会要求一个安全协议，例如：HTTPS；
+        $.cookie(key, JSON.stringify(val), {
+            expires: 7,
+            path: '/'
+            // domain: 'jquery.com',
+            // secure: true
+        });
+    },
+    getCookie: function (key) {
+        var val = $.cookie(key);
+        if (val) {
+            return $.parseJSON(val);
+        }
+        return val;
+    },
+    delCookie: function (key) {
+        $.cookie(key, '', {expires: -1, path: '/'});
+    },
+    getAllMenus: function () {
+        var allMenus = ktUtils.getCookie('allMenus');   // 优先拿cookie中的值
+        if (!allMenus) {    // 若cookie没有值，则从后台获取
+            allMenus = ktUtils.get(ktConfig.api.allMenus);
+            if (allMenus.errorCode === 200) {
+                ktUtils.setCookie('allMenus', allMenus.data); // 保存到cookie中
+                return allMenus.data;
+            } else {
+                return '';
+            }
+        }
+        return allMenus;
     }
 };
 
@@ -186,12 +270,6 @@ var log = function () {
     }
 };
 
-var logv = function (val) {
-    if (ktConfig.logEnable) {
-        console.log('val=', val);
-    }
-};
-
 /**
  * 错误日志输出
  */
@@ -203,6 +281,42 @@ var error = function () {
     if (len === 2) {
         console.error(arguments[0], arguments[1]);
     }
+};
+
+/**
+ * 自定义stringBuilder
+ * @constructor
+ */
+var StringBuilder =  function() {
+    this._stringArray = [];
+};
+
+StringBuilder.prototype.append = function(str) {
+    this._stringArray.push(str);
+};
+
+StringBuilder.prototype.toString = function() {
+    return this._stringArray.join("");
+};
+
+/**
+ * 自定义startWith
+ * @param str
+ * @returns {boolean}
+ */
+String.prototype.startWith=function(str){
+    var reg=new RegExp("^"+str);
+    return reg.test(this);
+};
+
+/**
+ * 自定义endWith
+ * @param str
+ * @returns {boolean}
+ */
+String.prototype.endWith=function(str){
+    var reg=new RegExp(str+"$");
+    return reg.test(this);
 };
 
 /**
