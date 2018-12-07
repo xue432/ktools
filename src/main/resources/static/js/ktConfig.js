@@ -57,6 +57,7 @@ var ktConfig = {
         video2AsciiGif: kfc + '/video/to/asciiGif',
         allMenus: kfc + '/menu/all',
         stressTesting: kfc + '/dev/stressTesting',
-        getIpInfo: kfc + '/convenience/get/ipInfo'
+        getIpInfo: kfc + '/convenience/get/ipInfo',
+        qrCode2Image: kfc + '/convenience/qrCode/2Image'
     }
 };

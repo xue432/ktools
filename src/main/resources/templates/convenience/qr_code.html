@@ -45,13 +45,13 @@
                     <textarea class="form-control" rows="10" id="content" placeholder="二维码内容：可以为文字内容或者网址链接"></textarea>
                 </div>
                 <div class="col-sm-2 mt-lg-4 text-center">
-                    <button id="gen" class="btn btn-sm btn-primary mt-lg-5 glyphicon glyphicon-chevron-right">转换二维码</button>
-                    <button id="parse" class="btn btn-sm btn-secondary mt-2 glyphicon glyphicon-chevron-left">解析二维码</button>
-                    <select class="custom-select-sm mt-2" id="type">
+                    <select class="custom-select-sm mt-lg-5" id="type">
                         <option value="">二维码类型</option>
                         <option value="wx">微信二维码</option>
                         <option value="al">支付宝二维码</option>
                     </select>
+                    <button id="gen" class="btn btn-sm btn-primary mt-2 glyphicon glyphicon-chevron-right">转换二维码</button>
+                    <button id="parse" class="btn btn-sm btn-secondary mt-2 glyphicon glyphicon-chevron-left">解析二维码</button>
                     <button id="download" class="btn btn-sm btn-success mt-2 glyphicon glyphicon-download">下载二维码</button>
                     <!--<input type="text" class="form-control" id="selColor" placeholder="二维码颜色">-->
                 </div>
@@ -66,7 +66,7 @@
             <h4 class="kt-fs16">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
-                <p class="kt-fs13 kt-fc-desc">这是工具简介。。</p>
+                <p class="kt-fs13 kt-fc-desc">在线生成二维码以及解析二维码内容。</p>
             </blockquote>
         </div>
     </div>
@@ -96,6 +96,7 @@
         var margin = ($("#qrCode").height() - icoEle.height()) / 2; //控制Logo图标的位置
         icoEle.css("margin", margin);
 
+        // todo 还有功能未完成
         $('#gen').on('click', function () {
             var content = $('#content').val();
             qrCode.clear();
@@ -110,14 +111,24 @@
             });*/
         });
 
+        $('#parse').on('click', function () {
+            alert('此功能未完成');
+        });
+
         $('#download').on('click', function () {
             var base64 = $('#qrCode').find('img').attr('src');
-            log(base64.split('base64,')[1]);
-            $.post('/convenience/qrCode/2Image', {base64: base64.split('base64,')[1]}, function (r) {
+            if (base64) {
+                log(base64.split('base64,')[1]);
+                var r = ktUtils.post(ktConfig.api.qrCode2Image, {base64: base64.split('base64,')[1]});
+                window.open(ktConfig.api.imageDownload + '?fileName=' + r.data);
+            } else {
+                ktUtils.hintMsg('先转换二维码');
+            }
+            /*$.post('/convenience/qrCode/2Image', {base64: base64.split('base64,')[1]}, function (r) {
                 if (r.errorCode === ktConfig.request.okCode) {
                     window.open(ktConfig.api.imageDownload + '?fileName=' +  r.data);
                 }
-            });
+            });*/
         });
     });
 </script>

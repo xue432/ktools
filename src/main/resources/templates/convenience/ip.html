@@ -67,7 +67,7 @@
             <h4 class="kt-fs16">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
-                <p class="kt-fs13 kt-fc-desc">这是工具简介。。</p>
+                <p class="kt-fs13 kt-fc-desc">查询IP所在的地理位置地址及网络供应商。</p>
             </blockquote>
         </div>
     </div>
@@ -86,7 +86,6 @@
         // http://119.29.193.127
         $('#query').on('click', function () {
             var ip = $('#ip').val();
-            log('ip=', ip);
             if (!ip) {
                 ktUtils.warnMsg('请填写IP地址');
                 return false;
