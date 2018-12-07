@@ -21,7 +21,7 @@ import javax.sql.DataSource;
  * mybatisPlus配置
  */
 @Configuration
-@MapperScan(basePackages = "com.kalvin.ktools.dao.*")
+@MapperScan(basePackages = "com.kalvin.ktools.dao")
 @EnableTransactionManagement
 public class MybatisPlusConfig {
 

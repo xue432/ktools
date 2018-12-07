@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>二维码生成</title>
+    <link th:replace="comm/base::icon"/>
+    <!--引入静态文件-->
+    <static th:replace="comm/base::static"></static>
+    <script th:src="@{/static/js/qrcode.min.js}"></script>
+
+</head>
+<body class="kt-body">
+
+<!--网页头部-->
+<div th:replace="comm/base::head"></div>
+
+<!--Ktools导航栏-->
+<div th:replace="comm/base::navbar"></div>
+
+<!--面包悄-->
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">便民工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">二维码生成</li>
+        </ol>
+    </nav>
+</div>
+
+<!--tab页签-->
+<div class="container p-0">
+    <ul class="nav nav-tabs kt-tab-bg">
+    </ul>
+</div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-ctx-bg">
+            <div class="row">
+                <div class="col-sm-6 mt-lg-4">
+                    <textarea class="form-control" rows="10" id="content" placeholder="二维码内容：可以为文字内容或者网址链接"></textarea>
+                </div>
+                <div class="col-sm-2 mt-lg-4 text-center">
+                    <button id="gen" class="btn btn-sm btn-primary mt-lg-5 glyphicon glyphicon-chevron-right">转换二维码</button>
+                    <button id="parse" class="btn btn-sm btn-secondary mt-2 glyphicon glyphicon-chevron-left">解析二维码</button>
+                    <select class="custom-select-sm mt-2" id="type">
+                        <option value="wx">微信二维码</option>
+                        <option value="al">支付宝二维码</option>
+                    </select>
+                    <button id="download" class="btn btn-sm btn-success mt-2 glyphicon glyphicon-download">下载二维码</button>
+                    <!--<input type="text" class="form-control" id="selColor" placeholder="二维码颜色">-->
+                </div>
+                <div class="col-sm-4 mt-lg-4">
+                    <img id="qrCodeIco" src="/static/ktico.ico" style="position: absolute;width: 30px; height: 30px;" />
+                    <div id="qrCode"></div>
+                </div>
+            </div>
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-ctx-bg mt-2 pt-2">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">这是工具简介。。</p>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script>
+    $(document).ready(function() {
+        ktUtils.renderNavTab(ktConfig.moduleType.convenience);
+
+        // 设置参数方式
+        var qrCode = new QRCode('qrCode', {
+            text: 'your content',
+            width: 256,
+            height: 256,
+            colorDark : '#000000',
+            colorLight : '#ffffff',
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        var icoEle = $("#qrCodeIco");
+        var margin = ($("#qrCode").height() - icoEle.height()) / 2; //控制Logo图标的位置
+        icoEle.css("margin", margin);
+
+        $('#gen').on('click', function () {
+            var content = $('#content').val();
+            qrCode.clear();
+            qrCode.makeCode(content);
+            /*qrcode = new QRCode('qrCode', {
+                text: content,
+                width: 256,
+                height: 256,
+                colorDark : '#000000',
+                colorLight : '#ffffff',
+                correctLevel : QRCode.CorrectLevel.H
+            });*/
+        });
+
+        $('#download').on('click', function () {
+            var base64 = $('#qrCode').find('img').attr('src');
+            log(base64.split('base64,')[1]);
+            $.post('/convenience/qrCode/2Image', {base64: base64}, function (r) {
+                if (r.errorCode === ktConfig.request.okCode) {
+                    window.open('');
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

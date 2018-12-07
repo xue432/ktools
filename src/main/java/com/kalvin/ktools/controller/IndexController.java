@@ -2,10 +2,9 @@ package com.kalvin.ktools.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.kalvin.ktools.comm.annotation.SiteStats;
-import com.kalvin.ktools.entity.R;
+import com.kalvin.ktools.dto.R;
 import com.kalvin.ktools.exception.KTException;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;

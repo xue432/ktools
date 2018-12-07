@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>在线压力测试</title>
+    <link th:replace="comm/base::icon"/>
+    <!--引入静态文件-->
+    <static th:replace="comm/base::static"></static>
+
+</head>
+<body class="kt-body">
+
+<!--网页头部-->
+<div th:replace="comm/base::head"></div>
+
+<!--Ktools导航栏-->
+<div th:replace="comm/base::navbar"></div>
+
+<!--面包悄-->
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">开发者工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">在线压力测试</li>
+        </ol>
+    </nav>
+</div>
+
+<!--tab页签-->
+<div class="container p-0">
+    <ul class="nav nav-tabs kt-tab-bg">
+    </ul>
+</div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="stress">
+        <!--主要内容块-->
+        <div class="container kt-ctx-bg">
+            <!--表单-->
+            <form id="myForm">
+                <div class="row">
+                    <div class="col-sm-12 mt-lg-4">
+                        <div class="form-group">
+                            <label for="urls">url地址：<small style="color: #ccc;">例：http://www.xxx.com</small></label>
+                            <textarea class="form-control" required rows="4" id="urls" name="urls" placeholder="压测url地址，多个url使用换行分隔；注意地址后面不要带参数。"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="json">参数：<small style="color: #ccc;">例：name=yourname&id=123</small></label>
+                            <textarea class="form-control" rows="3" id="json" name="json" placeholder=""></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="header">请求头(header)：<small style="color: #ccc;">例：Cookie: your-cookie-name=your-cookie-value;Content-Type: text/html;charset=UTF-8;token=weriou24kjo845jl34;</small></label>
+                            <textarea class="form-control" rows="3" id="header" name="header" placeholder="多个属性使用分号(;)分隔"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">请求次数:</span>
+                            </div>
+                            <input type="text" value="5" class="form-control" id="reps" name="reps">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">并发数:</span>
+                            </div>
+                            <input type="text" value="2" required class="form-control" id="concurrent" name="concurrent" placeholder="" data-toggle="popover" title="说明" data-content="并发数，不建议设置过大，否则会很慢" data-trigger="hover" data-placement="top">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">请求方式:</span>
+                            </div>
+                            <select class="form-control" id="methods" name="methods">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span id="reqTime" class="input-group-text">请求时长:</span>
+                            </div>
+                            <input type="text" class="form-control" name="time" id="time" placeholder="秒" data-toggle="popover" title="说明" data-content="请求时长为压力测试的总时长，不能与请求数同用；使用它需要将请求数置空。" data-trigger="hover">
+                        </div>
+                    </div>
+                </div>
+                <button id="btnSubmit" type="submit" class="btn btn-outline-success" style="width: 100%">开始压力测试</button>
+            </form>
+
+            <div class="row mt-lg-4">
+                <div class="col-sm-12">
+                    <span class="badge badge-info">压力测试结果</span>
+                    <pre id="result" class="kt-pre-font12 kt-border mt-0" style="height: 150px;"></pre>
+                    <!--<textarea class="form-control" rows="3" id="result"></textarea>-->
+                </div>
+            </div>
+
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-ctx-bg mt-2 pt-2">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">在线压力测试工具，方便开发者们快速测试网站或API接口的并发情况，也可设置多个url随机模拟网站性能情况等。</p>
+                <p class="kt-fs13 kt-fc-desc"><mark>压力测试结果说明：</mark></p>
+                <p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.02 secs:   32417 bytes ==> GET  /    (每一次请求信息)</p>
+                <p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.02 secs:   32978 bytes ==> GET  /</p>
+                <!--<p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.02 secs:   32422 bytes ==> GET  /</p>
+                <p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.03 secs:   32321 bytes ==> GET  /</p>
+                <p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.02 secs:   32508 bytes ==> GET  /</p>
+                <p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.02 secs:   32509 bytes ==> GET  /</p>
+                <p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.02 secs:   32601 bytes ==> GET  /</p>
+                <p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.03 secs:   32427 bytes ==> GET  /</p>
+                <p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.02 secs:   33056 bytes ==> GET  /</p>
+                <p class="kt-fs13 kt-fc-desc">HTTP/1.1 200   0.02 secs:   32775 bytes ==> GET  /</p>-->
+                <p class="kt-fs13 kt-fc-desc">done.</p>
+                <p class="kt-fs13 kt-fc-desc">Transactions:		          10 hits(完成多少次处理)</p>
+                <p class="kt-fs13 kt-fc-desc">Availability:		      100.00 %(成功率%)</p>
+                <p class="kt-fs13 kt-fc-desc">Elapsed time:		        2.04 secs(总共使用时间secs)</p>
+                <p class="kt-fs13 kt-fc-desc">Data transferred:	        0.31 MB(总数据传输M（不包含头数据）)</p>
+                <p class="kt-fs13 kt-fc-desc">Response time:		        0.02 secs(平均响应时间secs)</p>
+                <p class="kt-fs13 kt-fc-desc">Transaction rate:	        4.90 trans/sec(平均每秒完成多少次处理trans/sec)</p>
+                <p class="kt-fs13 kt-fc-desc">Throughput:		        0.15 MB/sec(平均每秒传送数据MB/sec)</p>
+                <p class="kt-fs13 kt-fc-desc">Concurrency:		        0.11(实际最高并发连接数)</p>
+                <p class="kt-fs13 kt-fc-desc">Successful transactions:          10(成功处理次数)</p>
+                <p class="kt-fs13 kt-fc-desc">Failed transactions:	           0(失败处理次数)</p>
+                <p class="kt-fs13 kt-fc-desc">Longest transaction:	        0.03(满足一个请求所需最长时间)</p>
+                <p class="kt-fs13 kt-fc-desc">Shortest transaction:	        0.02(满足一个请求所需最短时间)</p>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script>
+    $(document).ready(function() {
+        init();
+        var i = 0;
+
+        // 表单提交
+        $('#myForm').submit(function (e) {
+            var data = ktUtils.getFormJsonData('myForm');
+            var json = ktUtils.parseJson(data.json);
+            var rsEle = $('#result');
+            if (json) {
+                data.json = JSON.stringify(json);
+            }
+            if (!data.reps && !data.time) {
+                ktUtils.warnMsg('请求次数与请求时长两者选一。');
+                return false;
+            }
+            log('data=', data);
+            var it = setInterval(wait, 500);
+            $.post(ktConfig.api.stressTesting, data, function (r) {
+                log('r=', r);
+                clearInterval(it);
+                if (r.errorCode === ktConfig.request.okCode) {
+                    rsEle.text(r.data);
+                } else {
+                    rsEle.text('压力测试过程遇到异常：' + r.msg);
+                }
+                rsEle.scrollTop(1);
+                if (rsEle.scrollTop() > 0) {
+                    rsEle.removeAttr('style');
+                }
+            });
+            return false;
+        });
+
+        function init() {
+            $('[data-toggle="popover"]').popover();
+            ktUtils.renderNavTab(ktConfig.moduleType.dev);
+        }
+
+        /**
+         * 压力测试中，等待效果
+         */
+        function wait() {
+            var p = 'stress testing';
+            if (i === 4) i = 0;
+            for (var j = 0; j < i; j++) {
+                p += '.';
+            }
+            $('#result').text(p);
+            i++;
+        }
+    });
+</script>
+
+</body>
+</html>

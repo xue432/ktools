@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>IP归属地查询</title>
+    <link th:replace="comm/base::icon"/>
+    <!--引入静态文件-->
+    <static th:replace="comm/base::static"></static>
+
+</head>
+<body class="kt-body">
+
+<!--网页头部-->
+<div th:replace="comm/base::head"></div>
+
+<!--Ktools导航栏-->
+<div th:replace="comm/base::navbar"></div>
+
+<!--面包悄-->
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">便民工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">IP归属地查询</li>
+        </ol>
+    </nav>
+</div>
+
+<!--tab页签-->
+<div class="container p-0">
+    <ul class="nav nav-tabs kt-tab-bg">
+    </ul>
+</div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-ctx-bg">
+            <div class="row">
+                <div class="col-sm-12 text-center mt-lg-5">
+                    <img th:src="@{/static/image/ip.png}" class=""/>
+                </div>
+                <div class="col-sm-6 offset-sm-3">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">IP地址:</span>
+                        </div>
+                        <input type="text" class="form-control" id="ip" placeholder="117.18.112.27" data-toggle="popover" title="说明" data-content="并发数，不建议设置过大，否则会很慢" data-trigger="hover" data-placement="top">
+                        <button id="query" class="btn btn-primary btn-sm glyphicon glyphicon-search">查询</button>
+                    </div>
+                </div>
+                <div class="col-sm-6 offset-3 mb-5">
+                    <p class="kt-fs14">
+                        <label class="font-weight-bold">IP归属地：</label>
+                        <mark id="ipAddress">中国广东省广州市天河区</mark>
+                        <label class="font-weight-bold" style="margin-left: 10px">isp：</label>
+                        <mark id="isp">电信</mark>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-ctx-bg mt-2 pt-2">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">这是工具简介。。</p>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script>
+    $(document).ready(function() {
+        ktUtils.renderNavTab(ktConfig.moduleType.convenience);
+
+        // http://119.29.193.127
+        $('#query').on('click', function () {
+            var ip = $('#ip').val();
+            log('ip=', ip);
+            if (!ip) {
+                ktUtils.warnMsg('请填写IP地址');
+                return false;
+            }
+            log(ktConfig.api.getIpInfo);
+            $.get(ktConfig.api.getIpInfo, {ip: ip}, function (r) {
+                log('r=', r);
+                if (r.data && r.data !== ' ') {
+                    var dr = r.data.split(' ');
+                    $('#ipAddress').text(dr[0]);
+                    $('#isp').text(dr[1]);
+                } else {
+                    $('#ipAddress').text('获取失败请重试');
+                    $('#isp').text('');
+                }
+
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

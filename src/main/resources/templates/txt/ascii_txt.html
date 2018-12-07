@@ -62,7 +62,7 @@
                     <button class="btn" id="transpic" style="background: #20c997;color: white; margin-left: 0;">开始转化</button>
                     <label for="comment" class="kt-fc-title">ascii字体预览:</label>
                     <!--<textarea class="ascii" disabled rows="5" id="comment"></textarea>-->
-                    <pre id="comment" class="kt-ascii-font14 kt-border"></pre>
+                    <pre id="comment" class="kt-pre-font12 kt-border"></pre>
                 </div>
             </div>
         </div>
@@ -106,6 +106,15 @@
                 url: ktConfig.api.txtAscii,
                 success: function (r) {
                     $('#comment').text(r.data);
+                },
+                complete: function (xmlHttpRequest) {
+                    var r = xmlHttpRequest.responseJSON;
+                    if (r.errorCode && r.errorCode !== ktConfig.request.okCode) {
+                        ktUtils.errorMsg("转换失败，请重试。" + r.msg);
+                    } else {
+                        ktUtils.errorMsg('request fail:' + r.status);
+                    }
+                    log(r);
                 }
             });
         });

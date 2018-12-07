@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.kalvin.ktools.comm.constant.Constant;
-import com.kalvin.ktools.entity.R;
+import com.kalvin.ktools.dto.R;
 import com.kalvin.ktools.exception.KTException;
 
 /**
@@ -21,7 +21,12 @@ public class KApiKit {
     }
 
     public static R respone2R(String respone) {
-        JSONObject jsonObject = JSONUtil.parseObj(respone);
+        JSONObject jsonObject;
+        try {
+            jsonObject = JSONUtil.parseObj(respone);
+        } catch (Exception e) {
+            throw new KTException(e.getMessage());
+        }
         String msg = (String) jsonObject.get("msg");
         Object data = jsonObject.get("data");
 

@@ -1,18 +1,18 @@
-package com.kalvin.ktools.entity;
+package com.kalvin.ktools.dto;
 
 import java.io.Serializable;
 
 /**
  * 图片实体类
  */
-public class ImageEntity implements Serializable {
+public class ImageDTO implements Serializable {
 
     private final static long serialVersionUID = 1L;
 
     private String name;
     private String base64;
 
-    public ImageEntity(String name, String base64) {
+    public ImageDTO(String name, String base64) {
         this.name = name;
         this.base64 = base64;
     }
@@ -35,7 +35,7 @@ public class ImageEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "ImageEntity{" +
+        return "ImageDTO{" +
                 "name='" + name + '\'' +
                 ", base64='" + base64 + '\'' +
                 '}';

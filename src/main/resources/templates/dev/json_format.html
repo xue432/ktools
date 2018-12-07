@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON格式化</title>
+    <link th:replace="comm/base::icon"/>
+    <!--引入静态文件-->
+    <static th:replace="comm/base::static"></static>
+    <link href="http://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">
+
+</head>
+<body class="kt-body">
+
+<!--网页头部-->
+<div th:replace="comm/base::head"></div>
+
+<!--Ktools导航栏-->
+<div th:replace="comm/base::navbar"></div>
+
+<!--面包悄-->
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">开发者工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">JSON格式化</li>
+        </ol>
+    </nav>
+</div>
+
+<!--tab页签-->
+<div class="container p-0">
+    <ul class="nav nav-tabs kt-tab-bg">
+    </ul>
+</div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-ctx-bg">
+            <div class="row">
+                <div class="col-sm-12 mt-lg-4">
+                    <div class="form-group">
+                        <label>待格式化JSON：</label>
+                        <textarea class="form-control" required rows="7" id="beforeFormat"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <button class="btn btn-primary btn-sm" id="format">格式化</button>
+                    <button class="btn btn-secondary btn-sm" data-clipboard-action="copy" data-clipboard-target="#code" id="copy">复制代码</button>
+                </div>
+                <div class="col-sm-12 mt-2">
+                    <div class="form-group">
+                        <label>格式化JSON：</label>
+                        <pre id="afterFormat" class="kt-pre-font12 kt-border mt-0" style="background: antiquewhite">
+                            <code id="code" class="json" style="margin:0 8px 0 8px;">
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-ctx-bg mt-2 pt-2">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">这是工具简介。。</p>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script src="http://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
+<script src="/static/js/clipboard.js"></script>
+<script>
+    $(document).ready(function() {
+        init();
+
+        var aJson;
+        $('#format').on('click', function () {
+            try {
+                var bfEle = $('#beforeFormat');
+                var afEle = $('#afterFormat');
+                var bJson = bfEle.val();
+                log('bJson=', bJson);
+                var eJson = eval('(' + bJson + ')');
+                aJson = ktUtils.formatJson(eJson);
+                afEle.find('code').html(aJson);
+                hljs.initHighlighting();
+            } catch (e) {
+                alert('JSON格式不正确：\n' + e);
+            }
+
+        });
+
+        // 复制到剪贴板
+        var clipboard = new ClipboardJS('#copy');
+        clipboard.on('success', function(e) {
+            alert('复制成功');
+            e.clearSelection();
+        });
+
+        function init() {
+            ktUtils.renderNavTab(ktConfig.moduleType.dev);
+        }
+
+    });
+</script>
+
+</body>
+</html>

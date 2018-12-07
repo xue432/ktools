@@ -5,14 +5,14 @@
 
 // 初始化navbar菜单
 var allMenus = ktUtils.getAllMenus();
-var navbarEle = $('#navbarSupportedContent').find('ul');
+var navbarEle = $('#collapsibleNavbar').find('ul');
 log('allMenus=', allMenus);
 if (allMenus) {
     var sb = new StringBuilder();
     allMenus.forEach(function (item) {
         if (item['menu'].length > 0) {
             sb.append('                <li class="nav-item dropdown">');
-            sb.append('                    <a class="nav-link dropdown-toggle" href="' + ktUtils.handleUrl(item['url']) + '">'+item['module']+'</a>');
+            sb.append('                    <a class="nav-link dropdown-toggle" id="navbardrop"  data-toggle="dropdown" href="' + ktUtils.handleUrl(item['url']) + '">'+item['module']+'</a>');
             sb.append('                    <div class="dropdown-menu mt-0">');
             // 遍历子菜单
             item['menu'].forEach(function (itm) {
@@ -47,11 +47,13 @@ $('.kt-img-box').hover(function(event) {
 var dropdownEle = $('.dropdown');
 dropdownEle.on('mouseover', function (event) {
     $(event.currentTarget).addClass('show');
+    $(event.currentTarget).find('div').addClass('show');
 });
 
 // 鼠标离开导航栏下拉导航收起效果
 dropdownEle.on('mouseleave', function (event) {
     $(event.currentTarget).removeClass('show');
+    $(event.currentTarget).find('div').removeClass('show');
 });
 
 // 网站标题特效事件

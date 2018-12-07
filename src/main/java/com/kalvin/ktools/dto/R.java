@@ -1,4 +1,4 @@
-package com.kalvin.ktools.entity;
+package com.kalvin.ktools.dto;
 
 import com.kalvin.ktools.comm.constant.Constant;
 

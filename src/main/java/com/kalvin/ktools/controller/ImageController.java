@@ -5,9 +5,10 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpUtil;
 import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.constant.Constant;
+import com.kalvin.ktools.comm.constant.KApi;
 import com.kalvin.ktools.comm.kit.*;
-import com.kalvin.ktools.entity.ImageEntity;
-import com.kalvin.ktools.entity.R;
+import com.kalvin.ktools.dto.ImageDTO;
+import com.kalvin.ktools.dto.R;
 import com.kalvin.ktools.exception.KTException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.util.HashMap;
 
@@ -28,29 +30,14 @@ public class ImageController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
-    @Value(value = "${kt.kapi.image.upload.url}")
-    private String kApiImageUploadUrl;
-
-    @Value(value = "${kt.kapi.image.handle.url}")
-    private String kApiImageHandleUrl;
-
-    @Value(value = "${kt.kapi.image.ascii.url}")
-    private String kApiImageToAsciiUrl;
+    @Resource
+    private KApi kApi;
 
     @Value(value = "${kt.image.upload.dir}")
     private String imageUploadDir;
 
     @Value(value = "${kt.image.handle.dir}")
     private String imageHandleDir;
-
-    @Value(value = "${kt.kapi.image.toGif.url}")
-    private String kApiImageToGifUrl;
-
-    @Value(value = "${kt.kapi.image.toColAscii.url}")
-    private String kApiImageToColAsciiUrl;
-
-    @Value(value = "${kt.kapi.gif.toAsciiGif.url}")
-    private String kApiGifToAsciiGifUrl;
 
     @SiteStats
     @GetMapping(value = "artPic")
@@ -127,11 +114,11 @@ public class ImageController {
         hashMap.put("filename", fileName);
         hashMap.put("image_type", type);
         hashMap.put("handle_dir", Constant.CLASSPATH_HANDLE_IMAGE_DIR);
-        String post = HttpUtil.post(kApiImageHandleUrl, hashMap);
+        String post = HttpUtil.post(kApi.getImgHandleUrl(), hashMap);
         R r = KApiKit.respone2R(post);
         if (KApiKit.isSuccess(post)) {
             final String fileUrl = imageHandleDir + r.getData().toString();
-            return R.ok(new ImageEntity(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
+            return R.ok(new ImageDTO(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
 //            return R.ok(Constant.HANDLE_IMAGE_URL + r.getData().toString());   // 返回处理后图片相对路径
         }
         return r;
@@ -180,7 +167,7 @@ public class ImageController {
         R upload = this.upload(file);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("filename", upload.getData());
-        String post = HttpUtil.post(kApiImageToAsciiUrl, hashMap);
+        String post = HttpUtil.post(kApi.getImg2AsciiUrl(), hashMap);
         return KApiKit.respone2R(post);
     }
 
@@ -197,13 +184,13 @@ public class ImageController {
         hashMap.put("images", imageArr);
         hashMap.put("duration", duration);
         hashMap.put("handle_dir", Constant.CLASSPATH_HANDLE_IMAGE_DIR);
-        String post = HttpUtil.post(kApiImageToGifUrl, hashMap);
+        String post = HttpUtil.post(kApi.getImg2GifUrl(), hashMap);
         R r = KApiKit.respone2R(post);
         if (KApiKit.isSuccess(post)) {
             // 返回处理后缩略gif相对路径(带_sl.gif)
 //            return R.ok(Constant.HANDLE_IMAGE_URL + r.getData().toString());
             final String fileUrl = imageHandleDir + r.getData().toString();
-            return R.ok(new ImageEntity(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
+            return R.ok(new ImageDTO(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
         }
         return r;
     }
@@ -219,13 +206,13 @@ public class ImageController {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("filename", fileName);
         hashMap.put("handle_dir", Constant.CLASSPATH_HANDLE_IMAGE_DIR);
-        String post = HttpUtil.post(kApiGifToAsciiGifUrl, hashMap);
+        String post = HttpUtil.post(kApi.getGif2AsciiUrl(), hashMap);
         R r = KApiKit.respone2R(post);
         if (KApiKit.isSuccess(post)) {
             // 返回处理后缩略gif相对路径(带_sl.gif)
 //            return R.ok(Constant.HANDLE_IMAGE_URL + r.getData().toString());
             final String fileUrl = imageHandleDir + r.getData().toString();
-            return R.ok(new ImageEntity(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
+            return R.ok(new ImageDTO(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
         }
         return r;
     }
@@ -242,13 +229,13 @@ public class ImageController {
         hashMap.put("filename", fileName);
         hashMap.put("handle_dir", Constant.CLASSPATH_HANDLE_IMAGE_DIR);
         hashMap.put("useless", ""); // todo 无用的参数,为了让idea不显示重复代码（强迫症受不了）
-        String post = HttpUtil.post(kApiImageToColAsciiUrl, hashMap);
+        String post = HttpUtil.post(kApi.getImg2ColorAsciiUrl(), hashMap);
         R r = KApiKit.respone2R(post);
         if (KApiKit.isSuccess(post)) {
             // 返回处理后缩略图相对路径(带_sl.png)
 //            return R.ok(Constant.HANDLE_IMAGE_URL + r.getData().toString());
             final String fileUrl = imageHandleDir + r.getData().toString();
-            return R.ok(new ImageEntity(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
+            return R.ok(new ImageDTO(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
         }
         return r;
     }

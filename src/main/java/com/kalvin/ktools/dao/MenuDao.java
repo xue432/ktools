@@ -12,7 +12,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author Kalvin
  * @since 2018-11-21
  */
-@Mapper
 public interface MenuDao extends BaseMapper<Menu> {
 
 }

@@ -1,7 +1,7 @@
 package com.kalvin.ktools.exception;
 
 import com.kalvin.ktools.comm.constant.Constant;
-import com.kalvin.ktools.entity.R;
+import com.kalvin.ktools.dto.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;

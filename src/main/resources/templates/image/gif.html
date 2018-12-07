@@ -6,7 +6,11 @@
     <link th:replace="comm/base::icon"/>
     <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
-
+    <style>
+        .file-preview-frame {
+            width: 223px;
+        }
+    </style>
 </head>
 <body class="kt-body">
 
@@ -40,37 +44,65 @@
         <!--主要内容块-->
         <div class="container kt-ctx-bg">
             <div class="row">
-                <div class="col-sm-12">
-                    <!--<div class="p-lg-5">
-
-                    </div>-->
-                    <input id="upload" type="file" name="file" multiple class="file-loading" value=""/>
-                    <hr class="hidden-sm hidden-md hidden-lg">
+                <div class="col-sm-7">
+                    <div class="p-lg-5">
+                        <input id="upload" type="file" name="file" multiple class="file-loading" value=""/>
+                        <hr class="hidden-sm hidden-md hidden-lg">
+                    </div>
                 </div>
-                <div class="col-sm-12">
-                    <!--<div class="p-lg-5">
-
-                    </div>-->
-                    <div class="row mt-1 ml-1 mb-2 mr-1">
-                        <div class="col-sm-6" style="text-align: center;line-height: 305px;">
+                <div class="col-sm-5">
+                    <div class="p-lg-5">
+                        <!--转换后显示图片区块-->
+                        <div class="row kt-border">
+                            <div class="col-sm-12" style="height: 300px">
+                                <a  target="_blank" title="可点击图片下载缩略图">
+                                    <img  id="handle" class="rounded fakeimg" style="height: auto;" alt="pic">
+                                </a>
+                                <input type="text" hidden id="handleFileName" value=""/>
+                            </div>
+                        </div>
+                        <!--进度条-->
+                        <div class="row">
+                            <div id="pbg" class="col-xl|sm-12" style="width: 100%;">
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-xl|sm-12">
+                                <label class="kt-fc-title">时间间隔:</label>
+                                <select name="type" id="duration" class="custom-select" style="width: 100px">
+                                </select>
+                                <button class="btn" id="transpic" style="background: #20c997;color: white; margin:0 auto;">合成GIF</button>
+                                <button class="btn btn-primary" id="download" style="margin:0 auto;">下载高清图</button>
+                            </div>
+                        </div>
+                        <hr class="hidden-sm hidden-md hidden-lg">
+                    </div>
+                    <!--<div class="row mt-1 ml-1 mb-2 mr-1">
+                        <div class="col-sm-4" style="text-align: center;line-height: 305px;">
                             <label class="kt-fc-title">时间间隔:</label>
-                            <select name="type" id="duration" class="custom-select">
+                            <select name="type" id="duration" class="custom-select" style="width: 100px">
                             </select>
+
+                        </div>
+                        <div class="col-sm-2" style="">
                             <button class="btn" id="transpic" style="background: #20c997;color: white; margin:0 auto;">合成GIF</button>
                             <button class="btn btn-primary" id="download" style="margin:0 auto;">下载高清图</button>
                         </div>
                         <div class="col-sm-6 kt-border" style="height: 305px">
-                            <a th:href="@{/static/image/gif123.gif}" target="_blank" title="可点击图片下载缩略图">
+                            &lt;!&ndash;<a th:href="@{/static/image/gif123.gif}" target="_blank" title="可点击图片下载缩略图">
                                 <img th:src="@{/static/image/gif123.gif}" id="handle" class="rounded fakeimg" style="height: auto;" alt="pic">
+                            </a>&ndash;&gt;
+                            <a  target="_blank" title="可点击图片下载缩略图">
+                                <img  id="handle" class="rounded fakeimg" style="height: auto;" alt="pic">
                             </a>
                             <input type="text" hidden id="handleFileName" value=""/>
                         </div>
                     </div>
-                    <!--进度条-->
+                    &lt;!&ndash;进度条&ndash;&gt;
                     <div class="row">
                         <div id="pbg" class="col-xl|sm-12" style="width: 100%;">
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
@@ -184,7 +216,7 @@
                 $.ajax({
                     type:'POST',
                     url: ktConfig.api.image2Gif,
-                    async: false,
+                    // async: false,
                     data: {imageArr: imageArr.toString(), duration: duration},
                     success: function (r) {
                         if (r.errorCode === 200) {
@@ -195,6 +227,7 @@
                             $('#handle').parent().attr('href', ktcfg.ctx + url);
                             ktUtils.fixedImg(img.base64);
                         } else {
+                            log('3333333333333');
                             ktUtils.errorMsg("合成GIF动图失败，请重新合成。" + r.msg);
                         }
                     },

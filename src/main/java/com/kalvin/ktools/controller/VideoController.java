@@ -1,9 +1,10 @@
 package com.kalvin.ktools.controller;
 
 import cn.hutool.http.HttpUtil;
+import com.kalvin.ktools.comm.constant.KApi;
 import com.kalvin.ktools.comm.kit.IoKit;
 import com.kalvin.ktools.comm.kit.KApiKit;
-import com.kalvin.ktools.entity.R;
+import com.kalvin.ktools.dto.R;
 import com.kalvin.ktools.exception.KTException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.util.HashMap;
 
@@ -24,11 +26,14 @@ import java.util.HashMap;
 @RequestMapping(value = "video")
 public class VideoController {
 
-    @Value(value = "${kt.kapi.video.toAsciiGif.url}")
-    private String kApiVideoToAsciiGif;
+    /*@Value(value = "${kt.kapi.video.toAsciiGif.url}")
+    private String kApiVideoToAsciiGif;*/
 
     @Value(value = "${kt.video.upload.dir}")
     private String videoUploadDir;
+
+    @Resource
+    private KApi kApi;
 
     @GetMapping(value = "")
     public ModelAndView index() {
@@ -52,7 +57,7 @@ public class VideoController {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("video_name", upload.getData());
 
-        String post = HttpUtil.post(kApiVideoToAsciiGif, hashMap);
+        String post = HttpUtil.post(kApi.getVideo2AsciiGifUrl(), hashMap);
         return KApiKit.respone2R(post);
     }
 }

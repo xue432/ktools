@@ -252,6 +252,152 @@ var ktUtils = {
             }
         }
         return allMenus;
+    },
+    getFormJsonData: function (formId) {
+        var json = {};
+        var sArr = $('#' + formId).serializeArray();
+        sArr.forEach(function (item) {
+            if (item.value) {
+                json[item.name] = item.value;
+            }
+        });
+        return json;
+    },
+    parseJson: function (str) {
+        if (!str) return '';
+        var json;
+        try {
+            if (!isNaN(str)) return '';
+            json = $.parseJSON(str);
+        } catch (e) {
+            json = {};
+            str = str.replace(/[ ]/g, '');
+            str = str.replace(/[\r\n]/g, '');
+            var sArr = str.split('&');
+            sArr.forEach(function (value) {
+                var fArr = value.split('=');
+                if (fArr.length < 2) return true;
+                json[fArr[0]] = fArr[1];
+            });
+        }
+        if (Object.keys(json).length === 0) {
+            return '';
+        }
+        return json;
+    },
+    /**
+     * JSON格式化
+     * @param json
+     * @param options
+     * @returns {string}
+     */
+    formatJson: function (json, options) {
+        var reg = null,
+            formatted = '',
+            pad = 0,
+            PADDING = '    '; // one can also use '\t' or a different number of spaces
+        // optional settings
+        options = options || {};
+        // remove newline where '{' or '[' follows ':'
+        options.newlineAfterColonIfBeforeBraceOrBracket = (options.newlineAfterColonIfBeforeBraceOrBracket === true) ? true : false;
+        // use a space after a colon
+        options.spaceAfterColon = (options.spaceAfterColon === false) ? false : true;
+
+        // begin formatting...
+
+        // make sure we start with the JSON as a string
+        if (typeof json !== 'string') {
+            json = JSON.stringify(json);
+        }
+        // parse and stringify in order to remove extra whitespace
+        json = JSON.parse(json);
+        json = JSON.stringify(json);
+
+        // add newline before and after curly braces
+        reg = /([\{\}])/g;
+        json = json.replace(reg, '\r\n$1\r\n');
+
+        // add newline before and after square brackets
+        reg = /([\[\]])/g;
+        json = json.replace(reg, '\r\n$1\r\n');
+
+        // add newline after comma
+        reg = /(\,)/g;
+        json = json.replace(reg, '$1\r\n');
+
+        // remove multiple newlines
+        reg = /(\r\n\r\n)/g;
+        json = json.replace(reg, '\r\n');
+
+        // remove newlines before commas
+        reg = /\r\n\,/g;
+        json = json.replace(reg, ',');
+
+        // optional formatting...
+        if (!options.newlineAfterColonIfBeforeBraceOrBracket) {
+            reg = /\:\r\n\{/g;
+            json = json.replace(reg, ':{');
+            reg = /\:\r\n\[/g;
+            json = json.replace(reg, ':[');
+        }
+        if (options.spaceAfterColon) {
+            reg = /\:/g;
+            json = json.replace(reg, ': ');
+        }
+
+        $.each(json.split('\r\n'), function(index, node) {
+            var i = 0,
+                indent = 0,
+                padding = '';
+
+            if (node.match(/\{$/) || node.match(/\[$/)) {
+                indent = 1;
+            } else if (node.match(/\}/) || node.match(/\]/)) {
+                if (pad !== 0) {
+                    pad -= 1;
+                }
+            } else {
+                indent = 0;
+            }
+
+            for (i = 0; i < pad; i++) {
+                padding += PADDING;
+            }
+
+            formatted += padding + node + '\r\n';
+            pad += indent;
+        });
+
+        return formatted;
+    },
+    /**
+     * 检查浏览器类型
+     * @returns {string}
+     */
+    checkBrowser: function () {
+        var userAgent = window.navigator.userAgent.toLowerCase();
+
+        if (/chrome/.test(userAgent) && !/edge/.test(userAgent)){
+            return ktConfig.browserType.chrome;
+        }
+        if (/edge/.test(userAgent)) {
+            return ktConfig.browserType.edg;
+        }
+        if (/trident/.test(userAgent)) {
+            return ktConfig.browserType.ie;
+        }
+        if (/firefox/.test(userAgent)) {
+            return ktConfig.browserType.firefox;
+        }
+        /*
+        if(Sys.opera){//Js判断为opera浏览器
+            alert('http://www.111cn.net'+Sys.opera);
+            return 'Opera';
+        }
+        if(Sys.safari){//Js判断为苹果safari浏览器
+            alert('http://www.111cn.net'+Sys.safari);
+            return 'Safari';
+        }*/
     }
 };
 
