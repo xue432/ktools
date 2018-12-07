@@ -48,6 +48,7 @@
                     <button id="gen" class="btn btn-sm btn-primary mt-lg-5 glyphicon glyphicon-chevron-right">转换二维码</button>
                     <button id="parse" class="btn btn-sm btn-secondary mt-2 glyphicon glyphicon-chevron-left">解析二维码</button>
                     <select class="custom-select-sm mt-2" id="type">
+                        <option value="">二维码类型</option>
                         <option value="wx">微信二维码</option>
                         <option value="al">支付宝二维码</option>
                     </select>
@@ -112,9 +113,9 @@
         $('#download').on('click', function () {
             var base64 = $('#qrCode').find('img').attr('src');
             log(base64.split('base64,')[1]);
-            $.post('/convenience/qrCode/2Image', {base64: base64}, function (r) {
+            $.post('/convenience/qrCode/2Image', {base64: base64.split('base64,')[1]}, function (r) {
                 if (r.errorCode === ktConfig.request.okCode) {
-                    window.open('');
+                    window.open(ktConfig.api.imageDownload + '?fileName=' +  r.data);
                 }
             });
         });
