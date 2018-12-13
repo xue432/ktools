@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>GIF转换AsciiGif</title>
+    <meta name="keywords" content="GIF转换Ascii动态图、动态图转艺术动态图">
+    <meta name="description" content="在线GIF转换Ascii动态图、动态图转艺术动态图、GIF转换Ascii文字动态图">
     <link th:replace="comm/base::icon"/>
     <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
 
 </head>
-<body class="kt-body">
+<body class="kt-bg">
 
 <!--网页头部-->
 <div th:replace="comm/base::head"></div>
@@ -94,7 +96,9 @@
 
 <!--js脚本-->
 <script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
 <script th:replace="comm/base::publicjs"></script>
+<script th:replace="comm/base::uploadjs"></script>
 <script>
     $(document).ready(function() {
         init();

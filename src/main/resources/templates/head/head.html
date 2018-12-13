@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>头像大全</title>
+    <meta name="keywords" content="头像大全">
+    <meta name="description" content="头像大全">
     <link th:replace="comm/base::icon"/>
     <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
 
 </head>
-<body class="kt-body">
+<body class="kt-bg">
 
 <!--网页头部-->
 <div th:replace="comm/base::head"></div>
@@ -166,6 +168,7 @@
 
 <!--js脚本-->
 <script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
 <script th:replace="comm/base::publicjs"></script>
 <script>
     $(document).ready(function() {

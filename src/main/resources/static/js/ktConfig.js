@@ -58,6 +58,9 @@ var ktConfig = {
         allMenus: kfc + '/menu/all',
         stressTesting: kfc + '/dev/stressTesting',
         getIpInfo: kfc + '/convenience/get/ipInfo',
-        qrCode2Image: kfc + '/convenience/qrCode/2Image'
+        qrCode2Image: kfc + '/convenience/qrCode/2Image',
+        linuxCmdCategory: kfc + '/dev/linuxCmd/category',
+        linuxCmdQuery: kfc + '/dev/linuxCmd/query'
+
     }
 };

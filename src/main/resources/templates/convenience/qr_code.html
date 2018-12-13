@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>二维码生成</title>
+    <meta name="keywords" content="二维码生成、二维码转换">
+    <meta name="description" content="在线二维码生成、二维码转换,二维码下载">
     <link th:replace="comm/base::icon"/>
     <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
     <script th:src="@{/static/js/qrcode.min.js}"></script>
 
 </head>
-<body class="kt-body">
+<body class="kt-bg">
 
 <!--网页头部-->
 <div th:replace="comm/base::head"></div>
@@ -45,18 +47,18 @@
                     <textarea class="form-control" rows="10" id="content" placeholder="二维码内容：可以为文字内容或者网址链接"></textarea>
                 </div>
                 <div class="col-sm-2 mt-lg-4 text-center">
-                    <select class="custom-select-sm mt-lg-5" id="type">
+                    <!--<select class="custom-select-sm mt-lg-5" id="type">
                         <option value="">二维码类型</option>
                         <option value="wx">微信二维码</option>
                         <option value="al">支付宝二维码</option>
-                    </select>
-                    <button id="gen" class="btn btn-sm btn-primary mt-2 glyphicon glyphicon-chevron-right">转换二维码</button>
-                    <button id="parse" class="btn btn-sm btn-secondary mt-2 glyphicon glyphicon-chevron-left">解析二维码</button>
+                    </select>-->
+                    <button id="gen" class="btn btn-sm btn-primary glyphicon glyphicon-chevron-right" style="margin-top: 99px;">转换二维码</button>
+                    <!--<button id="parse" class="btn btn-sm btn-secondary mt-2 glyphicon glyphicon-chevron-left">解析二维码</button>-->
                     <button id="download" class="btn btn-sm btn-success mt-2 glyphicon glyphicon-download">下载二维码</button>
                     <!--<input type="text" class="form-control" id="selColor" placeholder="二维码颜色">-->
                 </div>
                 <div class="col-sm-4 mt-lg-4">
-                    <img id="qrCodeIco" src="/static/ktico.ico" style="position: absolute;width: 30px; height: 30px;" />
+                    <!--<img id="qrCodeIco" src="/static/ktico.ico" style="position: absolute;width: 30px; height: 30px;" />-->
                     <div id="qrCode"></div>
                 </div>
             </div>
@@ -66,7 +68,7 @@
             <h4 class="kt-fs16">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
-                <p class="kt-fs13 kt-fc-desc">在线生成二维码以及解析二维码内容。</p>
+                <p class="kt-fs13 kt-fc-desc">在线生成二维码图片，支持下载</p>
             </blockquote>
         </div>
     </div>
@@ -77,6 +79,7 @@
 
 <!--js脚本-->
 <script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
 <script th:replace="comm/base::publicjs"></script>
 <script>
     $(document).ready(function() {
@@ -92,9 +95,9 @@
             correctLevel : QRCode.CorrectLevel.H
         });
 
-        var icoEle = $("#qrCodeIco");
+        /*var icoEle = $("#qrCodeIco");
         var margin = ($("#qrCode").height() - icoEle.height()) / 2; //控制Logo图标的位置
-        icoEle.css("margin", margin);
+        icoEle.css("margin", margin);*/
 
         // todo 还有功能未完成
         $('#gen').on('click', function () {

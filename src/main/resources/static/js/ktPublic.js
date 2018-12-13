@@ -93,3 +93,6 @@ $("body").append('<!-- 模态框 -->\n' +
     '      </div>\n' +
     '    </div>\n' +
     '  </div>');
+
+// 实例化tooltips
+$('[data-toggle="tooltip"]').tooltip();

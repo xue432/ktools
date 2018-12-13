@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>图片转换艺术图</title>
+    <meta name="keywords" content="图片转换艺术图、图片转换漫画风格、图片转换素描风格">
+    <meta name="description" content="在线图片转换艺术图、图片转换漫画风格、图片转换素描风格、图片转换黑白图">
     <link th:replace="comm/base::icon"/>
     <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
 
 </head>
-<body class="kt-body">
+<body class="kt-bg">
 
 <!--网页头部-->
 <div th:replace="comm/base::head"></div>
@@ -99,7 +101,9 @@
 
 <!--js脚本-->
 <script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
 <script th:replace="comm/base::publicjs"></script>
+<script th:replace="comm/base::uploadjs"></script>
 <script>
     $(document).ready(function() {
         init();

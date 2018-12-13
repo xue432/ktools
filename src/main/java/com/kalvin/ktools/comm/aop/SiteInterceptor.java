@@ -48,7 +48,7 @@ public class SiteInterceptor {
         HttpServletRequest request = HttpServletContextKit.getHttpServletRequest();
         String clientIP = HttpUtil.getClientIP(request);
         clientIP = "0:0:0:0:0:0:0:1".equals(clientIP) ? "127.0.0.1" : clientIP;
-        LOGGER.info("{}正在请求:{}", clientIP, clientIP + request.getRequestURI());
+        LOGGER.info("{}正在请求:{}", clientIP, request.getContextPath() + request.getRequestURI());
     }
 
     /*@After(value = "siteStats()")

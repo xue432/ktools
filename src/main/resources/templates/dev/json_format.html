@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>JSON格式化</title>
+    <meta name="keywords" content="JSON格式化">
+    <meta name="description" content="在线JSON格式化、JSON格式美化">
     <link th:replace="comm/base::icon"/>
     <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
     <link href="http://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">
 
 </head>
-<body class="kt-body">
+<body class="kt-bg">
 
 <!--网页头部-->
 <div th:replace="comm/base::head"></div>
@@ -78,9 +80,10 @@
 
 <!--js脚本-->
 <script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
 <script th:replace="comm/base::publicjs"></script>
 <script src="http://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
-<script src="/static/js/clipboard.js"></script>
+<script th:src="@{/static/js/clipboard.js}"></script>
 <script>
     $(document).ready(function() {
         init();

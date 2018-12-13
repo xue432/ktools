@@ -15,47 +15,28 @@
 
     <!-- 共用css/js静态资源 -->
     <static th:fragment="static">
-        <!--Bootstrap 核心css-->
-        <!--<link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/css/bootstrap.min.css}">-->
-        <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/css/bootstrap1.min.css}">
-        <!--<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">-->
+        <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/css/bootstrap.min.css}">
         <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/fileinput/css/fileinput.min.css}">
-        <!--KTools.css-->
         <link rel="stylesheet" th:href="@{/static/css/ktools.css}">
-        <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-        <!--<script th:src="@{/static/plugin/bootstrap4/js/jquery.min.js}"></script>-->
-        <script th:src="@{/static/js/jquery-3.3.1.min.js}"></script>
-        <script th:src="@{/static/js/jquery.cookie.js}"></script>
-        <!--<script th:src="@{/static/plugin/bootstrap4/js/tether.min.js}"></script>-->
-        <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-        <!--<script th:src="@{/static/plugin/bootstrap4/js/bootstrap.min.js}"></script>-->
-        <script th:src="@{/static/plugin/bootstrap4/js/popper.min.js}"></script>
-        <script th:src="@{/static/plugin/bootstrap4/js/bootstrap1.min.js}"></script>
-        <script th:src="@{/static/plugin/bootstrap4/fileinput/js/fileinput.min.js}"></script>
-        <script th:src="@{/static/plugin/bootstrap4/fileinput/js/zh.js}"></script>
     </static>
 
     <!--网页头部-->
     <!--background: #4b8d78 #0c2d41-->
     <div th:fragment="head" class="jumbotron text-center text-white font-weight-bold mb-0" style="background: #0c2d41;padding-top: 20px;height: 183px;">
         <div class="" style="width: 800px;margin: 30px auto auto;">
-            <!--<span class="kt-banner">Kalvin Tools</span>-->
             <h1 class="row3 skew-title">
                 <span>K</span><span>a</span><span>l</span><span>v</span><span>i</span><span class="last">n</span>
-                <span class="alt">T</span><span class="alt">o</span><span class="alt">o</span><span class="alt">l</span><span class="alt last">s</span>
+                <!--<span class="alt">T</span><span class="alt">o</span><span class="alt">o</span><span class="alt">l</span><span class="alt last">s</span>-->
+                <span class="alt">在</span><span class="alt">线</span><span class="alt">工</span><span class="alt last">具</span>
             </h1>
         </div>
-        <p style="color: #adffb4;">Kalvin Tools旨在集成更多好玩有趣有逼格以及实用的在线工具！</p>
-        <!--<div class="mt-lg-4 kt-border" style="width: 115px;">
-            <h1 style="font-family: serif;font-weight: bold;font-size: 80px;">1</h1>
-        </div>-->
+        <p style="color: #adffb4;">Kalvin在线工具旨在集成更多好玩有趣有逼格以及实用的在线工具！</p>
     </div>
 
     <!--Ktools导航栏-->
     <nav th:fragment="navbar" class="navbar navbar-expand-sm bg-secondary navbar-dark">
         <!-- Brand -->
         <a class="navbar-brand" href="#">
-            <!--<img src="http://static.runoob.com/images/mix/bird.jpg" alt="logo" style="width:40px;">-->
             <img th:src="@{/static/ktico.ico}" width="30" height="30" class="d-inline-block align-top glyphicon glyphicon-briefcase" alt="">
         </a>
 
@@ -76,14 +57,39 @@
 
 
     <!-- 网站footer -->
-    <div th:fragment="footer" class="jumbotron text-center" style="margin-bottom:0">
-        <p>Copyright © 2018-2018 KalvinTools</p>
+    <div th:fragment="footer" class="jumbotron text-center kt-bg" style="margin-bottom:0; padding:10px 0 20px 0;">
+        <p style="margin-bottom: 2px; font-size: 15px;">
+            <a class="kt-a-color" th:href="@{/}">返回首页</a> - <a class="kt-a-color" href="#">意见反馈</a> - <a class="kt-a-color" href="#">关于Kalvin在线工具</a>
+        </p>
+        <p class="kt-fc-desc kt-fs14" style="margin-bottom: 2px;">Copyright © Kalvin在线工具 <a class="kt-fc-desc" href="http://www.miitbeian.gov.cn" target="_blank">粤ICP备18152502号</a></p>
+
+        <div class="kt-fixed-bar">
+            <a href="#top" data-toggle="tooltip" data-placement="left" title="回到顶部" class="glyphicon glyphicon-arrow-up"></a>
+        </div>
+    </div>
+
+    <!--<script th:fragment="jquery" th:src="@{/static/js/jquery.min.js}"></script>-->
+    <script th:fragment="jquery" src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+
+    <div th:fragment="bootstrapjs">
+        <!--<script th:src="@{/static/plugin/bootstrap4/js/popper.min.js}"></script>-->
+        <!--<script th:src="@{/static/plugin/bootstrap4/js/bootstrap.min.js}"></script>-->
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
     </div>
 
     <div th:fragment="publicjs">
         <script th:src="@{/static/js/ktConfig.js}"></script>
+        <script th:src="@{/static/js/jquery.cookie.js}"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
         <script th:src="@{/static/js/ktUtils.js}"></script>
         <script th:src="@{/static/js/ktPublic.js}"></script>
+    </div>
+
+    <div th:fragment="uploadjs">
+        <script th:src="@{/static/plugin/bootstrap4/fileinput/js/fileinput.min.js}"></script>
+        <script th:src="@{/static/plugin/bootstrap4/fileinput/js/zh.js}"></script>
     </div>
 
 </body>

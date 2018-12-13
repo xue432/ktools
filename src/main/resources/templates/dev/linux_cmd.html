@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>linux常用命令字典</title>
+    <meta name="keywords" content="linux常用命令大全、linux命令字典">
+    <meta name="description" content="在线linux常用命令大全快速查询、常用linux运维常用命令大全">
+    <link th:replace="comm/base::icon"/>
+    <!--引入静态文件-->
+    <static th:replace="comm/base::static"></static>
+
+</head>
+<body class="kt-bg">
+
+<!--网页头部-->
+<div th:replace="comm/base::head"></div>
+
+<!--Ktools导航栏-->
+<div th:replace="comm/base::navbar"></div>
+
+<!--面包悄-->
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">开发者工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">linux常用命令字典</li>
+        </ol>
+    </nav>
+</div>
+
+<!--tab页签-->
+<div class="container p-0">
+    <ul class="nav nav-tabs kt-tab-bg">
+    </ul>
+</div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-ctx-bg">
+            <div class="row">
+                <div class="col-sm-12 text-center mt-lg-5">
+                    <img th:src="@{/static/image/linux_cmd.png}" />
+                </div>
+                <div class="col-sm-8 offset-sm-2">
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">命令分类:</span>
+                        </div>
+                        <select class="custom-select" id="cmdCategory">
+                            <option value="">请选择</option>
+                            <option th:each="cmdCategory:${cmdCategories}" th:value="${cmdCategory.id}" th:text="${cmdCategory.name}">文件相关</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">关键词:</span>
+                        </div>
+                        <input type="text" class="form-control" id="word" placeholder="请输入关键词或部分linux命令">
+                        <button id="query" class="btn btn-primary btn-sm glyphicon glyphicon-search">搜索</button>
+                    </div>
+                </div>
+                <div class="col-sm-8 offset-2 mb-5">
+                    <h5 id="resultLabel" style="display: none">搜索结果：“<span style="color: red;">创建文件</span>”共找到<span>8</span>条相关记录</h5>
+                    <ul class="list-group">
+                        <!--<li class="list-group-item">
+                            <div class="row">
+                                <div class="col-sm-6"><span style="color: #1c94c4">dpkg-query -W -f='$111{Installed123456</span></div>
+                                <div class="col-sm-6"><span class="float-right kt-fc-desc">文件相关</span></div>
+                            </div>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-ctx-bg mt-2 pt-2">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">linux常用命令字典收集了大部分常用linux命令，可快速通过关键词或分类查找到你需要的命令。</p>
+                <p class="kt-fs13 kt-fc-desc">注意：带[]括号的只是方便区分一下内容是可变的，真正的命令中不需要带上[]括号的</p>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script>
+    $(document).ready(function() {
+        ktUtils.renderNavTab(ktConfig.moduleType.dev);
+
+        // 搜索
+        $('#query').on('click', function () {
+            alert('未实现');
+        });
+
+        // 命令分类选择事件
+        $('#cmdCategory').on('change', function () {
+            var checkedVal = $(this).find('option:checked').val();
+            var checkedTxt = $(this).find('option:checked').text();
+            if (checkedVal) {
+                $.get(ktConfig.api.linuxCmdCategory, {cmdCategoryId: checkedVal}, function (r) {
+                    var rslEle = $('#resultLabel');
+                    var listGroupEle = $('.list-group');
+                    var sb = new StringBuilder();
+                    rslEle.show();
+                    rslEle.find('span').eq(0).text(checkedTxt + '分类');
+                    rslEle.find('span').eq(1).text(r.data.length);
+                    r.data.forEach(function (item) {
+                        sb.append('                        <li class="list-group-item">\n');
+                        sb.append('                            <div class="row">\n');
+                        sb.append('                                <div class="col-sm-6"><span style="color: #1c94c4">');
+                        sb.append(item.cmd);
+                        sb.append('</span></div>\n');
+                        sb.append('                                <div class="col-sm-6"><span class="float-right kt-fc-desc">');
+                        sb.append(item.name);
+                        sb.append('</span></div>\n');
+                        sb.append('                            </div>\n');
+                        sb.append('                        </li>\n');
+                    });
+                    listGroupEle.html(sb.toString());
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

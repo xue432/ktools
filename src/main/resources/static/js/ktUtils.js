@@ -224,7 +224,7 @@ var ktUtils = {
         // domain：（String）创建该Cookie的页面域名；
         // secure：（Booblean）如果设为true，那么此Cookie的传输会要求一个安全协议，例如：HTTPS；
         $.cookie(key, JSON.stringify(val), {
-            expires: 7,
+            // expires: 7,
             path: '/'
             // domain: 'jquery.com',
             // secure: true

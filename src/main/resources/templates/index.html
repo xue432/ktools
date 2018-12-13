@@ -2,19 +2,20 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Kalvin Tools</title>
+    <meta name="baidu-site-verification" content="zK3a4AccqC" />
+    <title>Kalvin在线工具</title>
+    <meta name="keywords" content="在线工具,有趣工具,图片工具,便民工具、开发者工具、艺术字转换,压力测试,linux常用命令字典、JSON格式化、二维码生成">
+    <meta name="description" content="在线工具,有趣工具,便民工具,开发者工具,图片处理、图片转换艺术图、图片转换ASCII图、GIF合成、艺术字转换、在线压力测试、linux常用命令字典、JSON格式化、二维码生成、IP地址归属地查询">
+    <meta name="Author" content="Kalvin">
     <link th:replace="comm/base::icon"/>
-    <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
-
 </head>
 
-<body class="kt-body">
+<body class="kt-bg">
 
     <!--网页头部-->
     <div th:replace="comm/base::head"></div>
 
-    <!--Ktools导航栏-->
     <div th:replace="comm/base::navbar"></div>
 
     <!--面包悄-->
@@ -156,7 +157,6 @@
                 <div style="text-align: center; width: 100%;background: #adffb4"><a th:href="@{/head}" target="_blank">查看更多</a></div>
             </div>
         </div>
-
     </div>
     <!--文字说明块-->
     <div class="container kt-ctx-bg mt-3">
@@ -172,6 +172,7 @@
 
     <!--js脚本-->
     <script th:replace="comm/base::config"></script>
+    <script th:replace="comm/base::jquery"></script>
     <script th:replace="comm/base::publicjs"></script>
     <script>
         $(document).ready(function() {

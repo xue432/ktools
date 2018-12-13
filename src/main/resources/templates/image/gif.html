@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>图片合成GIF动图</title>
+    <meta name="keywords" content="GIF合成工具、GIF生成工具、图片合成GIF动图">
+    <meta name="description" content="在线GIF合成工具、GIF生成工具、多张图片合成GIF动态图">
     <link th:replace="comm/base::icon"/>
     <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
@@ -12,7 +14,7 @@
         }
     </style>
 </head>
-<body class="kt-body">
+<body class="kt-bg">
 
 <!--网页头部-->
 <div th:replace="comm/base::head"></div>
@@ -128,7 +130,9 @@
 
 <!--js脚本-->
 <script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
 <script th:replace="comm/base::publicjs"></script>
+<script th:replace="comm/base::uploadjs"></script>
 <script>
     $(document).ready(function() {
         var uploadSucc = false;

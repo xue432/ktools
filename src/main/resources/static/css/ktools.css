@@ -115,7 +115,7 @@
     z-index: 1;
 }*/
 
-.kt-body {
+.kt-bg {
     background: #f5ecec !important;
 }
 
@@ -274,4 +274,32 @@ a:hover {
 
 button {
     cursor: pointer;
+}
+
+@media (max-width: 576px) {
+    .list-group > a > .row > div:nth-child(2) > span {
+        float: left!important;
+    }
+}
+
+.kt-a-color {
+    color: #333333;
+}
+
+.jumbotron > p > a:hover {
+    color: #333333;
+}
+
+blockquote {
+    padding-bottom: 2px;
+}
+
+.kt-fixed-bar {
+    position: fixed; right: 2px; bottom: 20px;width: 30px;
+}
+.kt-fixed-bar > a {
+    width: 100%;font-size: 20px;color: #929292;text-align: center;
+}
+.kt-fixed-bar > a:hover {
+    color: #0e0e0e;
 }
