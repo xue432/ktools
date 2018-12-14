@@ -268,7 +268,7 @@ var ktUtils = {
         var json;
         try {
             if (!isNaN(str)) return '';
-            json = $.parseJSON(str);
+            json = eval('(' + str + ')');
         } catch (e) {
             json = {};
             str = str.replace(/[ ]/g, '');

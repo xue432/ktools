@@ -6,7 +6,6 @@
     <meta name="keywords" content="linux常用命令大全、linux命令字典">
     <meta name="description" content="在线linux常用命令大全快速查询、常用linux运维常用命令大全">
     <link th:replace="comm/base::icon"/>
-    <!--引入静态文件-->
     <static th:replace="comm/base::static"></static>
 
 </head>
@@ -99,6 +98,8 @@
 <script>
     $(document).ready(function() {
         ktUtils.renderNavTab(ktConfig.moduleType.dev);
+
+        var reg = /^[\x{4E00}-\x{9FA5}]+$/u
 
         // 搜索
         $('#query').on('click', function () {

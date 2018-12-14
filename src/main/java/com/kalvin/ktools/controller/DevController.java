@@ -5,7 +5,6 @@ import cn.hutool.http.HttpUtil;
 import com.kalvin.ktools.comm.constant.KApi;
 import com.kalvin.ktools.comm.kit.KApiKit;
 import com.kalvin.ktools.dto.R;
-import com.kalvin.ktools.entity.CmdCategory;
 import com.kalvin.ktools.service.CmdCategoryService;
 import com.kalvin.ktools.service.LinuxCmdService;
 import com.kalvin.ktools.vo.StressTestingVO;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 开发者工具 控制层
@@ -51,8 +50,9 @@ public class DevController {
 
     @GetMapping(value = "linux/cmd")
     public ModelAndView linuxCmd() {
-        final List<CmdCategory> list = cmdCategoryService.list(null);
-        return new ModelAndView("dev/linux_cmd.html").addObject("cmdCategories", list);
+        ModelAndView mv = new ModelAndView("dev/linux_cmd.html");
+        mv.addObject("cmdCategories", cmdCategoryService.getCmdCategories());
+        return mv;
     }
 
     /**
@@ -62,6 +62,9 @@ public class DevController {
      */
     @PostMapping(value = "stressTesting")
     public R stressTesting(StressTestingVO stressTestingVO) {
+        if (stressTestingVO.getConcurrent() > 300) { // 并发数最大限制300
+            stressTestingVO.setConcurrent(300);
+        }
         String post = HttpUtil.post(kApi.getDevStressTestingUrl(), BeanUtil.beanToMap(stressTestingVO));
         LOGGER.info("post={}", post);
         return KApiKit.respone2R(post);
@@ -74,7 +77,10 @@ public class DevController {
      */
     @GetMapping(value = "linuxCmd/query")
     public R linuxCmdQuery(String word) {
-        return R.ok();
+        boolean matches = Pattern.matches("/^[\\x{4E00}-\\x{9FA5}]+$/u", word);
+        LOGGER.info("matches={}", matches);
+
+        return R.ok(matches);
     }
 
     /**
@@ -86,4 +92,5 @@ public class DevController {
     public R linuxCmdCategory(Long cmdCategoryId) {
         return R.ok(linuxCmdService.getByCmdCategoryId(cmdCategoryId));
     }
+
 }
