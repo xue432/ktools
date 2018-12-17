@@ -4,7 +4,7 @@
  */
 
 // 初始化navbar菜单
-var allMenus = ktUtils.getAllMenus();
+/*var allMenus = ktUtils.getAllMenus();
 var navbarEle = $('#collapsibleNavbar').find('ul');
 log('allMenus=', allMenus);
 if (allMenus) {
@@ -28,7 +28,7 @@ if (allMenus) {
         }
     });
     navbarEle.append(sb.toString());
-}
+}*/
 
 
 // 页签选择更新面包悄事件

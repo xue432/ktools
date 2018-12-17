@@ -34,4 +34,6 @@ public class Constant {
 
     public final static int REQ_URL_TYPE_PAGE = 0;  // 请求url类型：页面
     public final static int REQ_URL_TYPE_API = 1;  // 请求url类型：API
+
+    public final static String DEFAULT_BANNER = "/static/image/default_t_red.png";   // 默认的工具图片
 }

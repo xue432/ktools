@@ -19,8 +19,8 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 public class Generator {
 
     private static String packageName = "com.kalvin.ktools"; // 生成的包名
-    private static String[] tableNames = {"sys_menu"};   // 表名
-    private static String tablePrefix = "sys_";    // 配置了会自动去掉表名的前缀
+    private static String[] tableNames = {"kt_cmd_category","kt_linux_cmd"};   // 表名
+    private static String tablePrefix = "kt_";    // 配置了会自动去掉表名的前缀
     private static boolean serviceNameStartWithI = false;  //user -> UserService, 设置成true: user -> IUserService
     private static String author = "Kalvin";    // 作者
     private static String outputDir = "H://genCode";   // 代码生成的路径目录

@@ -4,7 +4,7 @@
     height: 50px;
     z-index: 1;
     clear: both;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     text-align: center;
 }
 .skew-title {
@@ -199,26 +199,30 @@ pre {
 
 /*在线工具样式*/
 .kt-tl-box {
-    height: 160px;
+    height: auto;
     width: 242px;
-    margin: 0 20px 20px 5px;
-    border-radius: 10px;
+    margin: 0 20px 10px 0;
+    border-radius: 5px;
+}
+.kt-tl-box:hover {
+    -moz-box-shadow:2px 2px 5px #333333; -webkit-box-shadow:2px 2px 5px #a9a9a9; box-shadow:2px 2px 5px #a9a9a9;
 }
 .module {
-    margin: 10px 0 10px 0;
+    margin: 3px 0 10px 0;
 }
 .module > div > hr {
     width: 97%; background: #f5ecec; margin-top: 13px; margin-left: 14px;
 }
 .module > div.kt-tl-box > div:first-child {
-    width: auto; height: 90px; margin: .5rem .5rem 0 .5rem;
+    width: auto; height: 90px;
 }
 .module > div.kt-tl-box > div:first-child > img {
-    width:100%; height: 100%;
+    width:100%; height: 100%; border-radius: 5px;
 }
 .module > div.kt-tl-box > div:nth-child(2) {
     width: auto; height: 50px;text-align: center;padding-top: 10px;
-    background: #f5ecec; margin: 0 .5rem 0 .5rem;border: 1px solid silver;
+    background: #f5ecec;border-radius: 5px;
+    /*border: 1px solid silver;*/
 }
 
 .kt-img-box {

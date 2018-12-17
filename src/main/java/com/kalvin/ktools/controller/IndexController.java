@@ -1,9 +1,12 @@
 package com.kalvin.ktools.controller;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
 import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.dto.R;
 import com.kalvin.ktools.exception.KTException;
+import com.kalvin.ktools.service.MenuService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +19,14 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/")
 public class IndexController {
 
+    @Autowired
+    private MenuService menuService;
+
     @SiteStats
     @GetMapping(value = "")
     public ModelAndView index() {
-        return new ModelAndView("index.html");
+        final JSONArray allMenu = menuService.getAllMenuHierarchy();
+        return new ModelAndView("index.html").addObject("allMenu", allMenu);
     }
 
     @SiteStats

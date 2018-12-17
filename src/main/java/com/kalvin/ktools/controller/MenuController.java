@@ -36,9 +36,8 @@ public class MenuController {
      * @return R
      */
     @GetMapping(value = "all")
-    @Cacheable(value = Constant.CACHE_NAME, key = "\"allMenus\"")
+//    @Cacheable(value = Constant.CACHE_NAME, key = "\"allMenus\"")
     public R allHierarchy() {
-        LOGGER.info("调用了缓存方法allHierarchy");
         return R.ok(menuService.getAllMenuHierarchy());
     }
 

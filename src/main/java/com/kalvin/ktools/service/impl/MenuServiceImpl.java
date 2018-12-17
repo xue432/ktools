@@ -1,6 +1,7 @@
 package com.kalvin.ktools.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -9,6 +10,9 @@ import com.kalvin.ktools.comm.constant.Constant;
 import com.kalvin.ktools.dao.MenuDao;
 import com.kalvin.ktools.entity.Menu;
 import com.kalvin.ktools.service.MenuService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +28,12 @@ import java.util.List;
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuService {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(MenuServiceImpl.class);
+
+    @Cacheable(value = Constant.CACHE_NAME, key = "\"allMenus\"")
     @Override
     public JSONArray getAllMenuHierarchy() {
+        LOGGER.info("调用了缓存方法getAllHierarchy");
         List<Menu> menus = baseMapper.selectList(
                 new QueryWrapper<Menu>().eq("parent_id", 0)
                         .eq("status", Constant.STATUS_0));
@@ -57,7 +65,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
                 jsonObject.put("name", menuCl.getName());
                 jsonObject.put("url", menuCl.getUrl());
                 jsonObject.put("icon", menuCl.getIcon());
-                jsonObject.put("banner", menuCl.getBanner());
+                jsonObject.put("banner", StrUtil.isNotEmpty(menuCl.getBanner())
+                        ? menuCl.getBanner() : Constant.DEFAULT_BANNER);
                 jsonObject.put("level", menuCl.getLevel());
                 jsonObject.put("menu", recurQuery(menuCl));
                 jsonArray.add(jsonObject);
