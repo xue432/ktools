@@ -8,7 +8,6 @@
     <meta name="description" content="在线linux常用命令大全快速查询、常用linux运维常用命令大全">
     <link th:replace="comm/base::icon"/>
     <static th:replace="comm/base::static"></static>
-
 </head>
 <body class="kt-bg">
 
@@ -60,12 +59,15 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">关键词:</span>
                         </div>
-                        <input type="text" class="form-control" id="word" placeholder="请输入关键词或部分linux命令">
+                        <input list="dl" type="text" class="form-control" id="word" placeholder="请输入关键词或部分linux命令">
+                        <datalist id="dl">
+                            <!--<option value="2">二号民</option>-->
+                        </datalist>
                         <button id="query" class="btn btn-primary btn-sm glyphicon glyphicon-search">搜索</button>
                     </div>
                 </div>
                 <div class="col-sm-8 offset-2 mb-5">
-                    <h5 id="resultLabel" style="display: none">搜索结果：“<span style="color: red;">创建文件</span>”共找到<span>8</span>条相关记录</h5>
+                    <h6 id="resultLabel" style="display: none">搜索结果：“<span style="color: red;">创建文件</span>”共找到<span>8</span>条相关记录</h6>
                     <ul class="list-group">
                         <!--<li class="list-group-item">
                             <div class="row">
@@ -102,7 +104,36 @@
 
         // 搜索
         $('#query').on('click', function () {
-            alert('未实现');
+            queryCmd();
+        });
+
+        // 输入关键词提示
+        var $word = $('#word');
+        $word.on('keyup', function (e) {
+            var word = $('#word').val();
+            if (!word) {
+                return false;
+            }
+            if (!e.which) { // 选择一项提示后，执行搜索命令
+                queryCmd();
+                return false;
+            }
+            $.get(ktConfig.api.linuxCmdQuery, {word: word, type: 0}, function (r) {
+                var sb = new StringBuilder();
+                r.data.forEach(function (item) {
+                    sb.append('<option>');
+                    sb.append(item.name);
+                    sb.append('</option>');
+                });
+                $('#dl').html(sb.toString());
+            });
+        });
+
+        // 回车事件：执行搜索命令
+        $word.on('keydown', function (e) {
+            if (e.which === 13) {
+                queryCmd();
+            }
         });
 
         // 命令分类选择事件
@@ -111,28 +142,51 @@
             var checkedTxt = $(this).find('option:checked').text();
             if (checkedVal) {
                 $.get(ktConfig.api.linuxCmdCategory, {cmdCategoryId: checkedVal}, function (r) {
-                    var rslEle = $('#resultLabel');
-                    var listGroupEle = $('.list-group');
-                    var sb = new StringBuilder();
-                    rslEle.show();
-                    rslEle.find('span').eq(0).text(checkedTxt + '分类');
-                    rslEle.find('span').eq(1).text(r.data.length);
-                    r.data.forEach(function (item) {
-                        sb.append('                        <li class="list-group-item">\n');
-                        sb.append('                            <div class="row">\n');
-                        sb.append('                                <div class="col-sm-6"><span style="color: #1c94c4">');
-                        sb.append(item.cmd);
-                        sb.append('</span></div>\n');
-                        sb.append('                                <div class="col-sm-6"><span class="float-right kt-fc-desc">');
-                        sb.append(item.name);
-                        sb.append('</span></div>\n');
-                        sb.append('                            </div>\n');
-                        sb.append('                        </li>\n');
-                    });
-                    listGroupEle.html(sb.toString());
+                    showCmd(r.data, checkedTxt + '分类')
                 });
             }
         });
+
+        /**
+         * 搜索命令
+         */
+        function queryCmd() {
+            var word = $('#word').val();
+            if (!word) {
+                alert('请输入关键词');
+                return false;
+            }
+            $.get(ktConfig.api.linuxCmdQuery, {word: word, type: 1}, function (r) {
+                showCmd(r.data, word);
+            });
+        }
+
+        /**
+         * 展示搜索后的命令列表
+         * @param data 命令列表数据
+         * @param word 关键词
+         */
+        function showCmd(data, word) {
+            var rslEle = $('#resultLabel');
+            var listGroupEle = $('.list-group');
+            var sb = new StringBuilder();
+            rslEle.show();
+            rslEle.find('span').eq(0).text(word);
+            rslEle.find('span').eq(1).text(data.length);
+            data.forEach(function (item) {
+                sb.append('                        <li class="list-group-item">\n');
+                sb.append('                            <div class="row">\n');
+                sb.append('                                <div class="col-sm-6"><span style="color: #1c94c4">');
+                sb.append(item.cmd);
+                sb.append('</span></div>\n');
+                sb.append('                                <div class="col-sm-6"><span class="float-right kt-fc-desc">');
+                sb.append(item.name);
+                sb.append('</span></div>\n');
+                sb.append('                            </div>\n');
+                sb.append('                        </li>\n');
+            });
+            listGroupEle.html(sb.toString());
+        }
     });
 </script>
 

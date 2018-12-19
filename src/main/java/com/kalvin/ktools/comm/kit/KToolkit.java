@@ -157,4 +157,13 @@ public class KToolkit {
         return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
+    /**
+     * 替换掉所有标点符号
+     * @param str
+     * @return 替换后的字符串
+     */
+    public static String replacePunctuation(String str) {
+        return str.replaceAll("[\\pP]", "");
+    }
+
 }

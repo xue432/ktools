@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.regex.Pattern;
 
 /**
  * 开发者工具 控制层
@@ -73,14 +72,18 @@ public class DevController {
     /**
      * linux命令查询 todo
      * @param word 关键词
+     * @param type 方式：0-普通的模糊查询 1-高级的模糊查询
      * @return
      */
     @GetMapping(value = "linuxCmd/query")
-    public R linuxCmdQuery(String word) {
-        boolean matches = Pattern.matches("/^[\\x{4E00}-\\x{9FA5}]+$/u", word);
-        LOGGER.info("matches={}", matches);
-
-        return R.ok(matches);
+    public R linuxCmdQuery(String word, Integer type) {
+        if (type == 0) {
+            return R.ok(linuxCmdService.getByCmdOrName(word));
+        } else if (type == 1) {
+            return R.ok(linuxCmdService.getByKeyword(word));
+        } else {
+            return R.fail("参数异常");
+        }
     }
 
     /**

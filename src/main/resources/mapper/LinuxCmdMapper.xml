@@ -15,4 +15,16 @@
         id, cmd_category_id, cmd, name
     </sql>
 
+    <select id="selectByKeywords" resultType="com.kalvin.ktools.entity.LinuxCmd">
+        select <include refid="Base_Column_List"/>
+        from kt_linux_cmd
+        where
+        <foreach collection="keywords" index="index" item="item" separator="OR">
+            `NAME` LIKE CONCAT('%',#{item},'%')
+        </foreach>
+        <foreach collection="letters" index="index" open="OR" item="item" separator="OR">
+            cmd LIKE CONCAT('%',#{item},'%')
+        </foreach>
+    </select>
+
 </mapper>

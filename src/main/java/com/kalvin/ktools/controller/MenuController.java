@@ -1,16 +1,13 @@
 package com.kalvin.ktools.controller;
 
 
-import com.kalvin.ktools.comm.constant.Constant;
 import com.kalvin.ktools.dto.R;
 import com.kalvin.ktools.service.MenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -36,7 +33,6 @@ public class MenuController {
      * @return R
      */
     @GetMapping(value = "all")
-//    @Cacheable(value = Constant.CACHE_NAME, key = "\"allMenus\"")
     public R allHierarchy() {
         return R.ok(menuService.getAllMenuHierarchy());
     }

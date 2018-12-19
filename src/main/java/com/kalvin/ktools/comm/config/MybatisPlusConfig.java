@@ -3,14 +3,10 @@ package com.kalvin.ktools.comm.config;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
-import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -21,7 +17,7 @@ import javax.sql.DataSource;
  * mybatisPlus配置
  */
 @Configuration
-@MapperScan(basePackages = "com.kalvin.ktools.dao")
+@MapperScan("com.kalvin.ktools.dao")
 @EnableTransactionManagement
 public class MybatisPlusConfig {
 
@@ -36,18 +32,17 @@ public class MybatisPlusConfig {
     }
 
     /**
-     * MP SqlSessionFactory配置
+     * MP SqlSessionFactory配置 mp3.0以后已经不需要配置它了
      * @param dataSource d
      * @return SqlSessionFactory
      */
-    @Bean(name = "sqlSessionFactory")
-    @Primary
+    /*@Bean(name = "sqlSessionFactory")
     @ConfigurationProperties(prefix = "mybatis-plus")
     public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
         MybatisSqlSessionFactoryBean sessionFactoryBean = new MybatisSqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
         return sessionFactoryBean.getObject();
-    }
+    }*/
 
     /**
      * 配置事物管理器
@@ -69,7 +64,7 @@ public class MybatisPlusConfig {
         return page;
     }
 
-    @Bean
+//    @Bean
     @Profile(value = "dev")
     public PerformanceInterceptor performanceInterceptor() {
         PerformanceInterceptor performanceInterceptor = new PerformanceInterceptor();

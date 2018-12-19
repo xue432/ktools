@@ -19,14 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/")
 public class IndexController {
 
-    @Autowired
-    private MenuService menuService;
-
     @SiteStats
     @GetMapping(value = "")
     public ModelAndView index() {
-        final JSONArray allMenu = menuService.getAllMenuHierarchy();
-        return new ModelAndView("index.html").addObject("allMenu", allMenu);
+        return new ModelAndView("index.html");
     }
 
     @SiteStats

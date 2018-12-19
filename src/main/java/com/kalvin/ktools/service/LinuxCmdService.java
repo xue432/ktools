@@ -22,4 +22,18 @@ public interface LinuxCmdService extends IService<LinuxCmd> {
      */
     List<LinuxCmd> getByCmdCategoryId(Long cmdCategoryId);
 
+    /**
+     * 根据关键词模糊获取
+     * @param keyword
+     * @return
+     */
+    List<LinuxCmd> getByKeyword(String keyword);
+
+    /**
+     * 根据命令或名称获取命令列表
+     * @param con
+     * @return
+     */
+    List<LinuxCmd> getByCmdOrName(String con);
+
 }

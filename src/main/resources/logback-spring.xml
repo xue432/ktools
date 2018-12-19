@@ -51,9 +51,19 @@
 		</filter> -->
 	</appender>
 
-	<logger name="com.kalvin.ktools" level="INFO" />
-	<!--<logger name="org.springframework.data.mybatis" level="INFO" />-->
-	<logger name="org.springframework.aop.aspectj" level="ERROR" />
+	<springProfile name="dev">
+		<logger name="com.kalvin.ktools" level="DEBUG" />
+		<!--<logger name="org.springframework.data.mybatis" level="INFO" />-->
+		<logger name="org.springframework.aop.aspectj" level="ERROR" />
+	</springProfile>
+	<springProfile name="prod">
+		<logger name="com.kalvin.ktools" level="INFO" />
+		<!--<logger name="org.springframework.data.mybatis" level="INFO" />-->
+		<logger name="org.springframework.aop.aspectj" level="ERROR" />
+	</springProfile>
+	<!--<logger name="com.kalvin.ktools" level="DEBUG" />
+	&lt;!&ndash;<logger name="org.springframework.data.mybatis" level="INFO" />&ndash;&gt;
+	<logger name="org.springframework.aop.aspectj" level="ERROR" />-->
 
 	<springProfile name="dev">
 		<root level="INFO">

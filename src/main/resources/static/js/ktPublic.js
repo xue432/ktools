@@ -3,57 +3,29 @@
  * @type {index|BigInt|number|*|jQuery}
  */
 
-// 初始化navbar菜单
-/*var allMenus = ktUtils.getAllMenus();
-var navbarEle = $('#collapsibleNavbar').find('ul');
-log('allMenus=', allMenus);
-if (allMenus) {
-    var sb = new StringBuilder();
-    allMenus.forEach(function (item) {
-        if (item['menu'].length > 0) {
-            sb.append('                <li class="nav-item dropdown">');
-            sb.append('                    <a class="nav-link dropdown-toggle" id="navbardrop"  data-toggle="dropdown" href="' + ktUtils.handleUrl(item['url']) + '">'+item['module']+'</a>');
-            sb.append('                    <div class="dropdown-menu mt-0">');
-            // 遍历子菜单
-            item['menu'].forEach(function (itm) {
-                sb.append('                         <a class="dropdown-item" href="' + ktUtils.handleUrl(itm['url']) + '">'+itm['name']+'</a>');
-            });
-            sb.append('                         <div class="dropdown-divider"></div>');
-            sb.append('                     </div>');
-            sb.append('                 </li>');
-        } else {
-            sb.append('                <li class="nav-item">');
-            sb.append('                    <a class="nav-link" href="' + ktUtils.handleUrl(item['url']) + '">'+item['module']+'</a>');
-            sb.append('                </li>');
-        }
-    });
-    navbarEle.append(sb.toString());
-}*/
-
-
 // 页签选择更新面包悄事件
-$('.nav-tabs').find('.nav-link').on('click', function (event) {
-    $('.breadcrumb').find('.active').text($(event.currentTarget).text());
+$('.nav-tabs').find('.nav-link').on('click', function () {
+    $('.breadcrumb').find('.active').text($(this).text());
 });
 
 // 鼠标经过头像框触发动画事件
-$('.kt-img-box').hover(function(event) {
-    $(event.currentTarget).find('.kt-img-inf').animate({"margin-top": "-20px"}, 100, "swing");
-},function(event) {
-    $(event.currentTarget).find('.kt-img-inf').stop(true, false).animate({"margin-top": "0"}, 100, "swing");
+$('.kt-img-box').hover(function() {
+    $(this).find('.kt-img-inf').animate({"margin-top": "-20px"}, 100, "swing");
+},function() {
+    $(this).find('.kt-img-inf').stop(true, false).animate({"margin-top": "0"}, 100, "swing");
 });
 
 // 鼠标经过导航栏下拉导航展开效果
 var dropdownEle = $('.dropdown');
-dropdownEle.on('mouseover', function (event) {
-    $(event.currentTarget).addClass('show');
-    $(event.currentTarget).find('div').addClass('show');
+dropdownEle.on('mouseover', function () {
+    $(this).addClass('show');
+    $(this).find('div').addClass('show');
 });
 
 // 鼠标离开导航栏下拉导航收起效果
-dropdownEle.on('mouseleave', function (event) {
-    $(event.currentTarget).removeClass('show');
-    $(event.currentTarget).find('div').removeClass('show');
+dropdownEle.on('mouseleave', function () {
+    $(this).removeClass('show');
+    $(this).find('div').removeClass('show');
 });
 
 // 网站标题特效事件
