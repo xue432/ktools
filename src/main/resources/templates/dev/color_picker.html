@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>在线颜色选择器 - Kalvin在线工具</title>
+    <meta name="keywords" content="颜色选择器、网页颜色选择器、html颜色代码、RGB颜色、hex转RGB、RGB转hex、拾色器">
+    <meta name="description" content="在线颜色选择器、网页颜色选择器、html颜色代码、RGB颜色选择、hex转RGB、RGB转hex、hex与RGB互转、拾色器">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <link rel="stylesheet" th:href="@{/static/css/colpick.css}">
+    <link rel="stylesheet" th:href="@{/static/css/bigcolorpicker.css}">
+    <style>
+        .colorCode {
+            background: white;
+            color: black;
+            border: 5px solid #6c757d;
+        }
+        #picker1 > div:nth-child(1) {
+            height: 236px;
+        }
+    </style>
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">开发者工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">在线颜色选择器</li>
+        </ol>
+    </nav>
+</div>
+
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <div class="container kt-first-layout-module">
+            <div class="row">
+                <div class="col-sm-6 mt-2">
+                    <label class="kt-fc-desc">颜色选择器一</label>
+                    <div id="picker1"></div>
+                    <div class="mt-2" id="colorCode1">
+                        <input type="text" class="input-mini colorCode" disabled placeholder="hex颜色代码"/>
+                        <input type="text" class="input-mini colorCode" disabled placeholder="RGB颜色代码"/>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mt-2">
+                    <label class="kt-fc-desc">颜色选择器二</label>
+                    <div id="picker2"></div>
+                    <div class="mt-2" id="colorCode2">
+                        <input type="text" class="input-mini colorCode" disabled placeholder="hex颜色代码"/>
+                        <input type="text" class="input-mini colorCode" disabled placeholder="RGB颜色代码"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container kt-layout-module">
+            <h4 class="kt-fs16">Hex(十六进制颜色代码)与RGB颜色代码互转</h4>
+            <hr>
+            <div class="row">
+                <div class="col-sm-5">
+                    <input type="text" id="hex" class="form-control" placeholder="#000000"/>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" id="rgb" class="form-control" placeholder="0,0,0"/>
+                </div>
+            </div>
+        </div>
+        <div class="container kt-ctx-bg mt-2 pt-2 pb-3">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">在线颜色选择器，可选择十六进制颜色代码或者RGB颜色代码</p>
+                <p class="kt-fs13 kt-fc-desc">附：<a href="/static/js/bigcolorpicker.js" target="_blank" title="点击复制保存">《jQuery拾色器插件bigcolorpicker扩展版》</a></p>
+                <p class="kt-fs13 kt-fc-desc">1)支持直接展示拾色器面板，原来只支持点击才弹出拾色器面板</p>
+                <p class="kt-fs13 kt-fc-desc">2)支持返回RGB颜色对象，原来只支持返回hex颜色代码</p>
+                <p class="kt-fs13 kt-fc-desc">扩展版使用说明：</p>
+                <p class="kt-fs13 kt-fc-desc"><span style="color: #1c94c4">$(element).bigColorpicker(callback,engine,sideLength,alwaysShow);</span>callback为回调函数，它可以把选择的颜色设置到绑bigColorpicker的元素的上，也可以自定义函数。engine可以为空，P、L，使用默认P，P代表着拾取器的背景是一张图片，而L则代表着拾取器的小格子是由一个个的li组成。sideLength参数是指小格子的个数，只有engine为L时生效，范围：2-10，默认为6；其中，前三个参数是原来插件的参数，<span style="color: red">alwaysShow是扩展的参数，默认false，若要直接展示拾色面板，改为true。</span></p>
+                <p class="kt-fs13 kt-fc-desc"></p>
+                <p class="kt-fs13 kt-fc-desc"><code>$(".ku").bigColorpicker(function(el,hex,rgb){</code></p>
+                <p class="kt-fs13 kt-fc-desc"><code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(rgb.r+','+rgb.g+','+rgb.b);</code></p>
+                <p class="kt-fs13 kt-fc-desc"><code>},'L', 10, true); </code></p>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="comm/base::footer"></footer>
+
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script th:src="@{/static/js/colpick.js}"></script>
+<script th:src="@{/static/js/bigcolorpicker.js}"></script>
+<script>
+    $(document).ready(function() {
+        ktUtils.renderNavTab(ktConfig.moduleType.dev);
+        $('#picker1').colpick({
+            flat: true,
+            layout: 'full',
+            colorScheme: 'dark',
+            submit: 0,
+            onChange:function(hsb,hex,rgb,el,bySetColor) {
+                var $codeEle = $('#colorCode1').find('input');
+                $codeEle.attr('style', 'border-color: #' + hex);
+                $codeEle.eq(0).val('#' + hex);
+                $codeEle.eq(1).val(rgb.r + ',' + rgb.g + ',' + rgb.b);
+            }
+        });
+
+        $('#picker2').bigColorpicker(function (el, hex, rgb) {
+            var $codeEle = $('#colorCode2').find('input');
+            $codeEle.attr('style', 'border-color: #' + hex);
+            $codeEle.eq(0).val(hex);
+            $codeEle.eq(1).val(rgb.r + ',' + rgb.g + ',' + rgb.b);
+        }, 'L', 10, true);
+        $("#bigpicker").height(232);
+
+        $('#hex').on('mousedown', function () {
+            var rgb = $('#rgb').val();
+            if (rgb) {  // rgb -> hex
+                $(this).val(ktUtils.rgbToHex(rgb.split(',')));
+            }
+        });
+        $('#rgb').on('mousedown', function () {
+            var hex = $('#hex').val();
+            if (hex) {  // hex -> rgb
+                if (hex.indexOf('#') === -1) {
+                    hex = '#' + hex;
+                }
+                $(this).val(ktUtils.hexToRgb(hex));
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

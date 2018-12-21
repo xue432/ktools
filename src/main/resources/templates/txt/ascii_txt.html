@@ -12,13 +12,10 @@
 </head>
 <body class="kt-bg">
 
-<!--网页头部-->
 <div th:replace="comm/base::head"></div>
 
-<!--Ktools导航栏-->
 <div th:replace="comm/base::navbar"></div>
 
-<!--面包悄-->
 <div class="container p-0">
     <nav>
         <ol class="breadcrumb mb-0 kt-bread-bg">
@@ -30,17 +27,13 @@
     </nav>
 </div>
 
-<!--tab页签-->
-<div class="container p-0 mt-2">
-    <ul class="nav nav-tabs kt-tab-bg">
-    </ul>
-</div>
+<div th:replace="comm/base::tab"></div>
 
 <!-- Tab panes -->
 <div class="tab-content">
     <div class="tab-pane container p-0 active" id="ascii">
         <!--主要内容块-->
-        <div class="container kt-ctx-bg">
+        <div class="container kt-first-layout-module">
             <div class="row">
                 <div class="col-sm-6 mt-3">
                     <label for="txt" class="kt-fc-title">请输入文字:</label>
@@ -69,7 +62,7 @@
             </div>
         </div>
         <!--文字说明块-->
-        <div class="container kt-ctx-bg mt-2 pt-2">
+        <div class="container kt-layout-module">
             <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
             <hr>
             <blockquote class="blockquote">

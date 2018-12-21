@@ -54,7 +54,12 @@ public class DevController {
         return mv;
     }
 
-    /**
+    @GetMapping(value = "colorPicker")
+    public ModelAndView colorPicker() {
+        return new ModelAndView("dev/color_picker.html");
+    }
+
+  /**
      * 压力测试
      * @param stressTestingVO 压力测试参数
      * @return r

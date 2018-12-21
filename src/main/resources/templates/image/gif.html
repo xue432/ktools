@@ -17,13 +17,10 @@
 </head>
 <body class="kt-bg">
 
-<!--网页头部-->
 <div th:replace="comm/base::head"></div>
 
-<!--Ktools导航栏-->
 <div th:replace="comm/base::navbar"></div>
 
-<!--面包悄-->
 <div class="container p-0">
     <nav>
         <ol class="breadcrumb mb-0 kt-bread-bg">
@@ -35,17 +32,13 @@
     </nav>
 </div>
 
-<!--tab页签-->
-<div class="container p-0 mt-2">
-    <ul class="nav nav-tabs kt-tab-bg">
-    </ul>
-</div>
+<div th:replace="comm/base::tab"></div>
 
 <!-- Tab panes -->
 <div class="tab-content">
     <div class="tab-pane container p-0 active" id="art">
         <!--主要内容块-->
-        <div class="container kt-ctx-bg">
+        <div class="container kt-first-layout-module">
             <div class="row">
                 <div class="col-sm-7">
                     <div class="p-lg-5">
@@ -80,38 +73,12 @@
                         </div>
                         <hr class="hidden-sm hidden-md hidden-lg">
                     </div>
-                    <!--<div class="row mt-1 ml-1 mb-2 mr-1">
-                        <div class="col-sm-4" style="text-align: center;line-height: 305px;">
-                            <label class="kt-fc-title">时间间隔:</label>
-                            <select name="type" id="duration" class="custom-select" style="width: 100px">
-                            </select>
-
-                        </div>
-                        <div class="col-sm-2" style="">
-                            <button class="btn" id="transpic" style="background: #20c997;color: white; margin:0 auto;">合成GIF</button>
-                            <button class="btn btn-primary" id="download" style="margin:0 auto;">下载高清图</button>
-                        </div>
-                        <div class="col-sm-6 kt-border" style="height: 305px">
-                            &lt;!&ndash;<a th:href="@{/static/image/gif123.gif}" target="_blank" title="可点击图片下载缩略图">
-                                <img th:src="@{/static/image/gif123.gif}" id="handle" class="rounded fakeimg" style="height: auto;" alt="pic">
-                            </a>&ndash;&gt;
-                            <a  target="_blank" title="可点击图片下载缩略图">
-                                <img  id="handle" class="rounded fakeimg" style="height: auto;" alt="pic">
-                            </a>
-                            <input type="text" hidden id="handleFileName" value=""/>
-                        </div>
-                    </div>
-                    &lt;!&ndash;进度条&ndash;&gt;
-                    <div class="row">
-                        <div id="pbg" class="col-xl|sm-12" style="width: 100%;">
-                        </div>
-                    </div>-->
                 </div>
             </div>
 
         </div>
         <!--文字说明块-->
-        <div class="container kt-ctx-bg mt-2 pt-2">
+        <div class="container kt-layout-module">
             <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
             <hr>
             <blockquote class="blockquote">

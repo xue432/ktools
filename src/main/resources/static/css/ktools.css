@@ -96,25 +96,6 @@
     /*cursor: pointer;*/
 }
 
-/*fileinput样式重写*/
-/*.file-preview {
-    border-radius: 5px;
-    border: 1px solid #989191;
-    padding: 8px;
-    width: 100%;
-    margin-bottom: 5px;
-    height: 300px;
-}
-
-.file-drop-zone {
-    margin: -1px 15px 12px 12px;
-}
-
-.file-error-message {
-    position: absolute;
-    z-index: 1;
-}*/
-
 .kt-bg {
     background: #f5ecec !important;
 }
@@ -126,9 +107,23 @@
 .kt-tab-bg {
     background: white;
 }
+.kt-tab-pm {
+    padding: 0!important;
+    margin-top: .5rem!important;
+}
 
 .kt-ctx-bg {
     background: white !important;
+}
+.kt-first-layout-module {
+    background: white !important;
+    padding-bottom: 1rem;
+}
+.kt-layout-module {
+    background: white !important;
+    padding-bottom: 1rem;
+    padding-top: .5rem;
+    margin-top: .5rem;
 }
 
 .kt-banner {
@@ -296,6 +291,9 @@ button {
 
 blockquote {
     padding-bottom: 2px;
+}
+blockquote > p {
+    margin-bottom: 2px;
 }
 
 .kt-fixed-bar {

@@ -44,6 +44,7 @@ public class LinuxCmdServiceImpl extends ServiceImpl<LinuxCmdDao, LinuxCmd> impl
     @Override
     public List<LinuxCmd> getByKeyword(String keyword) {
         LOGGER.info("调用了缓存方法getByKeyword");
+        List<LinuxCmd> list = this.getByCmdOrName(keyword);
         // 处理关键词
         keyword = keyword.replace(" ", "");
         keyword = keyword.replace("linux", "");
@@ -51,7 +52,10 @@ public class LinuxCmdServiceImpl extends ServiceImpl<LinuxCmdDao, LinuxCmd> impl
         keyword = keyword.replace("LINUX", "");
         keyword = KToolkit.replacePunctuation(keyword);
 
-        List<LinuxCmd> list = this.getByCmdOrName(keyword);
+        if (CollectionUtil.isEmpty(list)) {
+            list = this.getByCmdOrName(keyword);
+        }
+
         if (CollectionUtil.isEmpty(list)) {
             if (keyword.length() > 6) {
                 Map<String, Object> map = this.splitKeyword(keyword);
@@ -96,14 +100,14 @@ public class LinuxCmdServiceImpl extends ServiceImpl<LinuxCmdDao, LinuxCmd> impl
         StringBuilder wg = new StringBuilder();
         final int wgLen = 3;    // 重组词组长度
         int wLen = words.size();
-        boolean isOdd = wLen % wgLen != 0;  // 是否为奇数
+        boolean isEDiv = wLen % wgLen != 0;  // 是否整除
         int wgg = wLen / wgLen; // 总词组数
 
 
         // 从keyword开头开始拆分词组
         for (final String word : words) {
             wg.append(word);
-            if (!isOdd) {
+            if (isEDiv) {
                 if (wg.length() == wgLen) {
                     list.add(wg.toString());
                     wg = new StringBuilder();
@@ -122,7 +126,7 @@ public class LinuxCmdServiceImpl extends ServiceImpl<LinuxCmdDao, LinuxCmd> impl
         }
 
         // 从keyword尾开始拆分词组
-        if (isOdd) {
+        if (!isEDiv) {
             wg = new StringBuilder();
             wgg = wLen / wgLen; // 总词组数
             for (int i = wLen - 1; i >= 0; i--) {

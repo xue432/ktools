@@ -14,12 +14,10 @@
 
 <body class="kt-bg">
 
-    <!--网页头部-->
     <div th:replace="comm/base::head"></div>
 
     <div th:replace="comm/base::navbar"></div>
 
-    <!--面包悄-->
     <div class="container p-0">
         <nav>
             <ol class="breadcrumb mb-0 kt-bread-bg">
@@ -29,7 +27,6 @@
         </nav>
     </div>
 
-    <!--主要内容块-->
     <div class="container" style="background: white" th:with="ctx=${#httpServletRequest.getContextPath()}">
 
         <div class="row ml-1 mr-1 mt-2">
@@ -161,7 +158,6 @@
         </div>
     </div>
 
-    <!--文字说明块-->
     <div class="container kt-ctx-bg mt-3">
         <h4 class="kt-fs16 kt-fc-title">网站简介</h4>
         <hr>
@@ -170,10 +166,8 @@
         </blockquote>
     </div>
 
-    <!--网页footer-->
     <footer th:replace="comm/base::footer"></footer>
 
-    <!--js脚本-->
     <script th:replace="comm/base::config"></script>
     <script th:replace="comm/base::jquery"></script>
     <script th:replace="comm/base::publicjs"></script>

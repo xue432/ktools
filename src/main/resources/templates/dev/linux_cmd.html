@@ -11,13 +11,10 @@
 </head>
 <body class="kt-bg">
 
-<!--网页头部-->
 <div th:replace="comm/base::head"></div>
 
-<!--Ktools导航栏-->
 <div th:replace="comm/base::navbar"></div>
 
-<!--面包悄-->
 <div class="container p-0">
     <nav>
         <ol class="breadcrumb mb-0 kt-bread-bg">
@@ -29,17 +26,13 @@
     </nav>
 </div>
 
-<!--tab页签-->
-<div class="container p-0">
-    <ul class="nav nav-tabs kt-tab-bg">
-    </ul>
-</div>
+<div th:replace="comm/base::tab"></div>
 
 <!-- Tab panes -->
 <div class="tab-content">
     <div class="tab-pane container p-0 active" id="ascii">
         <!--主要内容块-->
-        <div class="container kt-ctx-bg">
+        <div class="container kt-first-layout-module">
             <div class="row">
                 <div class="col-sm-12 text-center mt-lg-5">
                     <img th:src="@{/static/image/linux_cmd.png}" />
@@ -55,16 +48,19 @@
                             <option th:each="cmdCategory:${cmdCategories}" th:value="${cmdCategory.id}" th:text="${cmdCategory.name}">文件相关</option>
                         </select>
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">关键词:</span>
                         </div>
-                        <input list="dl" type="text" class="form-control" id="word" placeholder="请输入关键词或部分linux命令">
+                        <input list="dl" type="text" class="form-control" id="word" placeholder="请输入关键词（精准的搜索不怕找不到你想要的）">
                         <datalist id="dl">
                             <!--<option value="2">二号民</option>-->
                         </datalist>
                         <button id="query" class="btn btn-primary btn-sm glyphicon glyphicon-search">搜索</button>
                     </div>
+                </div>
+                <div class="col-sm-8 offset-2">
+                    <label class="kt-fc-desc kt-fs13">小提示：使用谷歌浏览器体验更佳哦</label>
                 </div>
                 <div class="col-sm-8 offset-2 mb-5">
                     <h6 id="resultLabel" style="display: none">搜索结果：“<span style="color: red;">创建文件</span>”共找到<span>8</span>条相关记录</h6>
@@ -80,7 +76,7 @@
             </div>
         </div>
         <!--文字说明块-->
-        <div class="container kt-ctx-bg mt-2 pt-2">
+        <div class="container kt-layout-module">
             <h4 class="kt-fs16">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
@@ -114,19 +110,21 @@
             if (!word) {
                 return false;
             }
-            if (!e.which) { // 选择一项提示后，执行搜索命令
+            if (e.which === 13 || !e.which) {   // 选择一项提示后，执行搜索命令
                 queryCmd();
                 return false;
             }
-            $.get(ktConfig.api.linuxCmdQuery, {word: word, type: 0}, function (r) {
-                var sb = new StringBuilder();
-                r.data.forEach(function (item) {
-                    sb.append('<option>');
-                    sb.append(item.name);
-                    sb.append('</option>');
+            if (e.which !== 40 && e.which !== 38) {
+                $.get(ktConfig.api.linuxCmdQuery, {word: word, type: 0}, function (r) {
+                    var sb = new StringBuilder();
+                    r.data.forEach(function (item) {
+                        sb.append('<option>');
+                        sb.append(item.name);
+                        sb.append('</option>');
+                    });
+                    $('#dl').html(sb.toString());
                 });
-                $('#dl').html(sb.toString());
-            });
+            }
         });
 
         // 回车事件：执行搜索命令

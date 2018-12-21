@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>Kalvin在线工具 - 后台</title>
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+
+</head>
+<body class="kt-bg">
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-ctx-bg">
+            <form id="myForm" action="/back/push/link" method="post">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="links">链接提交：<small style="color: #ccc;">需要提交到百度站长平台的链接，多个使用回车换行</small></label>
+                            <textarea id="links" rows="9" name="links" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">提交</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--js脚本-->
+<script th:replace="comm/base::jquery"></script>
+<script>
+    $(document).ready(function() {
+
+    });
+</script>
+
+</body>
+</html>
