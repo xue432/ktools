@@ -40,7 +40,7 @@ public class DevController {
 
     @SiteStats
     @GetMapping(value = "stress/testing")
-    public ModelAndView index() {
+    public ModelAndView stressTest() {
         return new ModelAndView("dev/stress_testing.html");
     }
 
