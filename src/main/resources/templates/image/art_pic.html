@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
-    <title>图片转换艺术图 - Kalvin在线工具</title>
-    <meta name="keywords" content="图片转换艺术图、图片转换漫画风格、图片转换素描风格">
-    <meta name="description" content="在线图片转换艺术图、图片转换漫画风格、图片转换素描风格、图片转换黑白图">
+    <title>漫画、素描黑白图片在线生成 艺术图片生成 - Kalvin在线工具</title>
+    <meta name="keywords" content="艺术图片生成、素描图片在线生成、漫画图片在线生成、黑白图片在线生成">
+    <meta name="description" content="艺术图片生成器、素描图片在线生成器、漫画图片在线生成器、黑白图片在线生成器">
     <link th:replace="comm/base::icon"/>
     <static th:replace="comm/base::static"></static>
     <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/fileinput/css/fileinput.min.css}">
@@ -23,7 +23,7 @@
             <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
             <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
             <li class="breadcrumb-item kt-fs13"><a href="#">图片工具</a></li>
-            <li class="breadcrumb-item kt-fs13 active">图片转换艺术图</li>
+            <li class="breadcrumb-item kt-fs13 active">艺术图片生成</li>
         </ol>
     </nav>
 </div>
@@ -64,7 +64,7 @@
                                 <select name="type" id="picType" class="custom-select" style="width: 100px;">
                                     <option value="1">漫画</option>
                                     <option value="2">素描</option>
-                                    <option value="3">反色</option>
+                                    <option value="3">黑色</option>
                                 </select>
                                 <button class="btn" id="transpic" style="background: #20c997;color: white; margin-left: 0;">开始转换</button>
                                 <button class="btn btn-primary" id="download" style="margin-left: 1rem;">下载</button>

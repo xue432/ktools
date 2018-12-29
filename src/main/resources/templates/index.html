@@ -5,8 +5,8 @@
     <meta name="baidu-site-verification" content="zK3a4AccqC"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
     <title>Kalvin在线工具 - 有趣及实用的工具箱</title>
-    <meta name="keywords" content="在线工具,有趣工具,图片工具,便民工具、开发者工具、艺术字转换,压力测试,linux常用命令字典、JSON格式化、二维码生成">
-    <meta name="description" content="在线工具,有趣工具,便民工具,开发者工具,图片处理、图片转换艺术图、图片转换ASCII图、GIF合成、艺术字转换、在线压力测试、linux常用命令字典、JSON格式化、二维码生成、IP地址归属地查询">
+    <meta name="keywords" content="在线工具,在线生成器,图片工具,便民工具、开发者工具、ASCII图片生成、艺术图片生成、ASCII艺术字在线生成,压力测试,linux常用命令字典、JSON格式化、二维码生成、颜色选择器">
+    <meta name="description" content="在线工具,有趣工具,便民工具,开发者工具,艺术图片生成、ASCII图片在线生成、动漫或素描风格图片生成、GIF动态图片在线制作、GIF字符动画在线生成、ASCII艺术字在线生成、在线压力测试、linux常用命令字典、JSON格式化、二维码生成、在线颜色选择器、IP地址归属地查询">
     <meta name="Author" content="Kalvin">
     <link th:replace="comm/base::icon"/>
     <static th:replace="comm/base::static"></static>
@@ -27,27 +27,46 @@
         </nav>
     </div>
 
-    <div class="container" style="background: white" th:with="ctx=${#httpServletRequest.getContextPath()}">
+    <div class="container kt-first-layout-module" style="background: white" th:with="ctx=${#httpServletRequest.getContextPath()}">
 
         <div class="row ml-1 mr-1 mt-2">
-            <label class="kt-fc-title mb-0 mt-3" style="background: #f5ecec">在线工具</label>
+            <!--<label class="kt-fc-title mb-0 mt-3" style="background: #f5ecec">在线工具</label>-->
+            <h4 class="kt-fs16 kt-fc-title" style="margin-top: 8px;">在线工具</h4>
             <div id="toolsBox" class="col-sm-12 p-0">
 
                 <div class="row module" th:each="module,moduleStat:${allMenu}" th:if="${module.moduleType!='HEAD'}">
                     <div class="col-sm-12 pl-0 pr-0" th:each="menu0,menu0Stat:${module.menu}" th:if="${menu0Stat.index==0}">
-                        <h5 class="float-left"><span class="badge badge-primary glyphicon glyphicon-tags" th:text="${module.module}">图片相关</span></h5>
+                        <h5 class="float-left"><span class="badge badge-primary glyphicon glyphicon-tags" style="background: #0068a1;border-radius: 0;" th:text="${module.module}">图片相关</span></h5>
+                        <hr>
+                    </div>
+                    <div class="kt-tl-box kt-border float-left kt-box-shadow" th:each="menu:${module.menu}">
+                        <div>
+                            <div><img th:src="${ctx+menu.icon}"></div>
+                            <a th:href="${ctx + menu.url}" th:text="${menu.name}" target="_blank">某某某工具2</a>
+                        </div>
+                        <div class="kt-fc-desc kt-fs13" th:text="${menu.intro}"></div>
+                        <div>
+                            <div title="还未有网友使用过~~"><span class="glyphicon glyphicon-eye-open"></span><span th:data-id="${menu.id}" style="font-family: unset;margin-left: 4px;">0</span></div>
+                            <div><a th:href="${ctx + menu.url}" class="kt-text-decoration" target="_blank">马上使用<span class="glyphicon glyphicon-menu-right"></span></a></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="row module" th:each="module,moduleStat:${allMenu}" th:if="${module.moduleType!='HEAD'}">
+                    <div class="col-sm-12 pl-0 pr-0" th:each="menu0,menu0Stat:${module.menu}" th:if="${menu0Stat.index==0}">
+                        <h5 class="float-left"><span class="badge badge-primary glyphicon glyphicon-tags" style="background: #0068a1;border-radius: 0;" th:text="${module.module}">图片相关</span></h5>
                         <hr>
                     </div>
                     <div class="kt-tl-box kt-border float-left" th:each="menu:${module.menu}">
                         <div><img th:src="${ctx + menu.banner}"></div>
                         <div><a class="kt-fc-title" th:href="${ctx + menu.url}" th:utext="${menu.name} + '&nbsp;<i class=\'glyphicon glyphicon-forward\'></i>'" target="_blank">图片转换艺术图工具&nbsp;<i class='glyphicon glyphicon-forward'></i></a></div>
                     </div>
-                </div>
+                </div>-->
 
             </div>
         </div>
     </div>
-    <div class="container kt-ctx-bg mt-3">
+    <div class="container kt-ctx-bg mt-3" style="display: none">
         <div class="row ml-1 mr-1">
             <label class="kt-fc-title mt-2 mb-0" style="background: #f5ecec">头像大全</label>
             <div class="col-sm-12 border-bottom-0 mb-2 p-0">
@@ -162,7 +181,7 @@
         <h4 class="kt-fs16 kt-fc-title">网站简介</h4>
         <hr>
         <blockquote class="blockquote">
-            <p class="kt-fs13 kt-fc-desc">网站旨在集成更多好玩有趣有逼格以及实用的在线工具。如图片ascii转换工具、文字ascii转换工具、头像生成工具、IP归属地查询、在线压力测试、JSON格式化等工具。</p>
+            <p class="kt-fs13 kt-fc-desc">网站旨在集成更多有趣及实用方便的在线工具；如艺术图片生成、生成字符画、ASCII艺术字生成、颜色选择器、IP归属地查询、linux常用命令字典、在线压力测试、JSON格式化等在线工具。</p>
         </blockquote>
     </div>
 
@@ -174,34 +193,43 @@
     <script>
         $(document).ready(function() {
 
-            /*var allMenus = ktUtils.getAllMenus();
-            var toolHtml = new StringBuilder();
-            allMenus.forEach(function (item) {
-                var menuArr = item.menu;
-                if (menuArr.length === 0) {
-                    return true;
-                }
-                if (item.moduleType === ktConfig.moduleType.head || item.moduleType === ktConfig.moduleType.other) {
-                    return true;
-                }
-                toolHtml.append('<div class="row module">\n');
-                menuArr.forEach(function (itm, i) {
-                    if (i === 0) {
-                        toolHtml.append('' +
-                            '                    <div class="col-sm-12 pl-0 pr-0">\n' +
-                            '                        <h5 class="float-left"><span class="badge badge-primary glyphicon glyphicon-tags">'+item.module+'</span></h5>\n' +
-                            '                        <hr>\n' +
-                            '                    </div>');
-                    }
-                    toolHtml.append('' +
-                        '                    <div class="kt-tl-box kt-border float-left">\n' +
-                        '                        <div><img src="' + kfc + (itm.banner?itm.banner:ktConfig.defaultTPic) + '"></div>\n' +
-                        '                        <div><a class="kt-fc-title" href="'+ kfc + itm.url+'" target="_blank">'+itm.name+'工具&nbsp;<i class="glyphicon glyphicon-forward"></i></a></div>\n' +
-                        '                    </div>');
-                });
-                toolHtml.append('</div>');
+            boxAdapt();
+
+            $(window).resize(function () {
+                boxAdapt();
             });
-            $('#toolsBox').append(toolHtml.toString());*/
+            
+            function boxAdapt() {
+                var windowWidth = $(window).width();
+                var $tbEl = $('#toolsBox');
+                var $ktlbEl = $tbEl.find('.kt-tl-box');
+                var outBoxWidth = $tbEl.width();
+                var boxMinWidth = 240;
+                var pl = 20;
+                log('win=', windowWidth);
+                log('out=', outBoxWidth);
+                // num(boxMinWidth + pl) - pl = outBoxWidth
+                var maxNum = Math.floor((outBoxWidth - pl) / (boxMinWidth + pl));   // 求出每行最大容纳的盒子个数
+                // maxW = (outBoxWidth - (num-1) * pl) / num
+                var boxMaxWidth = Number(((outBoxWidth - (maxNum) * pl) / maxNum).toFixed(2));  // 求出盒子的最大宽度
+                log('boxMaxWidth=', boxMaxWidth);
+                if (windowWidth + 17 <= 766) {
+                    $ktlbEl.width(boxMaxWidth + 20 - 2);
+                } else {
+                    $ktlbEl.width(boxMaxWidth - 2);
+                }
+
+            }
+
+            $.get(ktConfig.api.countToolsView, function (r) {
+                var data = r.data;
+                var keys = Object.keys(data);
+                keys.forEach(function (key) {
+                    var $eyeEl = $('span[data-id=' + key + ']');
+                    $eyeEl.text(data[key]);
+                    $eyeEl.parent().attr('title', data[key] + '位网友使用过')
+                });
+            });
 
         });
     </script>

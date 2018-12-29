@@ -16,7 +16,7 @@
            overflowToDisk="false"
            diskPersistent="false"
            timeToIdleSeconds="0"
-           timeToLiveSeconds="300"
+           timeToLiveSeconds="10800"
            memoryStoreEvictionPolicy="FIFO"/>
 
     <!--

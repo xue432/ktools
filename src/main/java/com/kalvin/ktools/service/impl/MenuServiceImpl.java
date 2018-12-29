@@ -62,13 +62,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
         if (CollectionUtil.isNotEmpty(menus)) {
             menus.forEach(menuCl -> {
                 JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", menuCl.getId());
                 jsonObject.put("name", menuCl.getName());
                 jsonObject.put("url", menuCl.getUrl());
-                jsonObject.put("icon", menuCl.getIcon());
+                jsonObject.put("icon", StrUtil.isNotEmpty(menuCl.getIcon())
+                        ? menuCl.getIcon() : Constant.DEFAULT_ICON);
                 jsonObject.put("banner", StrUtil.isNotEmpty(menuCl.getBanner())
                         ? menuCl.getBanner() : Constant.DEFAULT_BANNER);
                 jsonObject.put("level", menuCl.getLevel());
                 jsonObject.put("menu", recurQuery(menuCl));
+                jsonObject.put("intro", menuCl.getIntro());
                 jsonArray.add(jsonObject);
             });
         }

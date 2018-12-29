@@ -1,6 +1,7 @@
 package com.kalvin.ktools;
 
 
+import java.util.HashMap;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,6 +12,7 @@ public class MainTest {
         System.out.println("isChineseByScript(\"你好\") = " + isChineseByScript("-".charAt(0)));
         System.out.println("isChinesePunctuation(\"-\") = " + isChinesePunctuation(",".charAt(0)));
         System.out.println("isCp() = " + isCp());
+        testMap();
     }
 
     //使用UnicodeScript方法判断
@@ -41,5 +43,13 @@ public class MainTest {
         }
 
         return testStr;
+    }
+
+    public static void testMap() {
+        HashMap<String, Integer> hashMap = new HashMap<>();
+        hashMap.put("1", 2);
+        hashMap.put("2", 3);
+//        hashMap.forEach((s, i) -> System.out.println(i));
+        System.out.println("hashMap = " + hashMap.get("1"));
     }
 }

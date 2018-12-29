@@ -12,6 +12,7 @@
         <result column="module_type" property="moduleType" />
         <result column="icon" property="icon" />
         <result column="banner" property="banner" />
+        <result column="intro" property="intro" />
         <result column="sort" property="sort" />
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
@@ -19,7 +20,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, parent_id, name, url, level, module_type, icon, banner, sort, status, create_time
+        id, parent_id, name, url, level, module_type, icon, banner, intro, sort, status, create_time
     </sql>
 
 </mapper>

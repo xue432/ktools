@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
-    <title>图片转换字符画 - Kalvin在线工具</title>
-    <meta name="keywords" content="图片转换字符画、图片转换Ascii图">
-    <meta name="description" content="在线图片转换字符画工具、图片转换Ascii图工具">
+    <title>ASCII图片在线生成 - Kalvin在线工具</title>
+    <meta name="keywords" content="ASCII图片在线生成、图片转换字符画、图片生成字符画">
+    <meta name="description" content="ASCII图片在线生成工具、在线图片转换字符画工具、在线图片生成字符画工具">
     <link th:replace="comm/base::icon"/>
     <static th:replace="comm/base::static"></static>
     <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/fileinput/css/fileinput.min.css}">
@@ -23,7 +23,7 @@
             <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
             <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
             <li class="breadcrumb-item kt-fs13"><a th:href="@{/image/artPic}">图片工具</a></li>
-            <li class="breadcrumb-item kt-fs13 active">图片转换字符画</li>
+            <li class="breadcrumb-item kt-fs13 active">转换字符画</li>
         </ol>
     </nav>
 </div>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="col-sm-8 mt-4">
                     <button class="btn" id="transpic" style="background: #20c997;color: white; margin-left: 0;">开始转换</button>
-                    <label class="kt-fc-title">ascii字符图预览:</label>
+                    <label class="kt-fc-title">ASCII字符图预览:</label>
                     <!--<textarea class="ascii" disabled rows="5" id="comment"></textarea>-->
                     <pre id="comment" class="kt-pre-font12 kt-border mt-0"></pre>
                 </div>
@@ -61,7 +61,7 @@
             <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
-                <p class="kt-fs13 kt-fc-desc">图片转字符画工具，可以把任意图片(除gif)转换成ascii艺术图。。</p>
+                <p class="kt-fs13 kt-fc-desc">图片转字符画工具，可以把任意图片(除gif)生成、转换成ASCII字符画。</p>
             </blockquote>
         </div>
     </div>

@@ -4,13 +4,11 @@
 <body>
     <!-- 系统信息  -->
     <script th:fragment="config" th:inline="javascript">
-        var ktcfg = {
-            ctx:[[${#httpServletRequest.getContextPath()}]]
-        };
+        var ktcfg = {ctx:[[${#httpServletRequest.getContextPath()}]]};
     </script>
 
     <!--网站图标-->
-    <link th:fragment="icon" rel="shortcut icon" th:href="@{/static/ktico.ico}" type="image/x-icon"/>
+    <link th:fragment="icon" rel="shortcut icon" th:href="@{/static/favicon.ico}" type="image/x-icon"/>
 
     <!-- 共用css/js静态资源 -->
     <static th:fragment="static">
@@ -19,29 +17,30 @@
     </static>
 
     <!--网页头部-->
-    <!--background: #4b8d78 #0c2d41-->
-    <div th:fragment="head" class="jumbotron text-center text-white font-weight-bold mb-0" style="background: #0c2d41;padding-top: 20px;height: 130px;">
+    <!--background: #4b8d78 #0c2d41 #0c2d41-->
+    <div th:fragment="head" class="jumbotron text-center text-white font-weight-bold mb-0 kt-hd-bg" style="border-radius: 0">
         <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h1 class="row3 skew-title">
-                        <span>K</span><span>a</span><span>l</span><span>v</span><span>i</span><span class="last">n</span>
-                        <!--<span class="alt">T</span><span class="alt">o</span><span class="alt">o</span><span class="alt">l</span><span class="alt last">s</span>-->
-                        <span class="alt">在</span><span class="alt">线</span><span class="alt">工</span><span class="alt last">具</span>
-                    </h1>
+            <div class="row float-left">
+                <div class="col-sm-12 text-left">
+                    <img th:src="@{/static/image/icon/ktitle.png}">
+                    <!--<div style="width: 324px;height: auto;">
+                        <div class="kt-inline" style='font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;font-weight: bold;font-size: 40px;text-shadow: 3px 3px black;color: #a6b3c3;'>Kalvin</div>
+                        <div class="kt-inline" style="color: #123942;font-size: 29px;position: absolute; top: 6px;">|</div>
+                        <div class="kt-inline" style="font-family: cursive;font-weight: bold;font-size: 39px;text-shadow: 1px 2px black;color: #9cd3dc;margin-left: 9px;">在线工具</div>
+                    </div>-->
                 </div>
-                <div class="col-sm-12">
-                    <p style="color: #adffb4;">Kalvin在线工具旨在集成更多好玩有趣有逼格以及实用的在线工具！</p>
+                <div class="col-sm-12 text-left" style="margin-top: 12px;padding-left: 86px;color: #f0f3ecfc; font-family: cursive">
+                    —— 一个有趣实用的工具箱！
                 </div>
             </div>
         </div>
     </div>
 
     <!--Ktools导航栏-->
-    <nav th:fragment="navbar" th:with="ctx=${#httpServletRequest.getContextPath()}" class="navbar navbar-expand-sm bg-secondary navbar-dark">
+    <nav th:fragment="navbar" th:with="ctx=${#httpServletRequest.getContextPath()}" class="navbar navbar-expand-sm bg-secondary navbar-dark" style="background-color: #0068a1!important;padding-top:0;padding-bottom: 0;">
         <!-- Brand -->
         <a class="navbar-brand" href="#">
-            <img th:src="@{/static/ktico.ico}" width="30" height="30" class="d-inline-block align-top glyphicon glyphicon-briefcase" alt="">
+            <img th:src="@{/static/favicon.ico}" width="30" height="30" class="d-inline-block align-top glyphicon glyphicon-briefcase" alt="">
         </a>
 
         <!-- Toggler/collapsibe Button -->
@@ -51,14 +50,14 @@
 
         <!-- Links -->
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" style="height: 50px;">
                 <li class="nav-item">
-                    <a class="nav-link " th:href="@{/}">Home</a>
+                    <a class="nav-link " th:href="@{/}">首页</a>
                 </li>
                 <li class="nav-item dropdown" th:each="module:${allMenu}">
                     <a class="nav-link dropdown-toggle" th:href="${ctx + module.url}" data-toggle="dropdown" th:text="${module.module}">Dropdown link</a>
                     <div class="dropdown-menu" style="margin-top: 0">
-                        <a class="dropdown-item" th:each="menu:${module.menu}" th:href="${ctx + menu.url}" th:text="${menu.name}">Link 1</a>
+                        <a class="dropdown-item" th:each="menu:${module.menu}" th:href="${ctx + menu.url}" th:text="${menu.name}" target="_blank">Link 1</a>
                     </div>
                 </li>
             </ul>
@@ -74,7 +73,7 @@
     <!-- 网站footer -->
     <div th:fragment="footer" class="jumbotron text-center kt-bg" style="margin-bottom:0; padding:10px 0 20px 0;">
         <p style="margin-bottom: 2px; font-size: 15px;">
-            <a class="kt-a-color" th:href="@{/}">返回首页</a> - <a class="kt-a-color" href="#">意见反馈</a> - <a class="kt-a-color" href="#">关于Kalvin在线工具</a>
+            <a class="kt-a-color" th:href="@{/}">返回首页</a> - <a class="kt-a-color" href="mailto:1481397688@qq.com" title="您的宝贵意见是我前进的动力">意见反馈</a> - <a class="kt-a-color" href="#">关于Kalvin在线工具</a>
         </p>
         <p class="kt-fc-desc kt-fs14" style="margin-bottom: 2px;">Copyright © Kalvin在线工具 <a class="kt-fc-desc" href="http://www.miitbeian.gov.cn" target="_blank">粤ICP备18152502号</a></p>
 

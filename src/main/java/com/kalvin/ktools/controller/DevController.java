@@ -2,6 +2,7 @@ package com.kalvin.ktools.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.http.HttpUtil;
+import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.constant.KApi;
 import com.kalvin.ktools.comm.kit.KApiKit;
 import com.kalvin.ktools.dto.R;
@@ -37,16 +38,19 @@ public class DevController {
     @Resource
     private KApi kApi;
 
+    @SiteStats
     @GetMapping(value = "stress/testing")
     public ModelAndView index() {
         return new ModelAndView("dev/stress_testing.html");
     }
 
+    @SiteStats
     @GetMapping(value = "json/format")
     public ModelAndView jsonFormat() {
         return new ModelAndView("dev/json_format.html");
     }
 
+    @SiteStats
     @GetMapping(value = "linux/cmd")
     public ModelAndView linuxCmd() {
         ModelAndView mv = new ModelAndView("dev/linux_cmd.html");
@@ -54,16 +58,18 @@ public class DevController {
         return mv;
     }
 
+    @SiteStats
     @GetMapping(value = "colorPicker")
     public ModelAndView colorPicker() {
         return new ModelAndView("dev/color_picker.html");
     }
 
-  /**
+    /**
      * 压力测试
      * @param stressTestingVO 压力测试参数
      * @return r
      */
+    @SiteStats
     @PostMapping(value = "stressTesting")
     public R stressTesting(StressTestingVO stressTestingVO) {
         if (stressTestingVO.getConcurrent() > 300) { // 并发数最大限制300
@@ -75,11 +81,12 @@ public class DevController {
     }
 
     /**
-     * linux命令查询 todo
+     * linux命令查询
      * @param word 关键词
      * @param type 方式：0-普通的模糊查询 1-高级的模糊查询
      * @return
      */
+    @SiteStats
     @GetMapping(value = "linuxCmd/query")
     public R linuxCmdQuery(String word, Integer type) {
         if (type == 0) {
@@ -96,6 +103,7 @@ public class DevController {
      * @param cmdCategoryId 命令分类ID
      * @return
      */
+    @SiteStats
     @GetMapping(value = "linuxCmd/category")
     public R linuxCmdCategory(Long cmdCategoryId) {
         return R.ok(linuxCmdService.getByCmdCategoryId(cmdCategoryId));

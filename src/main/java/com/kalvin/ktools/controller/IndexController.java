@@ -25,7 +25,6 @@ public class IndexController {
         return new ModelAndView("index.html");
     }
 
-    @SiteStats
     @GetMapping(value = "get/data")
     public R getData(String key) {
         if (StrUtil.isEmpty(key)) {

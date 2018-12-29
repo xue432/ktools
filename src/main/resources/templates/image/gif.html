@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
-    <title>图片合成GIF动图 - Kalvin在线工具</title>
-    <meta name="keywords" content="GIF合成工具、GIF生成工具、图片合成GIF动图">
-    <meta name="description" content="在线GIF合成工具、GIF生成工具、多张图片合成GIF动态图">
+    <title>GIF动态图片在线制作 GIF闪图在线制作 - Kalvin在线工具</title>
+    <meta name="keywords" content="GIF动态图片在线制作、GIF闪图在线制作、图片合成GIF动画">
+    <meta name="description" content="在线制作GIF动画工具、GIF生成工具、GIF闪图在线制作、多张图片快速制作GIF动态图">
     <link th:replace="comm/base::icon"/>
     <static th:replace="comm/base::static"></static>
     <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/fileinput/css/fileinput.min.css}">
@@ -27,7 +27,7 @@
             <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
             <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
             <li class="breadcrumb-item kt-fs13"><a href="#">图片工具</a></li>
-            <li class="breadcrumb-item kt-fs13 active">图片合成GIF动图</li>
+            <li class="breadcrumb-item kt-fs13 active">GIF动态图片制作</li>
         </ol>
     </nav>
 </div>
@@ -52,7 +52,7 @@
                         <div class="row kt-border">
                             <div class="col-sm-12" style="height: 300px">
                                 <a  target="_blank" title="可点击图片下载缩略图">
-                                    <img  id="handle" class="rounded fakeimg" style="height: auto;" alt="pic">
+                                    <img  id="handle"  class="rounded fakeimg" style="height: auto;">
                                 </a>
                                 <input type="text" hidden id="handleFileName" value=""/>
                             </div>
@@ -85,18 +85,13 @@
                 <p class="kt-fs13 kt-fc-desc">1、多张图片合成gif动态图，可控制动图动画速度。</p>
                 <p class="kt-fs13 kt-fc-desc">2、默认批量上传的按钮上传后合成的gif图片是无序的，若需要按自己的顺序生成gif，你只要点击图片下面那个小上传按钮，一个一个上传即可。</p>
                 <p class="kt-fs13 kt-fc-desc">3、尽量使用尺寸相差不大的图片效果更佳哦。</p>
-                <!--<footer class="blockquote-footer">图片转艺术图</footer>-->
             </blockquote>
         </div>
     </div>
-    <!--<div class="tab-pane container p-0" id="ascll">2222</div>-->
 </div>
 
-<!--网页footer-->
 <footer th:replace="comm/base::footer"></footer>
 
-
-<!--js脚本-->
 <script th:replace="comm/base::config"></script>
 <script th:replace="comm/base::jquery"></script>
 <script th:replace="comm/base::publicjs"></script>

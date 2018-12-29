@@ -59,6 +59,10 @@ public class Menu implements Serializable {
      * 菜单牌面图片
      */
     private String banner;
+    /**
+     * 简介
+     */
+    private String intro;
 
     /**
      * 排序值。越小越靠前
@@ -140,6 +144,14 @@ public class Menu implements Serializable {
         this.banner = banner;
     }
 
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
     public Integer getSort() {
         return sort;
     }
@@ -167,17 +179,18 @@ public class Menu implements Serializable {
     @Override
     public String toString() {
         return "Menu{" +
-        "id=" + id +
-        ", parentId=" + parentId +
-        ", name=" + name +
-        ", url=" + url +
-        ", level=" + level +
-        ", moduleType=" + moduleType +
-        ", icon=" + icon +
-        ", banner=" + banner +
-        ", sort=" + sort +
-        ", status=" + status +
-        ", createTime=" + createTime +
-        "}";
+                "id=" + id +
+                ", parentId=" + parentId +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", level=" + level +
+                ", moduleType='" + moduleType + '\'' +
+                ", icon='" + icon + '\'' +
+                ", banner='" + banner + '\'' +
+                ", intro='" + intro + '\'' +
+                ", sort=" + sort +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                '}';
     }
 }

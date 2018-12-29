@@ -1,9 +1,14 @@
 package com.kalvin.ktools.controller;
 
 
+import com.kalvin.ktools.dto.R;
+import com.kalvin.ktools.service.TrafficRecordsService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -16,6 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/trafficRecords")
 public class TrafficRecordsController {
+
+    @Resource
+    private TrafficRecordsService trafficRecordsService;
+
+    @GetMapping(value = "count/toolsView")
+    public R countToolsView() {
+        return R.ok(trafficRecordsService.countToolsView());
+    }
 
 }
 

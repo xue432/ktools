@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
-import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 
 
@@ -76,7 +75,7 @@ public class Generator {
                                 .setController("controller")
                                 .setService("service")
                                 .setServiceImpl("service.impl")
-                                .setXml("templates/mapper")
+                                .setXml("mapper")
                 ).execute();
     }
 }

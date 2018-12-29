@@ -60,7 +60,7 @@ var ktConfig = {
         getIpInfo: kfc + '/convenience/get/ipInfo',
         qrCode2Image: kfc + '/convenience/qrCode/2Image',
         linuxCmdCategory: kfc + '/dev/linuxCmd/category',
-        linuxCmdQuery: kfc + '/dev/linuxCmd/query'
-
+        linuxCmdQuery: kfc + '/dev/linuxCmd/query',
+        countToolsView: kfc + '/trafficRecords/count/toolsView'
     }
 };
