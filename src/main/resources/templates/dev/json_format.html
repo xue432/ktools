@@ -46,12 +46,12 @@
                     </div>
                 </div>
                 <div class="col-sm-12">
-                    <button class="btn btn-primary btn-sm" id="format">格式化</button>
+                    <button class="btn btn-primary btn-sm" id="format">格式化/校验</button>
                     <button class="btn btn-secondary btn-sm" data-clipboard-action="copy" data-clipboard-target="#code" id="copy">复制代码</button>
                 </div>
                 <div class="col-sm-12 mt-2">
                     <div class="form-group">
-                        <label>格式化JSON：</label>
+                        <label>格式化JSON：<span id="jsonStatus" class="badge badge-success"></span></label>
                         <pre id="afterFormat" class="kt-pre-font12 kt-border mt-0" style="background: antiquewhite">
                             <code id="code" class="json" style="margin:0 8px 0 8px;">
                             </code>
@@ -65,7 +65,7 @@
             <h4 class="kt-fs16">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
-                <p class="kt-fs13 kt-fc-desc">json格式美化工具</p>
+                <p class="kt-fs13 kt-fc-desc">json格式化、校验工具</p>
             </blockquote>
         </div>
     </div>
@@ -84,6 +84,7 @@
 
         var aJson;
         $('#format').on('click', function () {
+            var $jsonStatusEl = $('#jsonStatus');
             try {
                 var bfEle = $('#beforeFormat');
                 var afEle = $('#afterFormat');
@@ -91,9 +92,17 @@
                 log('bJson=', bJson);
                 var eJson = eval('(' + bJson + ')');
                 aJson = ktUtils.formatJson(eJson);
-                afEle.find('code').html(aJson);
+                var obj = hljs.highlightAuto(aJson);
+                afEle.find('code').html(obj.value);
                 hljs.initHighlighting();
+
+                $jsonStatusEl.removeClass('badge-danger');
+                $jsonStatusEl.addClass('badge-success');
+                $jsonStatusEl.html("格式正确");
             } catch (e) {
+                $jsonStatusEl.removeClass('badge-success');
+                $jsonStatusEl.addClass('badge-danger');
+                $jsonStatusEl.html("格式错误");
                 alert('JSON格式不正确：\n' + e);
             }
 
