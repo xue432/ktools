@@ -1,25 +1,27 @@
 package com.kalvin.ktools;
 
 
+import cn.hutool.core.util.ImageUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.omg.PortableInterceptor.INACTIVE;
+import com.kalvin.ktools.comm.kit.ImageKit;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainTest {
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    public static void main(String[] args) throws Exception {
         System.out.println("isChineseByScript(\"你好\") = " + isChineseByScript("-".charAt(0)));
         System.out.println("isChinesePunctuation(\"-\") = " + isChinesePunctuation(",".charAt(0)));
         System.out.println("isCp() = " + isCp());
@@ -27,6 +29,7 @@ public class MainTest {
 //        crawlUrl("http://tools.kalvinbg.cn/convenience/ip");
         mn12306Login();
 //        checkCaptcha(30,54,104,50,187,118);
+
     }
 
     //使用UnicodeScript方法判断
@@ -88,14 +91,15 @@ public class MainTest {
         System.out.println("body = " + body);
     }
 
-    public static void mn12306Login() {
-        Long _l = 1546591552509L;
+    public static void mn12306Login() throws InterruptedException {
+        Long _l = 1546591552617L;
         // 生成验证码
         String captcha = "https://kyfw.12306.cn/passport/captcha/captcha-image64";
         // 校验验证码
-        String checkCaptcha = "https://kyfw.12306.cn/passport/captcha/captcha-check?callback=jQuery19108263327514321501_1546591552466&rand=sjrand&login_site=E&_=" + (_l + 1);
+//        String checkCaptcha = "https://kyfw.12306.cn/passport/captcha/captcha-check?callback=jQuery19108263327514321501_1546591552466&rand=sjrand&login_site=E&_=" + (_l + 1);
         // 登录接口
         String login = "https://kyfw.12306.cn/passport/web/login";
+
         String params = "login_site=E&module=login&rand=sjrand&1546593264150&callback=jQuery191042896203430328805_1546497225758&_=" + _l;
         captcha += "?" + params;
         HttpRequest get = HttpUtil.createGet(captcha);
@@ -109,13 +113,65 @@ public class MainTest {
         get.header("Connection", "keep-alive");
         HttpResponse execute = get.execute();
 
-//        get.body(params.getBytes());
+        //        get.body(params.getBytes());
         String body = execute.body();
-        System.out.println("body = " + body);
+        System.out.println("body1 = " + body);
         body = body.substring(body.indexOf("(") + 1, body.indexOf(")"));
         JSONObject jsonObject = JSONUtil.parseObj(body);
         String image = (String) jsonObject.get("image");
+        image = "data:image/png;base64," + image;
+//        BufferedImage bufferedImage = ImageUtil.toImage(image);
+//        ImageUtil.write(bufferedImage,  new File("C:\\Users\\14813\\Desktop\\check.png"));
         System.out.println(image);
+
+        // checkCaptcha
+//        System
+        Scanner scanner = new Scanner(System.in);
+        String answer = scanner.nextLine();
+        System.out.println("answer = " + answer);
+
+        String checkCaptcha = "https://kyfw.12306.cn/passport/captcha/captcha-check";
+        String params2 = "callback=jQuery19108263327514321501_1546591552466&rand=sjrand&login_site=E&_=" + (_l + 1) + "&answer=" + answer;
+        checkCaptcha += "?" + params2;
+        get.setUrl(checkCaptcha);
+
+//        Thread.sleep(5000);
+        body = get.execute().body();
+        System.out.println("body2 = " + body);
+        body = body.substring(body.indexOf("(") + 1, body.indexOf(")"));
+        jsonObject = JSONUtil.parseObj(body);
+        String resultCode = jsonObject.get("result_code").toString();
+        System.out.println("resultCode = " + resultCode);
+
+        if (resultCode.equals("4")) {  // 验证码校验成功
+
+            System.out.println("验证码校验成功");
+            // login
+            HttpRequest post = HttpUtil.createPost(login);
+            post.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
+            post.header("Accept", "application/json, text/javascript, */*; q=0.01");
+            post.header("Accept-Encoding", "gzip, deflate, br");
+            post.header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+            post.header("Host", "kyfw.12306.cn");
+            post.header("Referer", "https://kyfw.12306.cn/otn/resources/login.html");
+            post.header("Connection", "keep-alive");
+            post.header("Origin", "https://kyfw.12306.cn");
+            post.contentType("application/x-www-form-urlencoded; charset=UTF-8");
+
+            HashMap<String, Object> formData = new HashMap<>();
+            formData.put("username", "18218798420");
+            formData.put("password", "qr_kh_6926641746");
+            formData.put("appid", "otn");
+            formData.put("answer", answer);
+            post.form(formData);
+
+            body = post.execute().body();
+
+            System.out.println("login body = " + body);
+        }
+
+
+
 
     }
 
