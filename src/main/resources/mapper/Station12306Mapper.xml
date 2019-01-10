@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kalvin.ktools.dao.Station12306Dao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kalvin.ktools.entity.Station12306">
+        <id column="id" property="id" />
+        <result column="letter" property="letter" />
+        <result column="spell_s12306" property="spellS12306" />
+        <result column="name" property="name" />
+        <result column="all_spell" property="allSpell" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, letter, spell_s12306, name, all_spell
+    </sql>
+
+</mapper>

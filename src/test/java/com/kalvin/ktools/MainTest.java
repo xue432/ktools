@@ -1,19 +1,18 @@
 package com.kalvin.ktools;
 
 
-import cn.hutool.core.util.ImageUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.kalvin.ktools.comm.kit.ImageKit;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -21,15 +20,17 @@ import java.util.regex.Pattern;
 
 public class MainTest {
 
+
     public static void main(String[] args) throws Exception {
-        System.out.println("isChineseByScript(\"你好\") = " + isChineseByScript("-".charAt(0)));
-        System.out.println("isChinesePunctuation(\"-\") = " + isChinesePunctuation(",".charAt(0)));
-        System.out.println("isCp() = " + isCp());
+//        System.out.println("isChineseByScript(\"你好\") = " + isChineseByScript("-".charAt(0)));
+//        System.out.println("isChinesePunctuation(\"-\") = " + isChinesePunctuation(",".charAt(0)));
+//        System.out.println("isCp() = " + isCp());
 //        testMap();
 //        crawlUrl("http://tools.kalvinbg.cn/convenience/ip");
-        mn12306Login();
+//        mn12306Login();
 //        checkCaptcha(30,54,104,50,187,118);
-
+//        splitI();
+//        handleStationNameData();
     }
 
     //使用UnicodeScript方法判断
@@ -92,7 +93,7 @@ public class MainTest {
     }
 
     public static void mn12306Login() throws InterruptedException {
-        Long _l = 1546591552617L;
+        Long _l = 1546591552717L;// 1546931989021
         // 生成验证码
         String captcha = "https://kyfw.12306.cn/passport/captcha/captcha-image64";
         // 校验验证码
@@ -111,6 +112,7 @@ public class MainTest {
         get.header("Host", "kyfw.12306.cn");
         get.header("Referer", "https://kyfw.12306.cn/otn/resources/login.html");
         get.header("Connection", "keep-alive");
+
         HttpResponse execute = get.execute();
 
         //        get.body(params.getBytes());
@@ -175,37 +177,53 @@ public class MainTest {
 
     }
 
-    public static void checkCaptcha(int... letPos) throws UnsupportedEncodingException {
-        Long _l = 1546591552509L;
-        // 校验验证码
-        String checkCaptcha = "https://kyfw.12306.cn/passport/captcha/captcha-check";
-        String s = Arrays.toString(letPos);
-        s = s.substring(1, s.length() - 1).replaceAll(" ", "");
-        String params = "callback=jQuery19108263327514321501_1546591552466&rand=sjrand&login_site=E&_=" + (_l + 1) + "&answer=108,116";
-        checkCaptcha += "?" + params;
-        System.out.println("s = " + s);
-//        checkCaptcha = URLEncoder.encode(checkCaptcha, "utf-8");
-        System.out.println("checkCaptcha = " + checkCaptcha);
-        HttpRequest get = HttpUtil.createGet(checkCaptcha);
-        get.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
-        get.header("Accept", "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01");
-        get.header("Accept-Encoding", "gzip, deflate, br");
-        get.header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
-        get.header("Host", "kyfw.12306.cn");
-        get.header("Referer", "https://kyfw.12306.cn/otn/resources/login.html");
-        get.header("Connection", "keep-alive");
-
-//        get.body(params.getBytes());
-        String body = get.execute().body();
-        System.out.println("body = " + body);
-
-        body = body.substring(body.indexOf("(") + 1, body.indexOf(")"));
-        JSONObject jsonObject = JSONUtil.parseObj(body);
-        Integer resultCode = (Integer) jsonObject.get("result_code");
-        System.out.println("resultCode = " + resultCode);
-        if (resultCode == 4) {  // 验证码校验成功
-            System.out.println("验证码校验成功");
+    public static void splitI() {
+        String s = "CYJQn3gydrzhsGwsIY3QDkydUxEWlw5q25Iq6FoA60pwMpVNKMMlkRb5PfCVJaez%2Bhk7lYcsabLA%0AtuPd2A3YNJ4zp6zQEOBFkhu5X03ptRWNdtsnzf2%2F6VxlXZBEaxLYGoYyh6Sbxr9%2BYjuQUtogd08p%0AghXoMgZFBm6Ky9Ce83ho1cOZOp99ASIy%2BgNy7oz2qsRtrfzRaOxuEMSaJt3mrEontnHOph7V9cV%2F%0AmtFmyKul36U39nU9g%2FAVzc37TPMN2bgTcbqCeA%2BsCOarH49TY4WJjIjM14tqIe1T8Egcpxo%3D|预订|6c000D28040A|D2804|IZQ|KQW|IZQ|FAQ|07:06|08:10|01:04|Y|nI%2F0aTvY11ZMaY4cqgc2CkZSB2porCju498cVE8f3Kwd1ZfY|20190113|3|QY|01|03|0|0|||||||有||||1|无|||O0M0O0|OMO|0|0";
+        String[] split = s.split("\\|");
+        System.out.println("split.len = " + split.length);
+        for (int i = 0; i < split.length; i++) {
+            System.out.println("sp=" + split[i] + "<-->index=" + i);
+            if (StrUtil.isEmpty(split[i])) {
+                System.out.println("i = " + i);
+                System.out.println("split[i-1]= " + split[i-1]);
+            }
         }
+    }
+
+    public void handleStationNameData() {
+        List<String> list = FileUtil.readLines(new File("H:\\Kalvin\\IdeaProjects\\ktools\\src\\main\\resources\\static\\station_name_data.txt"), "utf-8");
+        String stationInfo = list.get(0);
+        System.out.println("stationInfo = " + stationInfo);
+
+        String[] stationInfoArr = stationInfo.split("\\|");
+        StringBuilder sb = new StringBuilder("[");
+        int length = stationInfoArr.length;
+
+        for (int i = 0; i < length; i++) {
+            if (i == length - 1) {
+                break;
+            }
+            if (i % 5 == 0) {
+                String spell12306 = stationInfoArr[i + 2];
+                String letter = spell12306.substring(0, 1);
+                String name = stationInfoArr[i + 1];
+                String allSpell = stationInfoArr[i + 3];
+                if (sb.length() > 1) {
+                    sb.append(",");
+                }
+                sb.append("{").append("letter:").append("\"").append(letter).append("\"").append(",");
+                sb.append("spell12306:").append("\"").append(spell12306).append("\"").append(",");
+                sb.append("name:").append("\"").append(name).append("\"").append(",");
+                sb.append("allSpell:").append("\"").append(allSpell).append("\"").append("}");
+            }
+        }
+        sb.append("]");
+
+        System.out.println("sb = " + sb);
+        JSONArray jsonArray = JSONUtil.parseArray(sb.toString());
+        System.out.println("jsonArray = " + jsonArray.size());
+//        Object o = jsonArray.get(0);
 
     }
+
 }
