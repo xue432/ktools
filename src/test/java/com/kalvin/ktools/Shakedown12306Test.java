@@ -296,7 +296,7 @@ public class Shakedown12306Test {
         HttpResponse execute = this.request12306.execute();
         this.setCookie(execute);
         String body = execute.body();
-        LOGGER.info("passport body={}", body);
+//        LOGGER.info("passport body={}", body);
     }
 
     public void postUamtk(String uamtk1) {
@@ -400,15 +400,11 @@ public class Shakedown12306Test {
         request12306.header("Cookie", this.cookie);
         request12306.header("Host", "kyfw.12306.cn");
         request12306.header("Connection", "keep-alive");
-        if (isLogin) {
-//            this.setTK();
-        }
+
         Map<String, List<String>> headers = request12306.headers();
         headers.forEach((k, l) -> LOGGER.info("{}:{}", k, l.get(0)));
 
         HttpResponse execute = request12306.execute();
-        String cookieStr = execute.getCookieStr();
-        LOGGER.info("cookieStr2={}", cookieStr);
         String body = execute.body();
         LOGGER.info("body={}", body);
 
