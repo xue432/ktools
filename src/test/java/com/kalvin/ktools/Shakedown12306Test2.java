@@ -13,16 +13,17 @@ import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.RoundingMode;
-import java.net.HttpCookie;
 import java.util.*;
 
 /**
@@ -42,11 +43,12 @@ import java.util.*;
  * 13、下单确认中（调用两次）
  * 14、结果回执
  */
-public class Shakedown12306Test {
+public class Shakedown12306Test2 {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(Shakedown12306Test.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(Shakedown12306Test2.class);
 
     private HttpRequest request12306;
+    private HttpClient client12306;
     // 生成验证码
     private static String captcha = "https://kyfw.12306.cn/passport/captcha/captcha-image";
     // 校验验证码
@@ -78,6 +80,9 @@ public class Shakedown12306Test {
     // 结果回执
     private static String resultOrderForDcQueue = "https://kyfw.12306.cn/otn/confirmPassenger/resultOrderForDcQueue";
 
+    private static String uan = "User-Agent";
+    private static String uav = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36";
+
     private static String l1SeatCode = "M";
     private static String l2SeatCode = "O";
     private static String noSeatCode = "N";
@@ -86,22 +91,61 @@ public class Shakedown12306Test {
     private long rand_;
     private String tk;
     private String cookie = "";
+    private HashMap<String, String> cookieMap = new HashMap<>();
     private String username;
 
     private final List<String> dictCode = Lists.newArrayList("36,46", "116,46", "188,46", "267,43", "40,118", "113,119", "190,122", "264,115");
 
-    public Shakedown12306Test() {
-        HttpRequest get = HttpUtil.createGet("https://kyfw.12306.cn/otn/login/init");
-        get.header("Host", "kyfw.12306.cn");
-        get.header("Connection", "keep-alive");
+    public Shakedown12306Test2() throws IOException {
+        HttpClient client = new HttpClient();
+        client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 
-        HttpResponse execute = get.execute();
+        GetMethod get = new GetMethod("https://kyfw.12306.cn/otn/login/init");
+        get.setRequestHeader("Host", "kyfw.12306.cn");
+        get.setRequestHeader("Connection", "keep-alive");
+        get.setRequestHeader(uan, uav);
+        get.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+        get.setRequestHeader("Accept-Encoding", "gzip, deflate, br");
+
+        client.executeMethod(get);
+        Cookie[] cookies = client.getState().getCookies();
+        this.setCookie(cookies);
+
+        Header uag = get.getRequestHeader("User-Agent");
+        GetMethod get2 = new GetMethod("https://kyfw.12306.cn/otn/HttpZF/logdevice?algID=0MJE0VjA3d&hashCode=Mg-sjiOpuel38VxPEIVQ1lEonugib5Ve8Z4aZ4xk8Lk&FMQw=0&q4f3=zh-CN&VySQ=FGH_5WheGZp0a87otadDmB7aiLsm9dA9&VPIf=1&custID=133&VEek=unknown&dzuS=0&yD16=0&EOQP=8f58b1186770646318a429cb33977d8c&lEnu=167851055&jp76=52d67b2a5aa5e031084733d5006cc664&hAqN=Win32&platform=WEB&ks0Q=d22ca0b81584fbea62237b14bd04c866&TeRS=1040x1920&tOHY=24xx1080x1920&Fvje=i1l1o1s1&q5aJ=-8&wNLf=99115dfb07133750ba677d055874de87&0aew=Mozilla%2f5.0+(Windows+NT+10.0%3b+WOW64)+AppleWebKit%2f537.36+(KHTML%2c+like+Gecko)+Chrome%2f71.0.3578.98+Safari%2f537.36");
+        get2.setRequestHeader(uan, uav);
+        get2.setRequestHeader("Host", "kyfw.12306.cn");
+        get2.setRequestHeader("Connection", "keep-alive");
+        get2.setRequestHeader("Referer", "https://kyfw.12306.cn/otn/login/init");
+        get2.setRequestHeader("Cookie", this.getCookie());
+        String cookie = get2.getRequestHeader("Cookie").toString();
+        LOGGER.info("cookie get2 = {}", cookie);
+        client.executeMethod(get2);
+        Cookie[] cookies1 = client.getState().getCookies();
+        this.setCookie(cookies1);
+
+        byte[] b = get2.getResponseBody();
+        String body = new String(b);
+        LOGGER.info("device body={}", new String(b));
+
+        body = body.substring(18, body.length() - 2);
+
+        JSONObject jsonObject = JSONUtil.parseObj(body);
+        String exp = jsonObject.get("exp").toString();  // RAIL_EXPIRATION
+        String dfp = jsonObject.get("dfp").toString();  // RAIL_DEVICEID
+
+        this.cookieMap.put("RAIL_EXPIRATION", exp);
+        this.cookieMap.put("RAIL_DEVICEID", dfp);
+
+        this.client12306 = client;
+
+        /*HttpResponse execute = get.execute();
         this.setCookie(execute);
         int status = execute.getStatus();
         LOGGER.info("进入12306登录页，状态码：{}", status);
 
-        String ua = get.header("User-Agent");
-        get.setUrl("https://kyfw.12306.cn/otn/HttpZF/logdevice?algID=0MJE0VjA3d&hashCode=Mg-sjiOpuel38VxPEIVQ1lEonugib5Ve8Z4aZ4xk8Lk&FMQw=0&q4f3=zh-CN&VySQ=FGH_5WheGZp0a87otadDmB7aiLsm9dA9&VPIf=1&custID=133&VEek=unknown&dzuS=0&yD16=0&EOQP=8f58b1186770646318a429cb33977d8c&lEnu=167851055&jp76=52d67b2a5aa5e031084733d5006cc664&hAqN=Win32&platform=WEB&ks0Q=d22ca0b81584fbea62237b14bd04c866&TeRS=1040x1920&tOHY=24xx1080x1920&Fvje=i1l1o1s1&q5aJ=-8&wNLf=99115dfb07133750ba677d055874de87&0aew=" + ua);
+        String uav = get.header("User-Agent");
+        get.setUrl("https://kyfw.12306.cn/otn/HttpZF/logdevice?algID=0MJE0VjA3d&hashCode=Mg-sjiOpuel38VxPEIVQ1lEonugib5Ve8Z4aZ4xk8Lk&FMQw=0&q4f3=zh-CN&VySQ=FGH_5WheGZp0a87otadDmB7aiLsm9dA9&VPIf=1&custID=133&VEek=unknown&dzuS=0&yD16=0&EOQP=8f58b1186770646318a429cb33977d8c&lEnu=167851055&jp76=52d67b2a5aa5e031084733d5006cc664&hAqN=Win32&platform=WEB&ks0Q=d22ca0b81584fbea62237b14bd04c866&TeRS=1040x1920&tOHY=24xx1080x1920&Fvje=i1l1o1s1&q5aJ=-8&wNLf=99115dfb07133750ba677d055874de87&0aew=" + uav);
         String body = get.execute().body();
 
         body = body.substring(18, body.length() - 2);
@@ -117,7 +161,7 @@ public class Shakedown12306Test {
         this.request12306 = get;
 
         this.setCookie("RAIL_EXPIRATION=" + exp + ";RAIL_DEVICEID=" + dfp);
-        this.setTK();
+        this.setTK();*/
     }
 
     public HttpRequest getHttpRequest() {
@@ -128,14 +172,23 @@ public class Shakedown12306Test {
         this.request12306.header("Cookie", this.cookie);
     }
 
-    private void setCookie(HttpResponse response) {
-        List<HttpCookie> cookies = response.getCookies();
-        cookies.forEach(hc -> {
-            if (StrUtil.isNotEmpty(this.cookie)) {
-                this.cookie += ";";
+    private String getCookie() {
+        StringBuilder cookies = new StringBuilder();
+        this.cookieMap.forEach((k, v) -> {
+            if (cookies.length() > 0) {
+                cookies.append(";");
             }
-            this.cookie += hc.toString();
+            cookies.append(k).append("=").append(v);
         });
+        return cookies.toString();
+    }
+
+    private void setCookie(Cookie[] cookies) {
+        for (Cookie cookie : cookies) {
+            LOGGER.info("cookie={}", cookie.toString());
+            this.cookieMap.put(cookie.getName(), cookie.getValue());
+
+        }
     }
 
     private void setCookie(String cookie) {
@@ -203,15 +256,19 @@ public class Shakedown12306Test {
         this.answer = this.getCaptchaCode(myCodes);
         LOGGER.info("answer={}", this.answer);
 
-        this.request12306.setUrl(checkCaptcha);
-        this.request12306.setMethod(Method.POST);
-        this.request12306.header("Accept", "application/json, text/javascript, */*; q=0.01");
-        this.request12306.header("Referer", "https://kyfw.12306.cn/otn/login/init");
+        PostMethod post = new PostMethod(checkCaptcha);
+        post.setRequestHeader(uan, uav);
+        post.setRequestHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+        post.setRequestHeader("Referer", "https://kyfw.12306.cn/otn/login/init");
+
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("answer", answer);
         hashMap.put("login_site", "E");
         hashMap.put("rand", "sjrand");
         this.request12306.form(hashMap);
+
+//        post.set
+
         String body = this.request12306.execute().body();
         LOGGER.info("body={}", body);
 
@@ -226,7 +283,7 @@ public class Shakedown12306Test {
         return false;
     }
 
-    public boolean isSuccessCaptcha() {
+    public boolean isSuccessCaptcha() throws IOException {
 
         // todo
         Scanner scanner = new Scanner(System.in);
@@ -237,13 +294,34 @@ public class Shakedown12306Test {
         LOGGER.info("answer={}", this.answer);
         String params = "?callback=jQuery19108263327514321501_1546591552466&rand=sjrand&login_site=E&_=" + (this.rand_ + 1) + "&answer=" + this.answer;
 
-        this.request12306.setUrl(checkCaptcha);
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("answer", answer);
-        hashMap.put("login_site", "E");
-        hashMap.put("rand", "sjrand");
-        this.request12306.form(hashMap);
-        String body = this.request12306.execute().body();
+
+        PostMethod post = new PostMethod(checkCaptcha);
+        post.setRequestHeader(uan, uav);
+        post.setRequestHeader("Host", "kyfw.12306.cn");
+        post.setRequestHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+        post.setRequestHeader("Connection", "keep-alive");
+        post.setRequestHeader("Referer", "https://kyfw.12306.cn/otn/login/init");
+        post.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        post.setRequestHeader("Cookie", this.getCookie());
+        LOGGER.info("cookie={}", this.getCookie());
+
+
+        NameValuePair[] valuePairs = {
+                new NameValuePair("answer", this.answer),
+                new NameValuePair("login_site", "E"),
+                new NameValuePair("rand", "sjrand")
+        };
+//        post.setParameter("answer", answer);
+//        post.setParameter("login_site", "E");
+//        post.setParameter("rand", "sjrand");
+        post.setRequestBody(valuePairs);
+
+        this.client12306.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+        this.client12306.executeMethod(post);
+
+        byte[] b = post.getResponseBody();
+//        this.request12306.form(hashMap);
+        String body = new String(b);
         LOGGER.info("body={}", body);
         body = body.substring(body.indexOf("(") + 1, body.indexOf(")"));
         JSONObject jsonObject = JSONUtil.parseObj(body);
@@ -296,7 +374,7 @@ public class Shakedown12306Test {
         this.request12306.setUrl("https://kyfw.12306.cn/otn/passport?redirect=/otn/login/userLogin");
         this.request12306.setMethod(Method.GET);
         HttpResponse execute = this.request12306.execute();
-        this.setCookie(execute);
+//        this.setCookie(execute);
         String body = execute.body();
 //        LOGGER.info("passport body={}", body);
     }
@@ -325,7 +403,7 @@ public class Shakedown12306Test {
         this.request12306.setMethod(Method.POST);
         this.request12306.form("tk", this.tk);
         HttpResponse execute = this.request12306.execute();
-        this.setCookie(execute);
+//        this.setCookie(execute);
 
         String cookieStr = execute.getCookieStr();
         LOGGER.info("tk={},cookieStr={}", tk, cookieStr);
@@ -351,7 +429,7 @@ public class Shakedown12306Test {
     public void initTicket() {
         String params = "?linktypeid=dc&fs=广州,GZQ,GZQ&ts=怀集,FAQ,FAQ&date=2019-01-13&flag=N,N,Y";
         this.request12306.setUrl(initTicket + params);
-        String cookie = "_jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u6000%u96C6%2CFAQ; _jc_save_fromDate=2019-02-08; _jc_save_toDate=2019-01-15; _jc_save_wfdc_flag=dc; current_captcha_type=Z";
+        String cookie = "_jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u6000%u96C6%2CFAQ; _jc_save_fromDate=2019-01-13; _jc_save_toDate=2019-01-10; _jc_save_wfdc_flag=dc; current_captcha_type=Z";
 //        this.request12306.header("Cookie", this.cookie + cookie);
         this.setCookie(cookie);
 
@@ -380,8 +458,6 @@ public class Shakedown12306Test {
      * 查票并提交订单或有票车次进行入库处理
      *
      * @param trainDate 列车出发日期
-     * @param formStation 列车出发站
-     * @param toStation 列车终点站
      */
     public boolean queryZAndSubmitOrder(String params, String trainDate, String trainNums, String seats, boolean isLogin) {
 //        String params = "?leftTicketDTO.train_date="+trainDate+"&leftTicketDTO.from_station="+formStation+"&leftTicketDTO.to_station="+toStation+"&purpose_codes=ADULT";
@@ -398,7 +474,7 @@ public class Shakedown12306Test {
         request12306.removeHeader("Origin");
         request12306.removeHeader("uamtk");
         request12306.header("Accept", "*/*");
-        request12306.header("Referer", "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E5%B9%BF%E5%B7%9E,GZQ&ts=%E6%80%80%E9%9B%86,FAQ&date=2019-01-15&flag=N,N,Y");
+        request12306.header("Referer", "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc");
         request12306.header("Cookie", this.cookie);
         request12306.header("Host", "kyfw.12306.cn");
         request12306.header("Connection", "keep-alive");
@@ -449,10 +525,8 @@ public class Shakedown12306Test {
                 if (seats.contains(l1SeatCode)) {
                     if (NumberUtil.isNumber(l1Seat) && Integer.valueOf(l1Seat) > 0) {
                         LOGGER.info("提交订单：车次：{}，一等座，发车日期：{}，座席：{}", trainNum, trainDate, l1SeatCode);
-                        this.submitOrderRequest(ts.getSecretStr(), trainDate, ts.getFormStationName(), ts.getToStationName());
                     } else if ("有".equals(l1Seat)) {
                         LOGGER.info("提交订单：车次：{}，一等座，发车日期：{}，座席：{}", trainNum, trainDate, l1SeatCode);
-                        this.submitOrderRequest(ts.getSecretStr(), trainDate, ts.getFormStationName(), ts.getToStationName());
                     }
                 }
 
@@ -532,18 +606,18 @@ public class Shakedown12306Test {
                 secretStr, trainDate, formStationName, toStationName);
 
         HttpRequest request12306;
-//        request12306 = HttpUtil.createPost(submitOrderRequest);
+        request12306 = HttpUtil.createPost(submitOrderRequest);
         request12306 = this.request12306;
         request12306.setUrl(submitOrderRequest);
         request12306.setMethod(Method.POST);
 //        this.setTK();
         String cookie = ";route=9036359bb8a8a461c164a04f8f50b252; RAIL_EXPIRATION=1547374564430; RAIL_DEVICEID=rGmhlViizyzMN4K9aVfwuSlB_el8ItIuUoWCqhLgtPdI82RK5wCTjAwnRu1Mf6ee0hsnGW0GxhnwhNIThiFHhu5kt5CIZozWl6_qVaTMsTNebEOXjdq6sFofAxhgT1aOkLqjcq6ecE2ZMOTr_jrBqrcweFJPHGCG; BIGipServerpassport=937951498.50215.0000; BIGipServerpool_passport=200081930.50215.0000; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u6000%u96C6%2CFAQ; _jc_save_fromDate=2019-01-13; _jc_save_toDate=2019-01-10; _jc_save_wfdc_flag=dc; current_captcha_type=Z; BIGipServerotn=484966666.24610.0000";
-//        request12306.header("Cookie", this.cookie);
-        request12306.header("Referer",  "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E5%B9%BF%E5%B7%9E,GZQ&ts=%E6%80%80%E9%9B%86,FAQ&date=2019-02-08&flag=N,N,Y");
-        request12306.header("Host", "kyfw.12306.cn");
-        request12306.header("Connection", "keep-alive");
-        request12306.header("Origin","https://kyfw.12306.cn");
-        request12306.header("Accept","*/*");
+//        request12306.header("Cookie", this.cookie + cookie);
+//        request12306.header("Referer",  "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E5%B9%BF%E5%B7%9E,GZQ&ts=%E6%80%80%E9%9B%86,FAQ&date=2019-01-13&flag=N,N,Y");
+//        request12306.header("Host", "kyfw.12306.cn");
+//        request12306.header("Connection", "keep-alive");
+//        request12306.header("Origin","https://kyfw.12306.cn");
+//        request12306.header("Accept","*/*");
 
         String cookie1 = request12306.header("Cookie");
         LOGGER.info("submitOrderRequest cookie={}", cookie1);
@@ -822,17 +896,20 @@ public class Shakedown12306Test {
         }
     }
 
-    public static void main(String[] args) {
-        Shakedown12306Test s12306 = new Shakedown12306Test();
+    public static void main(String[] args) throws IOException {
+        Shakedown12306Test2 s12306 = new Shakedown12306Test2();
+        s12306.getCaptchaImage();
+        s12306.isSuccessCaptcha();
+        /*Shakedown12306Test s12306 = new Shakedown12306Test();
         s12306.getCaptchaImage();
         if (s12306.isSuccessCatcha2()) {
             s12306.login12306("18218798420", "qr_kh_6926641746");
-            s12306.queryZ("2019-02-08", "GZQ", "FAQ",
-                    "D2804,D1842,D2962,D2842,D1872", "M,O,N", true);
+            s12306.queryZ("2019-01-13", "GZQ", "FAQ",
+                    "D2804,D1842,D2962,D2842", "M,O,N", true);
         } else {
             // todo 重新获取验证码并登录
             LOGGER.info("重新获取验证码并登录");
-        }
+        }*/
 
 //        s12306.queryZ("2019-01-13", "GZQ", "FAQ",
 //                "D2804,D1842,D2962", "M,O,N", false);
@@ -860,6 +937,8 @@ public class Shakedown12306Test {
 //
 //        String body = request12306.execute().body();
 //        LOGGER.info("submitOrderRequest={}", body);
+
+
 
     }
 

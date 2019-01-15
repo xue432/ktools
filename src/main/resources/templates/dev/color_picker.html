@@ -19,6 +19,11 @@
         #picker1 > div:nth-child(1) {
             height: 236px;
         }
+        @media (max-width: 576px) {
+            #bigpicker {
+                width: 345px!important;
+            }
+        }
     </style>
 </head>
 <body class="kt-bg">
@@ -87,9 +92,9 @@
                 <p class="kt-fs13 kt-fc-desc">扩展版使用说明：</p>
                 <p class="kt-fs13 kt-fc-desc"><span style="color: #1c94c4">$(element).bigColorpicker(callback,engine,sideLength,alwaysShow);</span>callback为回调函数，它可以把选择的颜色设置到绑bigColorpicker的元素的上，也可以自定义函数。engine可以为空，P、L，使用默认P，P代表着拾取器的背景是一张图片，而L则代表着拾取器的小格子是由一个个的li组成。sideLength参数是指小格子的个数，只有engine为L时生效，范围：2-10，默认为6；其中，前三个参数是原来插件的参数，<span style="color: red">alwaysShow是扩展的参数，默认false，若要直接展示拾色面板，改为true。</span></p>
                 <p class="kt-fs13 kt-fc-desc"></p>
-                <p class="kt-fs13 kt-fc-desc"><code>$(".ku").bigColorpicker(function(el,hex,rgb){</code></p>
-                <p class="kt-fs13 kt-fc-desc"><code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(rgb.r+','+rgb.g+','+rgb.b);</code></p>
-                <p class="kt-fs13 kt-fc-desc"><code>},'L', 10, true); </code></p>
+                <p class="kt-fs13 kt-fc-desc font-weight-bold"><code>$(".ku").bigColorpicker(function(el,hex,rgb){</code></p>
+                <p class="kt-fs13 kt-fc-desc font-weight-bold"><code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(rgb.r+','+rgb.g+','+rgb.b);</code></p>
+                <p class="kt-fs13 kt-fc-desc font-weight-bold"><code>},'L', 10, true); </code></p>
             </blockquote>
         </div>
     </div>
