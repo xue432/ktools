@@ -21,8 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.RoundingMode;
 import java.net.HttpCookie;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -363,11 +365,11 @@ public class Shakedown12306Test {
 
         initTicket();
 
-        try {
+        /*try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         for (String trainDate : trainDates.split(",")) {
             String params = "?leftTicketDTO.train_date="+trainDate+"&leftTicketDTO.from_station="+formStation+"&leftTicketDTO.to_station="+toStation+"&purpose_codes=ADULT";
             boolean b = this.queryZAndSubmitOrder(params, trainDate, trainNums, seats, isLogin);
@@ -530,20 +532,25 @@ public class Shakedown12306Test {
 
         LOGGER.info("secretStr={},trainDate={},formStationName={},toStationName={}",
                 secretStr, trainDate, formStationName, toStationName);
+        try {
+            secretStr = URLDecoder.decode(secretStr, "utf-8");
+            LOGGER.info("secretStr2={}", secretStr);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         HttpRequest request12306;
 //        request12306 = HttpUtil.createPost(submitOrderRequest);
         request12306 = this.request12306;
         request12306.setUrl(submitOrderRequest);
         request12306.setMethod(Method.POST);
-//        this.setTK();
         String cookie = ";route=9036359bb8a8a461c164a04f8f50b252; RAIL_EXPIRATION=1547374564430; RAIL_DEVICEID=rGmhlViizyzMN4K9aVfwuSlB_el8ItIuUoWCqhLgtPdI82RK5wCTjAwnRu1Mf6ee0hsnGW0GxhnwhNIThiFHhu5kt5CIZozWl6_qVaTMsTNebEOXjdq6sFofAxhgT1aOkLqjcq6ecE2ZMOTr_jrBqrcweFJPHGCG; BIGipServerpassport=937951498.50215.0000; BIGipServerpool_passport=200081930.50215.0000; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u6000%u96C6%2CFAQ; _jc_save_fromDate=2019-01-13; _jc_save_toDate=2019-01-10; _jc_save_wfdc_flag=dc; current_captcha_type=Z; BIGipServerotn=484966666.24610.0000";
 //        request12306.header("Cookie", this.cookie);
         request12306.header("Referer",  "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E5%B9%BF%E5%B7%9E,GZQ&ts=%E6%80%80%E9%9B%86,FAQ&date=2019-02-08&flag=N,N,Y");
-        request12306.header("Host", "kyfw.12306.cn");
-        request12306.header("Connection", "keep-alive");
-        request12306.header("Origin","https://kyfw.12306.cn");
-        request12306.header("Accept","*/*");
+//        request12306.header("Host", "kyfw.12306.cn");
+//        request12306.header("Connection", "keep-alive");
+//        request12306.header("Origin","https://kyfw.12306.cn");
+//        request12306.header("Accept","*/*");
 
         String cookie1 = request12306.header("Cookie");
         LOGGER.info("submitOrderRequest cookie={}", cookie1);
