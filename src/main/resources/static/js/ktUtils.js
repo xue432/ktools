@@ -526,7 +526,7 @@ function interval() {
 function showLoading(){
     var ele = $('#pbg');
     ele.html('<div class="progress">\n' +
-        '                                    <div id="pba" class="progress-bar progress-bar-striped progress-bar-animated" style="width:40%">0%</div>\n' +
+        '                                    <div id="pba" class="progress-bar progress-bar-striped progress-bar-animated" style="width:0">0%</div>\n' +
         '                                </div>');
     interval();
 }

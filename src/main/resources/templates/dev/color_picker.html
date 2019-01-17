@@ -36,7 +36,7 @@
     <nav>
         <ol class="breadcrumb mb-0 kt-bread-bg">
             <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
-            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
             <li class="breadcrumb-item kt-fs13"><a href="#">开发者工具</a></li>
             <li class="breadcrumb-item kt-fs13 active">颜色选择器</li>
         </ol>
@@ -54,8 +54,8 @@
                     <label class="kt-fc-desc">颜色选择器一</label>
                     <div id="picker1"></div>
                     <div class="mt-2" id="colorCode1">
-                        <input type="text" class="input-mini colorCode" disabled placeholder="hex颜色代码"/>
-                        <input type="text" class="input-mini colorCode" disabled placeholder="RGB颜色代码"/>
+                        <input type="text" class="input-mini colorCode" placeholder="hex颜色代码"/>
+                        <input type="text" class="input-mini colorCode" placeholder="RGB颜色代码"/>
                     </div>
                 </div>
 
@@ -63,8 +63,8 @@
                     <label class="kt-fc-desc">颜色选择器二</label>
                     <div id="picker2"></div>
                     <div class="mt-2" id="colorCode2">
-                        <input type="text" class="input-mini colorCode" disabled placeholder="hex颜色代码"/>
-                        <input type="text" class="input-mini colorCode" disabled placeholder="RGB颜色代码"/>
+                        <input type="text" class="input-mini colorCode" placeholder="hex颜色代码"/>
+                        <input type="text" class="input-mini colorCode" placeholder="RGB颜色代码"/>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,8 @@
                 <p class="kt-fs13 kt-fc-desc">1)支持直接展示拾色器面板，原来只支持点击才弹出拾色器面板</p>
                 <p class="kt-fs13 kt-fc-desc">2)支持返回RGB颜色对象，原来只支持返回hex颜色代码</p>
                 <p class="kt-fs13 kt-fc-desc">扩展版使用说明：</p>
-                <p class="kt-fs13 kt-fc-desc"><span style="color: #1c94c4">$(element).bigColorpicker(callback,engine,sideLength,alwaysShow);</span>callback为回调函数，它可以把选择的颜色设置到绑bigColorpicker的元素的上，也可以自定义函数。engine可以为空，P、L，使用默认P，P代表着拾取器的背景是一张图片，而L则代表着拾取器的小格子是由一个个的li组成。sideLength参数是指小格子的个数，只有engine为L时生效，范围：2-10，默认为6；其中，前三个参数是原来插件的参数，<span style="color: red">alwaysShow是扩展的参数，默认false，若要直接展示拾色面板，改为true。</span></p>
+                <p class="kt-fs13 kt-fc-desc"><span style="color: #1c94c4">$(element).bigColorpicker(callback,engine,sideLength,alwaysShow);</span></p>
+                <p class="kt-fs13 kt-fc-desc">callback为回调函数，它可以把选择的颜色设置到绑bigColorpicker的元素的上，也可以自定义函数。engine可以为空，P、L，使用默认P，P代表着拾取器的背景是一张图片，而L则代表着拾取器的小格子是由一个个的li组成。sideLength参数是指小格子的个数，只有engine为L时生效，范围：2-10，默认为6；其中，前三个参数是原来插件的参数，<span style="color: red">alwaysShow是扩展的参数，默认false，若要直接展示拾色面板，改为true。</span></p>
                 <p class="kt-fs13 kt-fc-desc"></p>
                 <p class="kt-fs13 kt-fc-desc font-weight-bold"><code>$(".ku").bigColorpicker(function(el,hex,rgb){</code></p>
                 <p class="kt-fs13 kt-fc-desc font-weight-bold"><code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(rgb.r+','+rgb.g+','+rgb.b);</code></p>

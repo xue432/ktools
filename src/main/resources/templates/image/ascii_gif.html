@@ -21,7 +21,7 @@
     <nav>
         <ol class="breadcrumb mb-0 kt-bread-bg">
             <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
-            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">Home</a></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
             <li class="breadcrumb-item kt-fs13"><a th:href="@{/image/artPic}">图片工具</a></li>
             <li class="breadcrumb-item kt-fs13 active">GIF字符动画生成</li>
         </ol>
@@ -47,8 +47,8 @@
                         <!--转换后显示图片区块-->
                         <div class="row kt-border">
                             <div class="col-sm-12" style="height: 300px">
-                                <a th:href="@{/static/image/char_gif.gif}" target="_blank" title="可点击图片下载缩略图">
-                                    <img th:src="@{/static/image/char_gif.gif}" id="handle" class="rounded fakeimg" alt="pic">
+                                <a th:href="@{/static/image/xhr_asc_gif.gif}" target="_blank" title="可点击图片下载缩略图">
+                                    <img th:src="@{/static/image/xhr_asc_gif.gif}" id="handle" class="rounded fakeimg" alt="pic">
                                 </a>
                                 <input type="text" hidden id="uploadFileName" value=""/>
                                 <input type="text" hidden id="handleFileName" value=""/>
