@@ -102,6 +102,9 @@ var ktUtils = {
             })
         }
         control.fileinput(allParams);
+
+        $('.file-drop-zone-title').text("拖拽文件到这里");
+
         return control;
     },
     /**
