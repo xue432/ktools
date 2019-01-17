@@ -13,14 +13,10 @@ import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.RoundingMode;
 import java.net.HttpCookie;
@@ -171,13 +167,10 @@ public class Shakedown12306Test {
         double dr = RandomUtil.randomDouble(0, 0.9, 17, RoundingMode.HALF_UP);
         LOGGER.info("dr = {}", dr);
         String params = "?login_site=E&module=login&rand=sjrand&1546593264150&callback=jQuery191042896203430328805_1546497225758&_=" + this.rand_;
-        // 0.36080305656170086
         params = "?login_site=E&module=login&rand=sjrand&" + dr;
 
         this.request12306.header("Referer", "https://kyfw.12306.cn/otn/resources/login.html");
-//        this.request12306.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
         this.request12306.header("Accept", "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01");
-//        this.request12306.header("Accept", "image/webp,image/apng,image/*,*/*;q=0.8");
         this.request12306.setUrl(captcha + params);
         String body = this.request12306.execute().body();
         LOGGER.info("body={}", body);
@@ -194,7 +187,6 @@ public class Shakedown12306Test {
         LOGGER.info("dr = {}", dr);
         String params = "?login_site=E&module=login&rand=sjrand&" + dr;
         HttpUtil.downloadFile(captcha + params, "C:\\Users\\Kalvin\\Desktop\\check.png");
-//        this.request12306.setUrl(captc)
     }
 
     public boolean isSuccessCatcha2() {
@@ -299,8 +291,6 @@ public class Shakedown12306Test {
         this.request12306.setMethod(Method.GET);
         HttpResponse execute = this.request12306.execute();
         this.setCookie(execute);
-        String body = execute.body();
-//        LOGGER.info("passport body={}", body);
     }
 
     public void postUamtk(String uamtk1) {
@@ -338,7 +328,6 @@ public class Shakedown12306Test {
         Integer resultCode = (Integer) jsonObject.get("result_code");
         if (resultCode == 0) {
             this.username = (String) jsonObject.get("username");
-//            this.queryInfo();
         }
     }
 
@@ -354,7 +343,6 @@ public class Shakedown12306Test {
         String params = "?linktypeid=dc&fs=广州,GZQ,GZQ&ts=怀集,FAQ,FAQ&date=2019-01-13&flag=N,N,Y";
         this.request12306.setUrl(initTicket + params);
         String cookie = "_jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u6000%u96C6%2CFAQ; _jc_save_fromDate=2019-02-08; _jc_save_toDate=2019-01-15; _jc_save_wfdc_flag=dc; current_captcha_type=Z";
-//        this.request12306.header("Cookie", this.cookie + cookie);
         this.setCookie(cookie);
 
         this.setTK();
@@ -365,11 +353,6 @@ public class Shakedown12306Test {
 
         initTicket();
 
-        /*try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         for (String trainDate : trainDates.split(",")) {
             String params = "?leftTicketDTO.train_date="+trainDate+"&leftTicketDTO.from_station="+formStation+"&leftTicketDTO.to_station="+toStation+"&purpose_codes=ADULT";
             boolean b = this.queryZAndSubmitOrder(params, trainDate, trainNums, seats, isLogin);
@@ -387,10 +370,6 @@ public class Shakedown12306Test {
      */
     public boolean queryZAndSubmitOrder(String params, String trainDate, String trainNums, String seats, boolean isLogin) {
 //        String params = "?leftTicketDTO.train_date="+trainDate+"&leftTicketDTO.from_station="+formStation+"&leftTicketDTO.to_station="+toStation+"&purpose_codes=ADULT";
-
-//        Shakedown12306Test s12306 = new Shakedown12306Test();
-//        HttpRequest request = s12306.getHttpRequest();
-
 
         HttpRequest request12306;
         request12306 = HttpUtil.createGet(queryZ + params);
@@ -493,24 +472,6 @@ public class Shakedown12306Test {
         }
         return false;
 
-//        scheduleList.forEach(System.out::println);
-    }
-
-    /**
-     * 查票 带tk
-     * 查到票马上提交订单
-     * @param trainDate 列车出发日期
-     * @param formStation 列车出发站
-     * @param toStation 列车终点站
-     */
-    public void queryZWithTK(String trainDate, String formStation, String toStation) {
-        String params = "?leftTicketDTO.train_date="+trainDate+"&leftTicketDTO.from_station="+formStation+"&leftTicketDTO.to_station="+toStation+"&purpose_codes=ADULT";
-        this.request12306.setUrl(queryZ + params);
-        this.request12306.setMethod(Method.GET);
-//        this.setTK();
-
-        String body = this.request12306.execute().body();
-        LOGGER.info("body={}", body);
     }
 
     public void checkUser() {
@@ -843,30 +804,6 @@ public class Shakedown12306Test {
 
 //        s12306.queryZ("2019-01-13", "GZQ", "FAQ",
 //                "D2804,D1842,D2962", "M,O,N", false);
-
-//        HttpRequest request12306 = HttpUtil.createPost(Shakedown12306Test.submitOrderRequest);
-//        request12306.header("Cookie", "JSESSIONID=2951DC09EAD8CEFCC978403A2DB97CD7; tk=ct9YmKzLkoVMb3wLOrNaILcYq1oOtdCL0oLSCjbQSfo921210; route=9036359bb8a8a461c164a04f8f50b252; RAIL_EXPIRATION=1547374564430; RAIL_DEVICEID=rGmhlViizyzMN4K9aVfwuSlB_el8ItIuUoWCqhLgtPdI82RK5wCTjAwnRu1Mf6ee0hsnGW0GxhnwhNIThiFHhu5kt5CIZozWl6_qVaTMsTNebEOXjdq6sFofAxhgT1aOkLqjcq6ecE2ZMOTr_jrBqrcweFJPHGCG; BIGipServerpassport=937951498.50215.0000; BIGipServerpool_passport=200081930.50215.0000; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u6000%u96C6%2CFAQ; _jc_save_toDate=2019-01-10; _jc_save_wfdc_flag=dc; current_captcha_type=Z; BIGipServerotn=770703882.38945.0000; _jc_save_fromDate=2019-01-13");
-//        request12306.header("Referer",  "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E5%B9%BF%E5%B7%9E,GZQ&ts=%E6%80%80%E9%9B%86,FAQ&date=2019-01-13&flag=N,N,Y");
-//        request12306.header("Host", "kyfw.12306.cn");
-//        request12306.header("Connection", "keep-alive");
-//        request12306.header("Origin","https://kyfw.12306.cn");
-//        request12306.header("Accept","*/*");
-//
-//        String format = DateUtil.format(new Date(), "yyyy-MM-dd");
-//        LOGGER.info("format={}", format);
-//        HashMap<String, Object> hashMap = new HashMap<>();
-//        hashMap.put("secretStr", "jDiKahaKKm0oAGMNa4MdYRvD8VH3%2F8NEr0wmJlSG7TJlPA7CLPBaPW3TU%2FZBfDk83sWGfYeCGQmZ%0A4yPcOVbKOBnQO%2Bi%2Fi7znRr3TxQDO2rC9qs%2FSoiCijCsnOBaZDBJwPaq1xLR0VX2Tge0Ob23Zar6%2B%0AB6Oe%2BCpibvgpULZAZOiqxunipINWEE4U2%2Bo92UvD96RcqaCN%2F6lLM1%2F%2FgriyDAwKCWn3zdND0dLf%0A%2F3%2Bmou1mIhDLOdRtoOkpXeR49gAjsocriJPascNshc9uc7JlJXXQXxh5eRjYUH0rni20VGg%3D");
-//        hashMap.put("train_date", "2019-01-13");
-//        hashMap.put("back_train_date", format); // 返程日
-//        hashMap.put("tour_flag", "dc");
-//        hashMap.put("purpose_codes", "ADULT");
-//        hashMap.put("query_from_station_name", "广州");
-//        hashMap.put("query_to_station_name", "怀集");
-//        hashMap.put("undefined", "");
-//        request12306.form(hashMap);
-//
-//        String body = request12306.execute().body();
-//        LOGGER.info("submitOrderRequest={}", body);
 
     }
 
