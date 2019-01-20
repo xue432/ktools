@@ -1,7 +1,10 @@
 package com.kalvin.ktools;
 
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -11,9 +14,9 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +34,9 @@ public class MainTest {
 //        checkCaptcha(30,54,104,50,187,118);
 //        splitI();
 //        handleStationNameData();
+        DateTime date = DateUtil.parse("2019-02-08");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy '00:00:00' 'GMT'Z '(中国标准时间)'", Locale.ENGLISH);
+        System.out.println("date = " + sdf.format(date));
     }
 
     //使用UnicodeScript方法判断

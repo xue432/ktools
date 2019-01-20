@@ -4,6 +4,7 @@ package com.kalvin.ktools;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -21,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.RoundingMode;
 import java.net.HttpCookie;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -34,11 +36,13 @@ import java.util.*;
  * 7、提交订单
  * 8、initDc
  * 9、GetJS
- * 10、检查订单
- * 11、队列计数（准备进入下单步骤）
- * 12、正式下单
- * 13、下单确认中（调用两次）
- * 14、结果回执
+ * 10、getPassengerDTOs
+ * 11、getPassCodeNew
+ * 12、检查订单
+ * 13、队列计数（准备进入下单步骤）
+ * 14、正式下单
+ * 15、下单确认中（调用两次）
+ * 16、结果回执
  */
 public class Shakedown12306Test {
 
@@ -65,6 +69,9 @@ public class Shakedown12306Test {
     private static String initDc = "https://kyfw.12306.cn/otn/confirmPassenger/initDc";
     // GetJS
     private static String getJS = "https://kyfw.12306.cn/otn/HttpZF/GetJS";
+    // getPassengerDTOs
+    private static String getPassengerDTOs = "https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs";
+    private static String getPassCodeNew = "https://kyfw.12306.cn/otn/passcodeNew/getPassCodeNew";
     // 检查订单
     private static String checkOrderInfo = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo";
     // 队列计数（准备进入下单步骤）
@@ -76,6 +83,7 @@ public class Shakedown12306Test {
     // 结果回执
     private static String resultOrderForDcQueue = "https://kyfw.12306.cn/otn/confirmPassenger/resultOrderForDcQueue";
 
+    private static String accept = "text/javascript, application/javascript, application/ecmascript,application/json, application/x-ecmascript,image/webp,image/apng,image/*,*/*; q=0.01";
     private static String l1SeatCode = "M";
     private static String l2SeatCode = "O";
     private static String noSeatCode = "N";
@@ -84,7 +92,34 @@ public class Shakedown12306Test {
     private long rand_;
     private String tk;
     private String cookie = "";
-    private String username;
+
+    private String secretStr;   // 车次加密串
+    private String trainDate;   // 列车出发日期
+    private String formStationName; //  始发站
+    private String toStationName;   // 到达站
+//    private String trainSeat;   // 最终提交的列车座席 M、O、N
+    private String seatType;    // 座席类型：M、O(二等座、无座)
+
+    private String repeatSubmitToken; // 请求提交令牌
+
+    private String trainNo;
+    private String stationTrainCode;
+    private String fromStationTelecode;
+    private String toStationTelecode;
+    private String leftTicket;
+    private String purposeCodes = "00";
+    private String trainLocation;
+
+    private String passengerTicketStr = "{seatType},0,1,{username},1,{passengerIdCard},,N";
+    private String oldPassengerStr = "{username},1,{passengerIdCard},1_";
+
+    private String keyCheckIsChange;
+
+    private int passengerIdType = 1; // 证件类型:身份证
+    private int ticketType = 1;     // 票种：成人票
+
+    private String username;    // 乘客姓名
+    private String passengerIdCard;    // 乘客身份证号
 
     private final List<String> dictCode = Lists.newArrayList("36,46", "116,46", "188,46", "267,43", "40,118", "113,119", "190,122", "264,115");
 
@@ -98,9 +133,9 @@ public class Shakedown12306Test {
         int status = execute.getStatus();
         LOGGER.info("进入12306登录页，状态码：{}", status);
 
-        String ua = get.header("User-Agent");
-        get.setUrl("https://kyfw.12306.cn/otn/HttpZF/logdevice?algID=0MJE0VjA3d&hashCode=Mg-sjiOpuel38VxPEIVQ1lEonugib5Ve8Z4aZ4xk8Lk&FMQw=0&q4f3=zh-CN&VySQ=FGH_5WheGZp0a87otadDmB7aiLsm9dA9&VPIf=1&custID=133&VEek=unknown&dzuS=0&yD16=0&EOQP=8f58b1186770646318a429cb33977d8c&lEnu=167851055&jp76=52d67b2a5aa5e031084733d5006cc664&hAqN=Win32&platform=WEB&ks0Q=d22ca0b81584fbea62237b14bd04c866&TeRS=1040x1920&tOHY=24xx1080x1920&Fvje=i1l1o1s1&q5aJ=-8&wNLf=99115dfb07133750ba677d055874de87&0aew=" + ua);
-        String body = get.execute().body();
+//        String ua = get.header("User-Agent");
+//        get.setUrl("https://kyfw.12306.cn/otn/HttpZF/logdevice?algID=0MJE0VjA3d&hashCode=Mg-sjiOpuel38VxPEIVQ1lEonugib5Ve8Z4aZ4xk8Lk&FMQw=0&q4f3=zh-CN&VySQ=FGH_5WheGZp0a87otadDmB7aiLsm9dA9&VPIf=1&custID=133&VEek=unknown&dzuS=0&yD16=0&EOQP=8f58b1186770646318a429cb33977d8c&lEnu=167851055&jp76=52d67b2a5aa5e031084733d5006cc664&hAqN=Win32&platform=WEB&ks0Q=d22ca0b81584fbea62237b14bd04c866&TeRS=1040x1920&tOHY=24xx1080x1920&Fvje=i1l1o1s1&q5aJ=-8&wNLf=99115dfb07133750ba677d055874de87&0aew=" + ua);
+        /*String body = get.execute().body();
 
         body = body.substring(18, body.length() - 2);
         LOGGER.info("logdevice body={}", body);
@@ -110,11 +145,11 @@ public class Shakedown12306Test {
         String dfp = jsonObject.get("dfp").toString();  // RAIL_DEVICEID
 
         String rand = "1546" + RandomUtil.randomNumbers(9);
-        this.rand_ = Long.valueOf(rand);
+        this.rand_ = Long.valueOf(rand);*/
 
         this.request12306 = get;
 
-        this.setCookie("RAIL_EXPIRATION=" + exp + ";RAIL_DEVICEID=" + dfp);
+//        this.setCookie("RAIL_EXPIRATION=" + exp + ";RAIL_DEVICEID=" + dfp);
         this.setTK();
     }
 
@@ -143,34 +178,13 @@ public class Shakedown12306Test {
         this.cookie += cookie;
     }
 
-    /**
-     * 获取验证码位置代码
-     * @param myCodes 1~8，多个使用英文逗号分隔
-     * @return
-     */
-    public String getCaptchaCode(String myCodes) {
-        StringBuilder captchaCode = new StringBuilder();
-        String[] myCodeArr = myCodes.split("");
-        if (myCodeArr.length == 0) {
-            return captchaCode.toString();
-        }
-        for (String myCode : myCodeArr) {
-            if (captchaCode.length() > 0) {
-                captchaCode.append(",");
-            }
-            captchaCode.append(this.dictCode.get(Integer.valueOf(myCode) - 1));
-        }
-        return captchaCode.toString();
-    }
-
     public void getCaptchaBase64() {
-        double dr = RandomUtil.randomDouble(0, 0.9, 17, RoundingMode.HALF_UP);
-        LOGGER.info("dr = {}", dr);
         String params = "?login_site=E&module=login&rand=sjrand&1546593264150&callback=jQuery191042896203430328805_1546497225758&_=" + this.rand_;
-        params = "?login_site=E&module=login&rand=sjrand&" + dr;
+        params = "?login_site=E&module=login&rand=sjrand&" + this.genDoubleRand();
 
         this.request12306.header("Referer", "https://kyfw.12306.cn/otn/resources/login.html");
-        this.request12306.header("Accept", "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01");
+//        this.request12306.header("Accept", "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01");
+        this.request12306.header("Accept", accept);
         this.request12306.setUrl(captcha + params);
         String body = this.request12306.execute().body();
         LOGGER.info("body={}", body);
@@ -183,23 +197,20 @@ public class Shakedown12306Test {
     }
 
     public void getCaptchaImage() {
-        double dr = RandomUtil.randomDouble(0, 0.9, 17, RoundingMode.HALF_UP);
-        LOGGER.info("dr = {}", dr);
-        String params = "?login_site=E&module=login&rand=sjrand&" + dr;
-        HttpUtil.downloadFile(captcha + params, "C:\\Users\\Kalvin\\Desktop\\check.png");
+        String params = "?login_site=E&module=login&rand=sjrand&" + this.genDoubleRand();
+        HttpUtil.downloadFile(captcha + params, "C:\\Users\\14813\\Desktop\\check.png");
     }
 
-    public boolean isSuccessCatcha2() {
+    public boolean checkCaptcha() {
         Scanner scanner = new Scanner(System.in);
         String myCodes = scanner.nextLine();
-        LOGGER.info("myCodes={}", myCodes);
-
         this.answer = this.getCaptchaCode(myCodes);
         LOGGER.info("answer={}", this.answer);
 
         this.request12306.setUrl(checkCaptcha);
         this.request12306.setMethod(Method.POST);
-        this.request12306.header("Accept", "application/json, text/javascript, */*; q=0.01");
+//        this.request12306.header("Accept", "application/json, text/javascript, */*; q=0.01");
+        this.request12306.header("Accept", accept);
         this.request12306.header("Referer", "https://kyfw.12306.cn/otn/login/init");
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("answer", answer);
@@ -211,38 +222,6 @@ public class Shakedown12306Test {
 
         JSONObject jsonObject = JSONUtil.parseObj(body);
         String resultCode = jsonObject.get("result_code").toString();
-        LOGGER.info("resultCode={}", resultCode);
-
-        if ("4".equals(resultCode)) {
-            LOGGER.info("验证码校验成功");
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isSuccessCaptcha() {
-
-        // todo
-        Scanner scanner = new Scanner(System.in);
-        String myCodes = scanner.nextLine();
-        LOGGER.info("myCodes={}", myCodes);
-
-        this.answer = this.getCaptchaCode(myCodes);
-        LOGGER.info("answer={}", this.answer);
-        String params = "?callback=jQuery19108263327514321501_1546591552466&rand=sjrand&login_site=E&_=" + (this.rand_ + 1) + "&answer=" + this.answer;
-
-        this.request12306.setUrl(checkCaptcha);
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("answer", answer);
-        hashMap.put("login_site", "E");
-        hashMap.put("rand", "sjrand");
-        this.request12306.form(hashMap);
-        String body = this.request12306.execute().body();
-        LOGGER.info("body={}", body);
-        body = body.substring(body.indexOf("(") + 1, body.indexOf(")"));
-        JSONObject jsonObject = JSONUtil.parseObj(body);
-        String resultCode = jsonObject.get("result_code").toString();
-        LOGGER.info("resultCode={}", resultCode);
 
         if ("4".equals(resultCode)) {
             LOGGER.info("验证码校验成功");
@@ -283,7 +262,7 @@ public class Shakedown12306Test {
         this.request12306.setMethod(Method.GET);
         HttpResponse execute = this.request12306.execute();
         int status = execute.getStatus();
-        LOGGER.info("status={}", status);
+        LOGGER.info("userLogin status={}", status);
     }
 
     public void passport() {
@@ -294,13 +273,11 @@ public class Shakedown12306Test {
     }
 
     public void postUamtk(String uamtk1) {
-        LOGGER.info("uamtk={}", uamtk);
         this.request12306.setUrl(uamtk);
         this.request12306.setMethod(Method.POST);
         this.request12306.header("uamtk", uamtk1);
         this.request12306.form("appid", "otn");
         String body = this.request12306.execute().body();
-        LOGGER.info("body={}", body);
 
         JSONObject jsonObject = JSONUtil.parseObj(body);
         Integer resultCode = (Integer) jsonObject.get("result_code");
@@ -328,15 +305,27 @@ public class Shakedown12306Test {
         Integer resultCode = (Integer) jsonObject.get("result_code");
         if (resultCode == 0) {
             this.username = (String) jsonObject.get("username");
+            this.queryPassengerInfo();
         }
     }
 
-    public void queryInfo() {
+    public void queryPassengerInfo() {
         this.request12306.setUrl("https://kyfw.12306.cn/otn/modifyUser/initQueryUserInfoApi");
         this.request12306.setMethod(Method.POST);
         this.setTK();
         String body = this.request12306.execute().body();
-        LOGGER.info("queryInfo={}", body);
+        JSON parse = JSONUtil.parse(body);
+        JSONObject object = (JSONObject) parse.getByPath("data.userDTO.loginUserDTO");
+//        LOGGER.info("queryInfo={}", body);
+        String name = object.get("name").toString();
+        Integer idTypeCode = Integer.valueOf(object.get("id_type_code").toString());
+        String idNo = object.get("id_no").toString();
+        this.username = name;
+        this.passengerIdCard = idNo;
+        LOGGER.info("name={},idTypeCode={},idNo={}", name, idTypeCode, idNo);
+        this.passengerTicketStr = this.passengerTicketStr.replace("{username}", name).replace("{passengerIdCard}", idNo);
+        this.oldPassengerStr = this.oldPassengerStr.replace("{username}", name).replace("{passengerIdCard}", idNo);
+        LOGGER.info("passengerTicketStr={},oldPassengerStr={}", this.passengerTicketStr, this.oldPassengerStr);
     }
 
     public void initTicket() {
@@ -349,37 +338,37 @@ public class Shakedown12306Test {
 
     }
 
-    public void queryZ(String trainDates, String formStation, String toStation, String trainNums, String seats, boolean isLogin) {
+    public boolean queryZ(String trainDates, String formStation, String toStation, String trainNums, String seats, boolean isLogin) {
 
         initTicket();
 
         for (String trainDate : trainDates.split(",")) {
             String params = "?leftTicketDTO.train_date="+trainDate+"&leftTicketDTO.from_station="+formStation+"&leftTicketDTO.to_station="+toStation+"&purpose_codes=ADULT";
-            boolean b = this.queryZAndSubmitOrder(params, trainDate, trainNums, seats, isLogin);
-            if (b) break;
+            return this.queryZAndSubmitOrder(params, trainDate, trainNums, seats, isLogin);
         }
+
+        return false;
 
     }
 
     /**
      * 查票并提交订单或有票车次进行入库处理
-     *
-     * @param trainDate 列车出发日期
-     * @param formStation 列车出发站
-     * @param toStation 列车终点站
+     * @param params 车票查询接口参数
+     * @param trainDate 出发日期
+     * @param trainNums 车次
+     * @param seats 座席：M、O、N
+     * @param isLogin 是否登录状态
+     * @return
      */
     public boolean queryZAndSubmitOrder(String params, String trainDate, String trainNums, String seats, boolean isLogin) {
-//        String params = "?leftTicketDTO.train_date="+trainDate+"&leftTicketDTO.from_station="+formStation+"&leftTicketDTO.to_station="+toStation+"&purpose_codes=ADULT";
-
         HttpRequest request12306;
         request12306 = HttpUtil.createGet(queryZ + params);
-//        request12306 = this.request12306;
         request12306.setUrl(queryZ + params);
         request12306.setMethod(Method.GET);
         request12306.removeHeader("Origin");
         request12306.removeHeader("uamtk");
         request12306.header("Accept", "*/*");
-        request12306.header("Referer", "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E5%B9%BF%E5%B7%9E,GZQ&ts=%E6%80%80%E9%9B%86,FAQ&date=2019-01-15&flag=N,N,Y");
+//        request12306.header("Referer", "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E5%B9%BF%E5%B7%9E,GZQ&ts=%E6%80%80%E9%9B%86,FAQ&date=2019-01-15&flag=N,N,Y");
         request12306.header("Cookie", this.cookie);
         request12306.header("Host", "kyfw.12306.cn");
         request12306.header("Connection", "keep-alive");
@@ -395,140 +384,107 @@ public class Shakedown12306Test {
 
         List<TrainSchedule> scheduleList = this.handleTrainInfo(body);
         for (TrainSchedule ts : scheduleList) {
+            boolean submitFlg = false;
             String trainNum = ts.getTrainNum();
+            String l1Seat = ts.getL1Seat();
+            String l2Seat = ts.getL2Seat();
+            String noSeat = ts.getNoSeat(); // todo 无座标识
+
+            LOGGER.info("可预订车票：发车日期：{}，车次：{}，座席：一等座{}、二等座{}、无座{}", trainDate, trainNum, l1Seat, l2Seat, noSeat);
             if (trainNums.contains(trainNum)) { // 当前车次有票
-                String l1Seat = ts.getL1Seat();
-                String l2Seat = ts.getL2Seat();
-                String noSeat = ts.getNoSeat();
+
+                // 先进行一次解码。避免提交后再编码一次导致参数失效
+                this.secretStr = this.urlDecode(ts.getSecretStr());
+                this.leftTicket = this.urlDecode(ts.getLeftTicket());
+
+                this.trainNo = ts.getTrainNo();
+                this.trainDate = trainDate;
+                this.formStationName = ts.getFormStationName();
+                this.toStationName = ts.getToStationName();
+                this.stationTrainCode = trainNum;
+                this.fromStationTelecode = ts.getFormStationTelecode();
+                this.toStationTelecode = ts.getToStationTelecode();
+                this.trainLocation = ts.getTrainLocation();
 
                 // 优先考虑二等座
-                if (seats.contains(l2Seat)) {
-                    if (NumberUtil.isNumber(l2Seat) && Integer.valueOf(l2Seat) > 0) {
-                        if (isLogin) {
-                            // todo 提交订单
-                            LOGGER.info("提交订单：车次：{}，二等座，发车日期：{}，座席：{}", trainNum, trainDate, l2SeatCode);
-                            this.submitOrderRequest(ts.getSecretStr(), trainDate, ts.getFormStationName(), ts.getToStationName());
-//                            this.initDc();
-                            return true;
-                        } else {
-                            // todo 有票车次进行入库处理
-                        }
-
-                    } else if ("有".equals(l2Seat)) {
-                        if (isLogin) {
-                            // todo 提交订单
-                            LOGGER.info("提交订单：车次：{}，二等座，发车日期：{}，座席：{}", trainNum, trainDate, l2SeatCode);
-                            this.submitOrderRequest(ts.getSecretStr(), trainDate, ts.getFormStationName(), ts.getToStationName());
-//                            this.initDc();
-                            return true;
-                        }
-
-                    }
+                if (seats.contains(l2SeatCode)) {
+                    submitFlg = (NumberUtil.isNumber(l2Seat) && Integer.valueOf(l2Seat) > 0) || "有".equals(l2Seat);
+                    this.seatType = l2SeatCode;
+                    LOGGER.info("提交订单：车次：{}，二等座，发车日期：{}，座席：{}", trainNum, trainDate, l2SeatCode);
+                } else if (seats.contains(l1SeatCode)) {    // 其次一等座
+                    submitFlg = (NumberUtil.isNumber(l1Seat) && Integer.valueOf(l1Seat) > 0) || "有".equals(l1Seat);
+                    this.seatType = l1SeatCode;
+                    LOGGER.info("提交订单：车次：{}，一等座，发车日期：{}，座席：{}", trainNum, trainDate, l1SeatCode);
+                } else if (seats.contains(noSeatCode)) {    // 最后选择无座
+                    submitFlg = (NumberUtil.isNumber(noSeat) && Integer.valueOf(noSeat) > 0) || "有".equals(noSeat);
+                    this.seatType = l2SeatCode; // 无座 座席类型和二等座一样是：O
+                    LOGGER.info("提交订单：车次：{}，无座，发车日期：{}，座席：{}", trainNum, trainDate, noSeatCode);
                 }
 
-                // 其次一等座
-                if (seats.contains(l1SeatCode)) {
-                    if (NumberUtil.isNumber(l1Seat) && Integer.valueOf(l1Seat) > 0) {
-                        LOGGER.info("提交订单：车次：{}，一等座，发车日期：{}，座席：{}", trainNum, trainDate, l1SeatCode);
-                        this.submitOrderRequest(ts.getSecretStr(), trainDate, ts.getFormStationName(), ts.getToStationName());
-                    } else if ("有".equals(l1Seat)) {
-                        LOGGER.info("提交订单：车次：{}，一等座，发车日期：{}，座席：{}", trainNum, trainDate, l1SeatCode);
-                        this.submitOrderRequest(ts.getSecretStr(), trainDate, ts.getFormStationName(), ts.getToStationName());
+                LOGGER.info("submitFlg={}", submitFlg);
+                if (submitFlg) {    // 提交订单
+                    if (isLogin) {
+                        this.passengerTicketStr = this.passengerTicketStr.replace("{seatType}", this.seatType);
+//                        this.submitOrderRequest();
+//                        this.initDc();
+                        return true;
+                    } else {
+                        // todo 入队列
+                        LOGGER.info("车次：{}入队列", trainNum);
                     }
                 }
-
-                // 最后选择无座
-                if (seats.contains(noSeatCode)) {
-                    if (NumberUtil.isNumber(noSeat) && Integer.valueOf(noSeat) > 0) {
-                        if (isLogin) {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            LOGGER.info("提交订单：车次：{}，无座，发车日期：{}，座席：{}", trainNum, trainDate, noSeatCode);
-                            this.submitOrderRequest(ts.getSecretStr(), trainDate, ts.getFormStationName(), ts.getToStationName());
-//                            this.initDc();
-                            return true;
-                        } else {
-
-                        }
-
-                    } else if ("有".equals(noSeat)) {
-                        if (isLogin) {
-                            LOGGER.info("提交订单：车次：{}，无座，发车日期：{}，座席：{}", trainNum, trainDate, noSeatCode);
-                            this.submitOrderRequest(ts.getSecretStr(), trainDate, ts.getFormStationName(), ts.getToStationName());
-//                            this.initDc();
-                            return true;
-                        } else {
-
-                        }
-                    }
-                }
-
-            } else {
-                LOGGER.info("当前车次{}有票，但不符合当前用户抢票条件", trainNum);
             }
         }
         return false;
-
     }
 
     public void checkUser() {
         this.request12306.setUrl(checkUser);
         this.request12306.setMethod(Method.POST);
         this.request12306.header("Referer",  "https://kyfw.12306.cn/otn/leftTicket/init");
-//        this.setTK();
-        String cookie = this.request12306.header("Cookie");
-        LOGGER.info("checkUser cookie={}", cookie);
-
-        String body = this.request12306.execute().body();
-        LOGGER.info("checkUser body={}", body);
+        this.request12306.execute();
     }
 
-    public void submitOrderRequest(String secretStr, String trainDate, String formStationName, String toStationName) {
+    public void submitOrderRequest() {
 
         // checkUser
         this.checkUser();
 
         LOGGER.info("secretStr={},trainDate={},formStationName={},toStationName={}",
                 secretStr, trainDate, formStationName, toStationName);
-        try {
-            secretStr = URLDecoder.decode(secretStr, "utf-8");
-            LOGGER.info("secretStr2={}", secretStr);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
 
-        HttpRequest request12306;
-//        request12306 = HttpUtil.createPost(submitOrderRequest);
-        request12306 = this.request12306;
-        request12306.setUrl(submitOrderRequest);
-        request12306.setMethod(Method.POST);
-        String cookie = ";route=9036359bb8a8a461c164a04f8f50b252; RAIL_EXPIRATION=1547374564430; RAIL_DEVICEID=rGmhlViizyzMN4K9aVfwuSlB_el8ItIuUoWCqhLgtPdI82RK5wCTjAwnRu1Mf6ee0hsnGW0GxhnwhNIThiFHhu5kt5CIZozWl6_qVaTMsTNebEOXjdq6sFofAxhgT1aOkLqjcq6ecE2ZMOTr_jrBqrcweFJPHGCG; BIGipServerpassport=937951498.50215.0000; BIGipServerpool_passport=200081930.50215.0000; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u6000%u96C6%2CFAQ; _jc_save_fromDate=2019-01-13; _jc_save_toDate=2019-01-10; _jc_save_wfdc_flag=dc; current_captcha_type=Z; BIGipServerotn=484966666.24610.0000";
-//        request12306.header("Cookie", this.cookie);
-        request12306.header("Referer",  "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=%E5%B9%BF%E5%B7%9E,GZQ&ts=%E6%80%80%E9%9B%86,FAQ&date=2019-02-08&flag=N,N,Y");
-//        request12306.header("Host", "kyfw.12306.cn");
-//        request12306.header("Connection", "keep-alive");
-//        request12306.header("Origin","https://kyfw.12306.cn");
-//        request12306.header("Accept","*/*");
+        this.request12306.setUrl(submitOrderRequest);
+        this.request12306.setMethod(Method.POST);
 
         String cookie1 = request12306.header("Cookie");
         LOGGER.info("submitOrderRequest cookie={}", cookie1);
 
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("secretStr", secretStr);
-        hashMap.put("train_date", trainDate);
+        hashMap.put("secretStr", this.secretStr);
+        hashMap.put("train_date", this.trainDate);
         hashMap.put("back_train_date", DateUtil.format(new Date(), "yyyy-MM-dd")); // 返程日
-        hashMap.put("tour_flag", "dc");
-        hashMap.put("purpose_codes", "ADULT");
+        hashMap.put("tour_flag", "dc"); // 单程
+        hashMap.put("purpose_codes", "ADULT");  // 成人票
         hashMap.put("query_from_station_name", "广州");   // todo
-        hashMap.put("query_to_station_name", toStationName);
+        hashMap.put("query_to_station_name", this.toStationName);
         hashMap.put("undefined", "");
-        request12306.form(hashMap);
+        this.request12306.form(hashMap);
 
-        String body = request12306.execute().body();
+        String body = this.request12306.execute().body();
         LOGGER.info("submitOrderRequest={}", body);
+        JSONObject jsonObject = JSONUtil.parseObj(body);
+        boolean status = (boolean) jsonObject.get("status");
+        if (status) {
+            String data = jsonObject.get("data").toString();
+            if ("N".equals(data)) {
+                // todo checkOrderInfo
+                this.initDc();
+                this.checkOrderInfo();
+            }
+        } else {
+            // todo
+            this.submitOrderRequest();
+        }
 
     }
 
@@ -540,14 +496,200 @@ public class Shakedown12306Test {
         this.setTK();
 
         String body = this.request12306.execute().body();
-        LOGGER.info("initDc={}", body);
+//        LOGGER.info("initDc={}", body);
+        List<String> list0 = ReUtil.findAll("globalRepeatSubmitToken = '(.*?)'", body, 1);
+        List<String> list1 = ReUtil.findAll("'key_check_isChange':'(.*?)'", body, 1);
+        this.repeatSubmitToken = list0.get(0);
+        this.keyCheckIsChange = list1.get(0);
+
+        this.getJS();
+        this.getPassengerDTOs();
+        this.getPassCodeNew();
+    }
+
+    public void getJS() {
+        this.request12306.setUrl(getJS);
+        this.request12306.setMethod(Method.GET);
+        this.request12306.execute();
+    }
+
+    public void getPassengerDTOs() {
+        this.request12306.setUrl(getPassengerDTOs);
+        this.request12306.setMethod(Method.POST);
+        this.request12306.form("REPEAT_SUBMIT_TOKEN", this.repeatSubmitToken);
+        this.request12306.form("_json_att", "");
+        String body = this.request12306.execute().body();
+        LOGGER.info("getPassengerDTOs body = {}", body);
+    }
+
+    public void getPassCodeNew() {
+        String params = "?module=passenger&rand=randp&" + this.genDoubleRand();
+        this.request12306.setUrl(getPassCodeNew + params);
+        this.request12306.setMethod(Method.GET);
+        HttpResponse execute = this.request12306.execute();
+        LOGGER.info("getPassCodeNew status = {}", execute.getStatus());
+        this.setCookie(execute);
+    }
+
+    public void checkOrderInfo() {
+        this.request12306.setUrl(checkOrderInfo);
+        this.request12306.setMethod(Method.POST);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("cancel_flag", 2);
+        hashMap.put("bed_level_order_num", "000000000000000000000000000000");
+        hashMap.put("passengerTicketStr", this.passengerTicketStr);
+        hashMap.put("oldPassengerStr", this.oldPassengerStr);
+        hashMap.put("tour_flag", "dc"); // 单程
+        hashMap.put("randCode", "");
+        hashMap.put("whatsSelect", this.passengerIdType);   // 证件类型:1身份证
+        hashMap.put("_json_att", "");
+        hashMap.put("REPEAT_SUBMIT_TOKEN", this.repeatSubmitToken);
+
+        this.request12306.form(hashMap);
+
+        String body = this.request12306.execute().body();
+        JSON parse = JSONUtil.parse(body);
+        boolean submitStatus = (boolean) parse.getByPath("data.submitStatus");
+        String ifShowPassCode = (String) parse.getByPath("data.ifShowPassCode");
+        String ifShowPassCodeTime = (String) parse.getByPath("data.ifShowPassCodeTime");
+        LOGGER.info("checkOrderInfo body = {}", body);
+        // {"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"ifShowPassCode":"N","canChooseBeds":"N","canChooseSeats":"Y","choose_Seats":"O","isCanChooseMid":"N","ifShowPassCodeTime":"1189","submitStatus":true,"smokeStr":""},"messages":[],"validateMessages":{}}
+        boolean isNeedCode = false;
+        if (submitStatus) {
+            LOGGER.info("车票提交通过，正在尝试排队");
+            if ("Y".equals(ifShowPassCode)) {
+                isNeedCode = true;
+            }
+        }
+
+    }
+
+    public void getQueueCount() {
+        this.request12306.setUrl(getQueueCount);
+        this.request12306.setMethod(Method.POST);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("train_date", this.formatDateGMT(this.trainDate));
+        hashMap.put("train_no", this.trainNo);
+        hashMap.put("stationTrainCode", this.stationTrainCode);
+        hashMap.put("seatType", this.seatType);
+        hashMap.put("fromStationTelecode", this.fromStationTelecode);
+        hashMap.put("toStationTelecode", this.toStationTelecode);
+        hashMap.put("leftTicket", this.leftTicket);
+        hashMap.put("purpose_codes", this.purposeCodes);
+        hashMap.put("train_location", this.trainLocation);
+        hashMap.put("_json_att", "");
+        hashMap.put("REPEAT_SUBMIT_TOKEN", this.repeatSubmitToken);
+
+        this.request12306.form(hashMap);
+
+        HttpResponse execute = this.request12306.execute();
+        LOGGER.info("getQueueCount body = {}", execute.body());
+    }
+
+    public void confirmSingleForQueue() {
+        this.request12306.setUrl(confirmSingleForQueue);
+        this.request12306.setMethod(Method.POST);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("passengerTicketStr", this.passengerTicketStr);
+        hashMap.put("oldPassengerStr", this.oldPassengerStr);
+        hashMap.put("randCode", "");
+        hashMap.put("purpose_codes", this.purposeCodes);
+        hashMap.put("key_check_isChange", this.keyCheckIsChange);
+        hashMap.put("leftTicketStr", this.leftTicket);
+        hashMap.put("train_location", this.trainLocation);
+        hashMap.put("choose_seats", "");
+        hashMap.put("seatDetailType", "000");   // 开始需要选择座位，但是目前12306不支持自动选择作为，那这个参数为默认
+        hashMap.put("whatsSelect", "1");
+        hashMap.put("roomType", "00");  // 好像是根据一个id来判断选中的，两种 第一种是00，第二种是10，但是我在12306的页面没找到该id，目前写死是00
+        hashMap.put("dwAll", "N");
+        hashMap.put("_json_att", "");
+        hashMap.put("REPEAT_SUBMIT_TOKEN", this.repeatSubmitToken);
+
+        this.request12306.form(hashMap);
+
+        HttpResponse execute = this.request12306.execute();
+        LOGGER.info("confirmSingleForQueue body = {}", execute.body());
+    }
+
+    /**
+     * 排队获取订单等待信息,每隔3秒请求一次，最高请求次数为20次！
+     */
+    public void queryOrderWaitTime() {
+        String params = "?random=" + this.genRand13() + "&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=" + this.repeatSubmitToken;
+        this.request12306.setUrl(queryOrderWaitTime + params);
+        this.request12306.setMethod(Method.GET);
+
+        HttpResponse execute = this.request12306.execute();
+        LOGGER.info("queryOrderWaitTime body = {}", execute.body());
+    }
+
+    public void resultOrderForDcQueue() {
+        this.request12306.setUrl(resultOrderForDcQueue);
+        this.request12306.setMethod(Method.POST);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("orderSequence_no", "EF95296121");  // todo
+        hashMap.put("_json_att", "");
+        hashMap.put("REPEAT_SUBMIT_TOKEN", this.repeatSubmitToken);
+
+        this.request12306.form(hashMap);
+
+        HttpResponse execute = this.request12306.execute();
+        LOGGER.info("resultOrderForDcQueue body = {}", execute.body());
+    }
+
+    /**
+     * 获取验证码位置代码
+     * @param myCodes 1~8，多个使用英文逗号分隔
+     * @return
+     */
+    public String getCaptchaCode(String myCodes) {
+        StringBuilder captchaCode = new StringBuilder();
+        String[] myCodeArr = myCodes.split("");
+        if (myCodeArr.length == 0) {
+            return captchaCode.toString();
+        }
+        for (String myCode : myCodeArr) {
+            if (captchaCode.length() > 0) {
+                captchaCode.append(",");
+            }
+            captchaCode.append(this.dictCode.get(Integer.valueOf(myCode) - 1));
+        }
+        return captchaCode.toString();
+    }
+
+    public double genDoubleRand() {
+        return RandomUtil.randomDouble(0, 0.9, 17, RoundingMode.HALF_UP);
+    }
+
+    public String genRand13() {
+        return  "1546" + RandomUtil.randomNumbers(9);
+    }
+
+    public String urlDecode(String str) {
+        try {
+            // 先进行一次解码。避免提交后再编码一次导致参数secretStr失效
+            String dStr = URLDecoder.decode(str, "utf-8");
+            LOGGER.info("dStr={}", dStr);
+            return dStr;
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return str;
+    }
+
+    public String formatDateGMT(String date) {
+        final SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy '00:00:00' 'GMT'Z '(中国标准时间)'", Locale.ENGLISH);
+        return sdf.format(date);
     }
 
     public List<TrainSchedule> handleTrainInfo(String body) {
         JSON parse = JSONUtil.parse(body);
         JSONObject map = (JSONObject) parse.getByPath("data.map");
         JSONArray result = (JSONArray) parse.getByPath("data.result");
-//        LOGGER.info("result={}", result);
         List<TrainSchedule> scheduleList = new ArrayList<>();
         TrainSchedule trainSchedule;
 
@@ -793,10 +935,13 @@ public class Shakedown12306Test {
     public static void main(String[] args) {
         Shakedown12306Test s12306 = new Shakedown12306Test();
         s12306.getCaptchaImage();
-        if (s12306.isSuccessCatcha2()) {
+        if (s12306.checkCaptcha()) {
             s12306.login12306("18218798420", "qr_kh_6926641746");
-            s12306.queryZ("2019-02-08", "GZQ", "FAQ",
+            boolean isSubmit = s12306.queryZ("2019-02-08", "GZQ", "FAQ",
                     "D2804,D1842,D2962,D2842,D1872", "M,O,N", true);
+            if (isSubmit) {
+                s12306.submitOrderRequest();
+            }
         } else {
             // todo 重新获取验证码并登录
             LOGGER.info("重新获取验证码并登录");
