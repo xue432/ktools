@@ -139,6 +139,8 @@ public class Shakedown12306Test {
 
     private int outNum = 120;   // 排队请求12306的次数
 
+    private int ticketCount;    // 余票数
+
     private final List<String> dictCode = Lists.newArrayList("36,46", "116,46", "188,46", "267,43", "40,118", "113,119", "190,122", "264,115");
 
     public Shakedown12306Test(String trainDates, String fromStation, String toStation, String trainNums, String seats) {
@@ -229,11 +231,11 @@ public class Shakedown12306Test {
         String params;
         if (type == 0) {
             params = "?login_site=E&module=login&rand=sjrand&" + this.genDoubleRand();
-            HttpUtil.downloadFile(captcha + params, "C:\\Users\\Kalvin\\Desktop\\check.png");
+            HttpUtil.downloadFile(captcha + params, "C:\\Users\\14813\\Desktop\\check.png");
         }
         if (type == 1) {
             params = "?module=passenger&rand=randp&" + this.genDoubleRand();
-            HttpUtil.downloadFile(getPassCodeNew + params, "C:\\Users\\Kalvin\\Desktop\\orderCheck.png");
+            HttpUtil.downloadFile(getPassCodeNew + params, "C:\\Users\\14813\\Desktop\\orderCheck.png");
         }
     }
 
@@ -643,12 +645,11 @@ public class Shakedown12306Test {
             Integer count = Integer.valueOf(dataObj.get("count").toString());   // todo 到底是这个是排队位置还是countT 我这里使用count
 //            Integer countT = Integer.valueOf(dataObj.get("countT").toString());
 
-            int ticketCount;
             if (!ticket.contains(",")) {
-                ticketCount = Integer.valueOf(ticket);
+                this.ticketCount = Integer.valueOf(ticket);
             } else {
                 String[] ticketSplit = ticket.split(",");
-                ticketCount = Arrays.stream(ticketSplit).map(Integer::valueOf).max(Integer::compareTo).get();
+                this.ticketCount = Arrays.stream(ticketSplit).map(Integer::valueOf).max(Integer::compareTo).get();
             }
 
             LOGGER.info("排队成功，你排在：{}位，当前余票还有：{}张", count, ticketCount);
@@ -708,7 +709,7 @@ public class Shakedown12306Test {
         if (status) {
             boolean submitStatus = (boolean) parse.getByPath("data.submitStatus");
             if (submitStatus) {
-                LOGGER.info("提交订单成功");
+//                LOGGER.info("提交订单成功");
                 this.queryOrderWaitTime();
             } else {
                 LOGGER.info("提交订单失败，{}", parse.getByPath("data.submitStatus.errMsg"));
@@ -724,12 +725,47 @@ public class Shakedown12306Test {
      */
     public void queryOrderWaitTime() {
         this.request12306.setMethod(Method.GET);
+        this.request12306.header("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
+        this.request12306.header("Accept", accept);
+
         // waitCount
+        int tryTimes = 0;
         while (true) {
-            String params = "?random=" + this.currentTimeMillis() + "&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=" + this.repeatSubmitToken;
-            this.request12306.setUrl(queryOrderWaitTime + params);
-            HttpResponse execute = this.request12306.execute();
-            LOGGER.info("queryOrderWaitTime body = {}", execute.body());
+            if (tryTimes > this.outNum) {
+                // todo 排队失败，取消订单
+                LOGGER.info("排队失败，取消订单");
+                break;
+            }
+            try {
+                String params = "?random=" + this.currentTimeMillis() + "&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=" + this.repeatSubmitToken;
+                this.request12306.setUrl(queryOrderWaitTime + params);
+                HttpResponse execute = this.request12306.execute();
+                String body = execute.body();
+                LOGGER.info("queryOrderWaitTime body = {}", body);
+
+                JSON parse = JSONUtil.parse(body);
+                if ((boolean) parse.getByPath("status")) {
+                    JSONObject dObj = (JSONObject) parse.getByPath("data");
+                    String orderId = dObj.get("orderId").toString();
+                    String waitCount = dObj.get("waitCount").toString();
+                    LOGGER.info("余票剩余：{}张，前面还有{}个等待出票", this.ticketCount, waitCount);
+                    if (StrUtil.isNotEmpty(orderId)) {
+                        // todo 订票成功，使用邮件通知抢票人
+                        LOGGER.info("恭喜您订票成功，订单号为：{}, 请立即打开浏览器登录12306，访问‘未完成订单’，在30分钟内完成支付!", orderId);
+                        break;
+                    } else {
+                        LOGGER.info("正在排队，排队时间剩余：{}毫秒", dObj.get("waitTime"));
+                    }
+                } else {
+                    LOGGER.info("排队失败，{}", parse.getByPath("messages"));
+                }
+
+                tryTimes++;
+                LOGGER.info("第{}次排队中...", tryTimes);
+            } catch (Exception e) {
+                LOGGER.error("排队失败，{}", e.getMessage());
+            }
+            this.sleep(2000);
         }
         // {“validateMessagesShowId”:”_validatorMessage”,”status”:true,”httpstatus”:200,”data”:{“queryOrderWaitTimeStatus”:true,”count”:0,”waitTime”:17,”requestId”:6217964314520123645,”waitCount”:366,”tourFlag”:”dc”,”orderId”:null},”messages”:[],”validateMessages”:{}}
 
