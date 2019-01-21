@@ -34,9 +34,8 @@ public class MainTest {
 //        checkCaptcha(30,54,104,50,187,118);
 //        splitI();
 //        handleStationNameData();
-        DateTime date = DateUtil.parse("2019-02-08");
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy '00:00:00' 'GMT'Z '(中国标准时间)'", Locale.ENGLISH);
-        System.out.println("date = " + sdf.format(date));
+        // random参数是当前秒数*1000+毫秒数
+        System.out.println("System.currentTimeMillis() = " + System.currentTimeMillis());
     }
 
     //使用UnicodeScript方法判断
