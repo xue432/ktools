@@ -12,6 +12,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import org.apache.commons.httpclient.HttpHost;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -229,6 +230,35 @@ public class MainTest {
         System.out.println("jsonArray = " + jsonArray.size());
 //        Object o = jsonArray.get(0);
 
+    }
+
+    public void sendWithProxy() {
+        /*// 设置代理IP、端口、协议（请分别替换）
+        HttpHost proxy = new HttpHost("你的代理的IP", 8080);
+
+        //把代理设置到请求配置
+        RequestConfig defaultRequestConfig = RequestConfig.custom()
+                .setProxy(proxy)
+                .build();
+
+        //实例化CloseableHttpClient对象
+        CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
+
+        //访问目标地址
+        HttpGet httpGet = new HttpGet("http://www.baidu.com");
+
+        //请求返回
+        CloseableHttpResponse httpResp = httpclient.execute(httpGet);
+        try {
+            int statusCode = httpResp.getStatusLine().getStatusCode();
+            if (statusCode == HttpStatus.SC_OK) {
+                System.out.println("成功");
+            }
+        } catch (Exception e) {
+
+        } finally {
+            httpResp.close();
+        }*/
     }
 
 }
