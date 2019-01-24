@@ -32,7 +32,6 @@ public class ImageKitTest extends BaseTest {
     }
 
     public static void main(String[] args) {
-        KToolkit.imageAddWaterMark("H:\\Kalvin\\我的图片\\think.jpg",// 20090910050659531
-                "http://tools.kalvinbg.cn");// http://tools.kalvinbg.cn
+
     }
 }

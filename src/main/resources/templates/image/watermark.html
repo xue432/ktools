@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>图片加水印 - Kalvin在线工具</title>
+    <meta name="keywords" content="设置关键词">
+    <meta name="description" content="设置描述">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/fileinput/css/fileinput.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/bigcolorpicker.css}">
+
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">图片相关</a></li>
+            <li class="breadcrumb-item kt-fs13 active">图片加水印</li>
+        </ol>
+    </nav>
+</div>
+
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <div class="container kt-first-layout-module">
+            <form id="myForm">
+                <div class="row">
+                    <div class="col-sm-6 mt-3">
+                        <div class="form-group">
+                            <label>图片：</label>
+                            <input id="upload" type="file" class="form-control-file" name="file" value="image.png"/>
+                            <input type="text" hidden id="uploadFileName" value=""/>
+                            <input type="text" hidden id="handleFileName" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <label>水印内容：</label>
+                            <input type="text" class="form-control" name="waterContent" placeholder="默认tools.kalvinbg.cn">
+                        </div>
+                        <div class="form-group">
+                            <label>水印文字颜色：</label>
+                            <input type="text" id="picker" class="form-control" name="picker" style="border: 3px solid rgb(0, 0, 0)" placeholder="0,0,0">
+                        </div>
+                        <div class="form-group">
+                            <button id="btnUpload" type="submit" style="display: none">上传</button>
+                            <button class="btn btn-primary" id="btnAddWatermark">添加水印</button>
+                            <button class="btn btn-success" id="download">下载</button>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 mt-3">
+                        <div style="height: 300px; overflow: hidden; border: 1px solid #cccccc" >
+                            <img id="waterImage" class="fakeimg">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="container kt-layout-module">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">为图片添加自定义水印</p>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="comm/base::footer"></footer>
+
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script th:src="@{/static/js/bigcolorpicker.js}"></script>
+<script src="https://cdn.bootcss.com/jquery.form/4.2.2/jquery.form.min.js"></script>
+<script>
+    $(document).ready(function() {
+        init();
+
+        var uploadSucc = false;
+        var $handleFileEle = $("#handleFileName");
+        var $uploadFileEle = $("#uploadFileName");
+
+        $('#picker').bigColorpicker(function (el, hex, rgb) {
+            $(el).val(rgb.r + ',' + rgb.g + ',' + rgb.b);
+            $(el).attr('style', 'border:3px solid ' + hex);
+        }, 'L', 10, false);
+
+        $('#upload').on('change', function () {
+            var options = {
+                url: ktConfig.api.imageUpload, //上传文件的路径
+                type: 'POST',
+                success:function(r) {
+                    log(r);
+                    if (r.errorCode === ktConfig.request.okCode) {
+                        $uploadFileEle.val(r.data);
+                        uploadSucc = true;
+                    } else {
+                        alert("上传失败：" +  r.msg);
+                    }
+                }
+            };
+            $('#myForm').ajaxSubmit(options);
+            return false;
+        });
+
+        $('#btnAddWatermark').on('click', function () {
+            if (uploadSucc) {
+                var fileName = $uploadFileEle.val();
+                var waterContent = $('input[name="waterContent"]').val();
+                var rgbStr = $('input[name="picker"]').val();
+                log(rgbStr);
+                if (!fileName) {
+                    alert("添加水印时发生异常，请重试");
+                }
+                if (!waterContent) {
+                    waterContent = 'tools.kalvinbg.cn';
+                }
+                if (!rgbStr) {
+                    rgbStr = '0,0,0';
+                }
+                var rgb = new RGB(rgbStr);
+                var params = {fileName: fileName, waterMarkContent: waterContent, rgb: rgb};
+                $.ajax({
+                    type: 'POST',
+                    url: ktConfig.api.imageAddWatermark,
+                    dataType : 'JSON',
+                    contentType : 'application/json;charset=utf-8',
+                    data: JSON.stringify(params),
+                    success: function (r) {
+                        if (r.errorCode === ktConfig.request.okCode) {
+                            var img = r.data;
+                            $handleFileEle.val(img.name);
+                            $('#waterImage').attr('src', img.base64);
+                            ktUtils.fixedImg(img.base64);
+                        } else {
+                            alert('添加水印失败，请重试');
+                        }
+                    }
+                });
+            } else {
+                alert('请先上传图片');
+            }
+            return false;
+        });
+
+        $('#download').on('click', function () {
+            var waterImg = $handleFileEle.val();
+            if (!waterImg) {
+                alert('下载时发生了一个未知错误，请重试');
+                return false;
+            }
+            // 开始下载
+            window.open(ktConfig.api.imageDownload + '?fileName=' + waterImg);
+            return false;
+        });
+
+        function RGB(rgbStr) {
+            var rgb = {};
+            var rgbArr = rgbStr.split(',');
+            rgb.r = rgbArr[0];
+            rgb.g = rgbArr[1];
+            rgb.b = rgbArr[2];
+            return rgb;
+        }
+
+        function init() {
+            ktUtils.renderNavTab(ktConfig.moduleType.image);
+        }
+
+    });
+</script>
+
+</body>
+</html>

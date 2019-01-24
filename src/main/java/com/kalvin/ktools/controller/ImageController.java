@@ -9,7 +9,9 @@ import com.kalvin.ktools.comm.constant.KApi;
 import com.kalvin.ktools.comm.kit.*;
 import com.kalvin.ktools.dto.ImageDTO;
 import com.kalvin.ktools.dto.R;
+import com.kalvin.ktools.entity.RGB;
 import com.kalvin.ktools.exception.KTException;
+import com.kalvin.ktools.vo.ImageWatermarkVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +62,7 @@ public class ImageController {
     @SiteStats
     @GetMapping(value = "watermark")
     public ModelAndView watermark() {
-        return new ModelAndView("image/ascii_pic.html");
+        return new ModelAndView("image/watermark.html");
     }
 
     @SiteStats
@@ -86,8 +88,8 @@ public class ImageController {
         if (file == null) {
             throw new KTException("请先选择要上传的图片");
         }
-        File wfile = IoKit.writeMultipartFile(file, imageUploadDir);
-        return R.ok(wfile.getName());
+        File f = IoKit.writeMultipartFile(file, imageUploadDir);
+        return R.ok(f.getName());
     }
 
     /**
@@ -242,15 +244,19 @@ public class ImageController {
 
     /**
      * 图片加水印功能
-     * @param fileName 文件名
-     * @param waterMarkContent 水印文字
+     * @param imageWatermarkVO 水印参数实体
      * @return r
      */
     @SiteStats
     @PostMapping(value = "add/watermark")
-    public R addWatermark(String fileName, String waterMarkContent) {
-        String handleName = KToolkit.imageAddWaterMark(imageUploadDir + fileName, waterMarkContent);
-        return R.ok(handleName);
+    @ResponseBody
+    public R addWatermark(@RequestBody ImageWatermarkVO imageWatermarkVO) {
+        String handleName = KToolkit.imageAddWaterMark(
+                imageUploadDir + imageWatermarkVO.getFileName(),
+                imageWatermarkVO.getWaterMarkContent(),
+                imageWatermarkVO.getRgb());
+        String fileUrl = imageHandleDir + handleName;
+        return R.ok(new ImageDTO(handleName, ImageKit.toBase64(new File(fileUrl))));
     }
 
 }

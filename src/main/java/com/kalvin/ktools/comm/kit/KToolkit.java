@@ -5,6 +5,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.kalvin.ktools.comm.constant.Constant;
+import com.kalvin.ktools.entity.RGB;
 import com.kalvin.ktools.exception.KTException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,20 +87,32 @@ public class KToolkit {
      * @param waterMarkContent 水印文字
      * @return 处理后图片名称
      */
-    public static String imageAddWaterMark(String srcImgPath, String waterMarkContent) {
+    public static String imageAddWaterMark(String srcImgPath, String waterMarkContent, RGB rgb) {
         try {
             String fileName = srcImgPath.substring(srcImgPath.lastIndexOf("/") + 1);
-            String prefixPath = srcImgPath.substring(0, srcImgPath.lastIndexOf("/"));
+            fileName = fileName.replace(Constant.UPLOAD_PREFIX_FILENAME, Constant.HANDLE_PREFIX_FILENAME);
+            String prefixPath = srcImgPath.substring(0, srcImgPath.lastIndexOf("/") + 1);
             String handlePath = prefixPath.replace(Constant.UPLOAD_PREFIX_FILENAME, Constant.HANDLE_PREFIX_FILENAME);
+            if (StrUtil.isEmpty(prefixPath) || StrUtil.isEmpty(handlePath)) {
+                throw new KTException("图片url路径不正确");
+            }
             // 读取原图片信息
             File srcImgFile = new File(srcImgPath);// 得到文件
             Image srcImg = ImageIO.read(srcImgFile);// 文件转化为图片
             int srcImgWidth = srcImg.getWidth(null);// 获取图片的宽
             int srcImgHeight = srcImg.getHeight(null);// 获取图片的高
-            Color markContentColor = new Color(51, 255, 102, 128);
+            Color markContentColor;
+            if (rgb == null) {
+                markContentColor = new Color(0, 0, 0, 128);
+            } else {
+                markContentColor = new Color(rgb.getR(), rgb.getG(), rgb.getB(), 128);
+            }
 //            LOGGER.info("size={}", 45*srcImgWidth/2560);
             int size = 0, df = 0;
-            if (500 < srcImgHeight && srcImgWidth <= 1000) {
+            if (100 < srcImgHeight && srcImgWidth <= 500) {
+                size = 15;
+                df = 5;
+            } else if (500 < srcImgHeight && srcImgWidth <= 1000) {
                 size = 21;
                 df = 9;
             } else if (1000 < srcImgWidth && srcImgWidth <= 1500) {
@@ -137,7 +150,7 @@ public class KToolkit {
             outImgStream.close();
             return fileName;
         } catch (Exception e) {
-            throw new KTException("图片添加水印发现异常");
+            throw new KTException("图片添加水印发现异常：" + e.getMessage());
         }
     }
 

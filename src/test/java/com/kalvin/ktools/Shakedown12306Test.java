@@ -25,6 +25,10 @@ import java.math.RoundingMode;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 抢票流程：
@@ -91,6 +95,9 @@ public class Shakedown12306Test {
     private static String l2SeatCode = "O";
     private static String noSeatCode = "N";
 
+    private String username;    // 12306用户账号
+    private String password;    // 密码
+
     /*乘客订票相关参数*/
     private String trainDates;
     private String fromStation;
@@ -129,7 +136,7 @@ public class Shakedown12306Test {
     private int passengerIdType = 1; // 证件类型:身份证
     private int ticketType = 1;     // 票种：成人票
 
-    private String username;    // 乘客姓名
+    private String passenger;    // 乘客姓名
     private String passengerIdCard;    // 乘客身份证号
 
     private boolean isNeedCode; // 提交订单时是否需要验证码
@@ -145,8 +152,11 @@ public class Shakedown12306Test {
 
     private final List<String> dictCode = Lists.newArrayList("36,46", "116,46", "188,46", "267,43", "40,118", "113,119", "190,122", "264,115");
 
-    public Shakedown12306Test(String trainDates, String fromStation, String toStation, String trainNums, String seats) {
-        initQueryInfo(trainDates, fromStation, toStation, trainNums, seats);
+    private int btn;    // 刷票次数
+
+    public Shakedown12306Test(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     /**
@@ -180,6 +190,10 @@ public class Shakedown12306Test {
 
     }
 
+    /**
+     * 下载图片验证码
+     * @param type 图片验证码类型
+     */
     private void getCaptchaImage(CaptchaImageType type) {
         String params;
         this.request12306.setMethod(Method.GET);
@@ -198,7 +212,11 @@ public class Shakedown12306Test {
         }
     }
 
-    private boolean checkCaptcha() {
+    /**
+     * 验证图片验证码
+     * @return bl
+     */
+    private boolean authCaptchaImage() {
         Scanner scanner = new Scanner(System.in);
         String myCodes = scanner.nextLine();
         this.answer = this.getCaptchaCode(myCodes);
@@ -226,14 +244,17 @@ public class Shakedown12306Test {
         return false;
     }
 
-    private void login12306(String username, String password) {
+    /**
+     * 登录12306
+     */
+    private void login() {
         this.request12306.setUrl(login);
         this.request12306.setMethod(Method.POST);
         this.request12306.header("Origin", "https://kyfw.12306.cn");
 
         HashMap<String, Object> formData = new HashMap<>();
-        formData.put("username", username);
-        formData.put("password", password);
+        formData.put("username", this.username);
+        formData.put("password", this.password);
         formData.put("appid", "otn");
         formData.put("answer", this.answer);
         this.request12306.form(formData);
@@ -267,6 +288,10 @@ public class Shakedown12306Test {
         this.setCookie(execute);
     }
 
+    /**
+     * 获取登录token
+     * @param uamtk1 uam
+     */
     private void postUamtk(String uamtk1) {
         this.request12306.setUrl(uamtk);
         this.request12306.setMethod(Method.POST);
@@ -284,6 +309,9 @@ public class Shakedown12306Test {
         }
     }
 
+    /**
+     * 获取权限
+     */
     private void postUamauthclient() {
         this.request12306.setUrl(uamauthclient);
         this.request12306.setMethod(Method.POST);
@@ -299,11 +327,13 @@ public class Shakedown12306Test {
         JSONObject jsonObject = JSONUtil.parseObj(body);
         Integer resultCode = (Integer) jsonObject.get("result_code");
         if (resultCode == 0) {
-            this.username = (String) jsonObject.get("username");
             this.queryPassengerInfo();
         }
     }
 
+    /**
+     * 获取用户信息
+     */
     private void queryPassengerInfo() {
         this.request12306.setUrl("https://kyfw.12306.cn/otn/modifyUser/initQueryUserInfoApi");
         this.request12306.setMethod(Method.POST);
@@ -315,7 +345,7 @@ public class Shakedown12306Test {
         String name = object.get("name").toString();
         Integer idTypeCode = Integer.valueOf(object.get("id_type_code").toString());
         String idNo = object.get("id_no").toString();
-        this.username = name;
+        this.passenger = name;
         this.passengerIdCard = idNo;
         LOGGER.info("name={},idTypeCode={},idNo={}", name, idTypeCode, idNo);
         this.passengerTicketStr = this.passengerTicketStr.replace("{username}", name).replace("{passengerIdCard}", idNo);
@@ -323,6 +353,9 @@ public class Shakedown12306Test {
         LOGGER.info("passengerTicketStr={},oldPassengerStr={}", this.passengerTicketStr, this.oldPassengerStr);
     }
 
+    /**
+     * 进入查票页面
+     */
     private void initTicket() {
         this.request12306.setUrl(initTicket);
         this.request12306.execute();
@@ -356,7 +389,7 @@ public class Shakedown12306Test {
 
             // 由于这是新创建的请求，如果使用代理IP，需要再打开一次
             if (useProxy) {
-//                this.openProxy();
+                this.openProxy();
             }
 
             this.request12306.setUrl(queryZ + params);
@@ -365,11 +398,11 @@ public class Shakedown12306Test {
             this.request12306.header("Cookie", this.cookie);
             this.request12306.header("Host", "kyfw.12306.cn");
             this.request12306.header("Connection", "keep-alive");
+//            this.request12306.setFollowRedirects(false);
 
             HttpResponse execute = this.request12306.execute();
-            LOGGER.info("query status = {}", execute.getStatus());
             String body = execute.body();
-            LOGGER.info("body={}", body);
+//            LOGGER.info("query status = {}，body={}", execute.getStatus(), body);
 
             List<TrainSchedule> scheduleList = this.handleTrainInfo(body);
             for (TrainSchedule ts : scheduleList) {
@@ -379,7 +412,7 @@ public class Shakedown12306Test {
                 String l2Seat = ts.getL2Seat();
                 String noSeat = ts.getNoSeat(); // todo 无座标识
 
-                LOGGER.info("可预订车票：发车日期：{}，车次：{}，座席：一等座{}、二等座{}、无座{}", trainDate, trainNum, l1Seat, l2Seat, noSeat);
+                LOGGER.info("可预订车票：发车日期：{}，车次：{}，出发时间：{}，到达时间：{}，座席：一等座{}、二等座{}、无座{}", trainDate, trainNum, ts.getGoOffTime(), ts.getArrivalTime(), l1Seat, l2Seat, noSeat);
                 if (this.trainNums.contains(trainNum)) { // 当前车次有票
 
                     // 先进行一次解码。避免提交后再编码一次导致参数失效
@@ -430,17 +463,26 @@ public class Shakedown12306Test {
             LOGGER.info("查询订单异常：{}", e.getMessage());
         }
 
+        this.btn++;
+        LOGGER.info("-------已刷票{}次--------", btn);
         return false;
     }
 
+    /**
+     * 检查用户
+     */
     private void checkUser() {
         this.request12306.setUrl(checkUser);
         this.request12306.setMethod(Method.POST);
         this.request12306.header("Referer",  "https://kyfw.12306.cn/otn/leftTicket/init");
-        this.request12306.execute();
+        String body = this.request12306.execute().body();
+        LOGGER.info("checkUser body={}", body);
     }
 
-    private void submitOrderRequest() {
+    /**
+     * 提交订单
+     */
+    private void submitOrderRequest(int submitTime) {
 
         this.checkUser();
 
@@ -464,24 +506,43 @@ public class Shakedown12306Test {
         hashMap.put("undefined", "");
         this.request12306.form(hashMap);
 
-        String body = this.request12306.execute().body();
-        LOGGER.info("submitOrderRequest={}", body);
-        JSONObject jsonObject = JSONUtil.parseObj(body);
-        boolean status = (boolean) jsonObject.get("status");
+        boolean isReSubmit = false;
 
-        if (status) {
-            this.initDc();
-            String data = jsonObject.get("data").toString();
-            if ("N".equals(data)) {
-                this.checkOrderInfo();
+        try {
+            String body = this.request12306.execute().body();
+            LOGGER.info("submitOrderRequest={}", body);
+            JSONObject jsonObject = JSONUtil.parseObj(body);
+            boolean status = (boolean) jsonObject.get("status");
+
+            if (status) {
+                this.initDc();
+                String data = jsonObject.get("data").toString();
+                if ("N".equals(data)) {
+                    this.checkOrderInfo();
+                }
+            } else {
+                // todo 是否需要再次提交当前订单
+                isReSubmit = true;
+                LOGGER.info("订单提交失败，信息：{}", jsonObject.get("messages"));
+
             }
-        } else {
-            // todo 是否需要再次提交当前订单
-            LOGGER.info("订单提交失败，信息：{}", jsonObject.get("messages"));
+        } catch (Exception e) {
+            isReSubmit = true;
         }
 
+        if (isReSubmit) {
+            if (submitTime > 2) {
+                LOGGER.info("---------------请重新登录----------------");
+                this.run(false);    // 重新登录
+            }
+            submitTime++;
+            this.submitOrderRequest(submitTime);
+        }
     }
 
+    /**
+     * initDc
+     */
     private void initDc() {
         this.request12306.setUrl(initDc);
         this.request12306.setMethod(Method.POST);
@@ -502,6 +563,9 @@ public class Shakedown12306Test {
         this.getPassCodeNew();
     }
 
+    /**
+     * 获取initDc页面中的JS脚本
+     */
     private void getJS() {
         this.request12306.setUrl(getJS);
         this.request12306.setMethod(Method.GET);
@@ -516,10 +580,16 @@ public class Shakedown12306Test {
         this.request12306.execute().body();
     }
 
+    /**
+     * 获取订单图片验证码
+     */
     private void getPassCodeNew() {
         this.getCaptchaImage(CaptchaImageType.ORDER);
     }
 
+    /**
+     * 检查订单正确性
+     */
     private void checkOrderInfo() {
         this.request12306.setUrl(checkOrderInfo);
         this.request12306.setMethod(Method.POST);
@@ -553,6 +623,9 @@ public class Shakedown12306Test {
         this.getQueueCount();
     }
 
+    /**
+     * 获取订单队列位置
+     */
     private void getQueueCount() {
         this.request12306.setUrl(getQueueCount);
         this.request12306.setMethod(Method.POST);
@@ -602,6 +675,9 @@ public class Shakedown12306Test {
         }
     }
 
+    /**
+     * 真正下订单
+     */
     private void confirmSingleForQueue() {
 
         String randCode = "";
@@ -651,15 +727,24 @@ public class Shakedown12306Test {
         LOGGER.info("confirmSingleForQueue body = {}", body);
         // {"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"submitStatus":true},"messages":[],"validateMessages":{}}
 
+        boolean isReLogin = false;
+
         JSON parse = JSONUtil.parse(body);
         if ((boolean) parse.getByPath("status")) {
             if ((boolean) parse.getByPath("data.submitStatus")) {
                 this.queryOrderWaitTime();
             } else {
-                LOGGER.info("提交订单失败，{}", parse.getByPath("data.submitStatus.errMsg"));
+                isReLogin = true;
+                LOGGER.info("正式下单失败，{}", parse.getByPath("data.errMsg"));
             }
         } else {
-            LOGGER.info("提交订单失败，{}", parse.getByPath("messages"));
+            isReLogin = true;
+            LOGGER.info("正式下单失败，{}", parse.getByPath("messages"));
+        }
+
+        if (isReLogin) {
+            LOGGER.info("-------------------正式下单失败，请重新登录--------------------------");
+            this.run(false);
         }
     }
 
@@ -669,6 +754,8 @@ public class Shakedown12306Test {
     private void queryOrderWaitTime() {
         this.request12306.setMethod(Method.GET);
         this.request12306.header("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
+
+        boolean isReLogin = false;
 
         int tryTimes = 0;
         while (true) {
@@ -705,9 +792,14 @@ public class Shakedown12306Test {
                 tryTimes++;
                 LOGGER.info("第{}次排队中...", tryTimes);
             } catch (Exception e) {
+                isReLogin = true;
                 LOGGER.error("排队失败，{}", e.getMessage());
             }
             this.sleep(2000);
+        }
+        if (isReLogin) {
+            LOGGER.info("-------------------排队失败，请重新登录--------------------------");
+            this.run(false);
         }
         // {“validateMessagesShowId”:”_validatorMessage”,”status”:true,”httpstatus”:200,”data”:{“queryOrderWaitTimeStatus”:true,”count”:0,”waitTime”:17,”requestId”:6217964314520123645,”waitCount”:366,”tourFlag”:”dc”,”orderId”:null},”messages”:[],”validateMessages”:{}}
         // {"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"queryOrderWaitTimeStatus":true,"count":0,"waitTime":4,"requestId":6493308224569738742,"waitCount":0,"tourFlag":"dc","orderId":null},"messages":[],"validateMessages":{}}
@@ -715,14 +807,14 @@ public class Shakedown12306Test {
     }
 
     /**
-     * 查询未完成的订单
+     * 查询未完成的订单 todo
      */
     public void queryMyOrderNoComplete() {
 
     }
 
     /**
-     * 取消未完成的订单
+     * 取消未完成的订单 todo
      */
     public void cancelNoCompleteMyOrder() {
 
@@ -752,7 +844,7 @@ public class Shakedown12306Test {
     private void openProxy() {
         // https://www.xicidaili.com/nn/{页码} // 代理IP获取地址
         // 代理ip:119.101.115.114
-        SocketAddress sa = new InetSocketAddress("119.101.115.114", 9999);
+        SocketAddress sa = new InetSocketAddress("112.91.218.21", 	9000);
         Proxy proxy = new Proxy(Proxy.Type.HTTP, sa);
         this.request12306.setProxy(proxy);
         LOGGER.info("当前使用代理IP：{}", proxy.toString());
@@ -1122,14 +1214,14 @@ public class Shakedown12306Test {
     public void run() {
         loginInit();
         this.getCaptchaImage(CaptchaImageType.LOGIN);
-        if (this.checkCaptcha()) {
-            this.login12306("18218798420", "qr_kh_6926641746");
-//            this.login12306("18819458084", "llytest123");
+        int submitTime = 0;
+        if (this.authCaptchaImage()) {
+            this.login();
             this.initTicket();
             while (!this.queryZAll()) {
-                this.sleep(1000);
+                this.sleep(5000);
             }
-            this.submitOrderRequest();
+            this.submitOrderRequest(submitTime);
         } else {
             // todo 重新获取验证码并登录
             LOGGER.info("重新获取验证码并登录");
@@ -1145,15 +1237,56 @@ public class Shakedown12306Test {
         this.run();
     }
 
+    public static void runThread() {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+        executorService.execute(() -> {
+            LOGGER.info("lin start...");
+            String trainDate = "2019-02-01,2019-02-02";
+            String fromStation = "IZQ";
+            String toStation = "FAQ";
+            String trainNum = "D2985,D2959,D4707,D4285,D2951,G2901,D2809,D2367,D1801,D1867";
+            trainNum = "D1882,D2962,D1853,D4822,D2948,G2904,D1870,D2972,D1872,D2834,D1876";
+            String seats = "M,O,N";
+            Shakedown12306Test s12306 = new Shakedown12306Test("18218798420", "qr_kh_6926641746");  // "18819458084", "llytest123"
+            s12306.initQueryInfo(trainDate, fromStation, toStation, trainNum, seats);
+            s12306.run(false);
+            LOGGER.info("lin...");
+
+        });
+        LOGGER.info("--------------------");
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        executorService.execute(() -> {
+            LOGGER.info("liang start...");
+            String trainDate = "2019-02-11";
+            String fromStation = "FAQ";
+            String toStation = "IZQ";
+            String trainNum = "D4707,D2951,G2901,D2809,D2811,D1861,D2991,D1863,D2367,D1801,D1867,D1869,D2943,D2947,D2825";
+            String seats = "M,O,N";
+            Shakedown12306Test s12306 = new Shakedown12306Test("18819458084", "llytest123");  // "18819458084", "llytest123"
+            s12306.initQueryInfo(trainDate, fromStation, toStation, trainNum, seats);
+            s12306.run(false);
+        });
+    }
+
     public static void main(String[] args) {
-        String trainDate = "2019-02-05";
+//        Shakedown12306Test.runThread();
+
+//        ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(2, 2, 10, TimeUnit.SECONDS);
+
+        String trainDate = "2019-02-01,2019-02-02";
         String fromStation = "IZQ";
         String toStation = "FAQ";
-        String trainNum = "D2979,D2985,D2959,D4285,D2951,G2901,D2809";
-        trainNum = "D2842";
+        String trainNum = "D2985,D2959,D4707,D4285,D2951,G2901,D2809,D2367,D1801,D1867";
+        trainNum = "D1882,D2962,D1853,D4822,D2948,G2904,D1870,D2972,D1872,D2834,D1876";
         String seats = "M,O,N";
-        Shakedown12306Test s12306 = new Shakedown12306Test(trainDate, fromStation, toStation, trainNum, seats);
-        s12306.run(true);
+        Shakedown12306Test s12306 = new Shakedown12306Test("18218798420", "qr_kh_6926641746");  // "18819458084", "llytest123"
+        s12306.initQueryInfo(trainDate, fromStation, toStation, trainNum, seats);
+        s12306.run(false);
 //        s12306.useProxy = true;
 //        s12306.queryZAll();
     }

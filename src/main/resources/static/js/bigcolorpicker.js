@@ -323,10 +323,12 @@
             }
 
             var bsLiEl = $("#bigSections li");
-            bsLiEl.on('click', function () {
+            bsLiEl.unbind('hover').on('click', function () {
                 var cor = $(this).attr('data-color');
                 if (bigColorPicker.alwaysShow) {
                     invokeCallBack(cor);
+                } else {
+                    $(this).parents('#bigpicker').hide();
                 }
             });
             bsLiEl.hover(function () {

@@ -182,6 +182,24 @@ var ktUtils = {
     handleUrl: function (url) {
         return url ? (kfc + url) : '#';
     },
+    aGet: function (url, params, callback) {
+        $.ajax({
+            type: 'GET',
+            url: kfc + url,
+            data: params,
+            success: callback
+        });
+    },
+    aPost: function (url, params, callback) {
+        $.ajax({
+            type: 'POST',
+            url: kfc + url,
+            // dataType : 'JSON',
+            // contentType : 'application/json;charset=utf-8',
+            data: params,
+            success: callback
+        });
+    },
     /**
      * 同步get
      * @param url 请求地址：image/ascii

@@ -3,14 +3,14 @@ package com.kalvin.ktools.controller;
 import cn.hutool.core.util.ImageUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.kalvin.ktools.comm.kit.HttpServletContextKit;
+import com.kalvin.ktools.comm.kit.IoKit;
+import com.kalvin.ktools.dto.R;
 import com.kalvin.ktools.exception.KTException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
@@ -51,7 +51,6 @@ public class CommController {
      * 访问静态图片
      *
      * @param fileName 文件名
-     * @return r
      */
     @GetMapping(value = "static/image/{fileName}")
     public void staticImage(@PathVariable String fileName) {

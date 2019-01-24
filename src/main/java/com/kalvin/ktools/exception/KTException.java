@@ -5,14 +5,17 @@ package com.kalvin.ktools.exception;
  */
 public class KTException extends RuntimeException {
 
+    private static final long serialVersionUID = 3844100562400725986L;
     private Integer errorCode;
     private String msg;
 
     public KTException(String msg) {
+        super(msg);
         this.msg = msg;
     }
 
     public KTException(int errorCode, String msg) {
+        super(msg);
         this.errorCode = errorCode;
         this.msg = msg;
     }

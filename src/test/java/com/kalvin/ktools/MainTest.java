@@ -35,8 +35,10 @@ public class MainTest {
 //        checkCaptcha(30,54,104,50,187,118);
 //        splitI();
 //        handleStationNameData();
-        // random参数是当前秒数*1000+毫秒数
-        System.out.println("System.currentTimeMillis() = " + System.currentTimeMillis());
+
+        sendWithProxy();
+
+
     }
 
     //使用UnicodeScript方法判断
@@ -232,33 +234,15 @@ public class MainTest {
 
     }
 
-    public void sendWithProxy() {
-        /*// 设置代理IP、端口、协议（请分别替换）
-        HttpHost proxy = new HttpHost("你的代理的IP", 8080);
-
-        //把代理设置到请求配置
-        RequestConfig defaultRequestConfig = RequestConfig.custom()
-                .setProxy(proxy)
-                .build();
-
-        //实例化CloseableHttpClient对象
-        CloseableHttpClient httpclient = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
-
-        //访问目标地址
-        HttpGet httpGet = new HttpGet("http://www.baidu.com");
-
-        //请求返回
-        CloseableHttpResponse httpResp = httpclient.execute(httpGet);
-        try {
-            int statusCode = httpResp.getStatusLine().getStatusCode();
-            if (statusCode == HttpStatus.SC_OK) {
-                System.out.println("成功");
-            }
-        } catch (Exception e) {
-
-        } finally {
-            httpResp.close();
-        }*/
+    public static void sendWithProxy() {
+        String trainDate = "2019-02-11";
+        String fromStation = "FAQ";
+        String toStation = "IZQ";
+        String trainNum = "D4707,D2951,G2901,D2809,D2811,D1861,D2991,D1863,D2367,D1801,D1867,D1869,D2943,D2947,D2825";
+        String seats = "M,O,N";
+        Shakedown12306Test s12306 = new Shakedown12306Test("18819458084", "llytest123");  // "18819458084", "llytest123"
+        s12306.initQueryInfo(trainDate, fromStation, toStation, trainNum, seats);
+        s12306.run(false);
     }
 
 }
