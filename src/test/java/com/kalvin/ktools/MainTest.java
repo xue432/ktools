@@ -1,10 +1,7 @@
 package com.kalvin.ktools;
 
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -12,12 +9,11 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import org.apache.commons.httpclient.HttpHost;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +33,7 @@ public class MainTest {
 //        handleStationNameData();
 
         sendWithProxy();
+//        Shakedown12306Test.ImageAI.autoDELPHIl12306("C:\\Users\\Kalvin\\Desktop\\orderCheck.png");
 
 
     }
