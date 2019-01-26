@@ -279,7 +279,11 @@ var ktUtils = {
         var sArr = $('#' + formId).serializeArray();
         sArr.forEach(function (item) {
             if (item.value) {
-                json[item.name] = item.value;
+                if (json.hasOwnProperty(item.name)) {
+                    json[item.name] += ',' + item.value;
+                } else {
+                    json[item.name] = item.value;
+                }
             }
         });
         return json;

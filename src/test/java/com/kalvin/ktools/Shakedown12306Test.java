@@ -28,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 抢票流程：
@@ -54,7 +56,7 @@ public class Shakedown12306Test {
 
     private HttpRequest request12306;
 
-    private static String captchaImagePath = "C:\\Users\\Kalvin\\Desktop\\";
+    private static String captchaImagePath = "C:\\Users\\14813\\Desktop\\";
 
     private static String loginInit = "https://kyfw.12306.cn/otn/login/init";
     // 生成验证码
@@ -160,7 +162,7 @@ public class Shakedown12306Test {
 
     private int btn;    // 刷票次数
 
-    private Set<String> blackRoom;  // 小黑屋；临时存放排除失败的列车班次。5分钟后重置
+    private MyCache blackRoom = new MyCache();  // 小黑屋；临时存放排除失败的列车班次。5分钟后重置
 
     public Shakedown12306Test(String username, String password) {
         this.username = username;
@@ -204,7 +206,7 @@ public class Shakedown12306Test {
         this.request12306.setMethod(Method.GET);
 
         this.loginCaptchaImageName = "login" + RandomUtil.randomString(5) + ".png";
-        this.loginCaptchaImageName = "order" + RandomUtil.randomString(5) + ".png";
+        this.orderCaptchaImageName = "order" + RandomUtil.randomString(5) + ".png";
         if (type.value == 0) {
             params = "?login_site=E&module=login&rand=sjrand&" + this.genDoubleRand();
             this.request12306.setUrl(captcha + params);
@@ -215,7 +217,7 @@ public class Shakedown12306Test {
             params = "?module=passenger&rand=randp&" + this.genDoubleRand();
             this.request12306.setUrl(captcha + params);
             HttpResponse httpResponse = this.request12306.executeAsync();
-            httpResponse.writeBody(new File(captchaImagePath + this.loginCaptchaImageName));
+            httpResponse.writeBody(new File(captchaImagePath + this.orderCaptchaImageName));
         }
     }
 
@@ -419,7 +421,7 @@ public class Shakedown12306Test {
                 String noSeat = ts.getNoSeat();
 
                 // 判断当前车次是否在小黑屋中，若在，跳过此车次
-                if (this.blackRoom.contains(trainNum)) {
+                if (this.blackRoom.get(trainNum) != null) {
                     break;
                 }
 
@@ -757,7 +759,8 @@ public class Shakedown12306Test {
                 } else {
                     LOGGER.info("正式下单失败，{}", parse.getByPath("data.errMsg"));
                     // todo 将此班次列车加入小黑屋
-                    this.blackRoom.add(this.trainNum);
+                    LOGGER.info("车次{}加入小黑屋", this.trainNum);
+                    this.blackRoom.put(this.trainNum, this.trainNum, 3 * 60);
                     return true;
                 }
             } else {
@@ -773,7 +776,7 @@ public class Shakedown12306Test {
     /**
      * 排队获取订单等待信息,每隔3秒请求一次，最高请求次数为20次！
      */
-    private void queryOrderWaitTime() {
+    private boolean queryOrderWaitTime() {
         this.request12306.setMethod(Method.GET);
         this.request12306.header("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
 
@@ -782,6 +785,9 @@ public class Shakedown12306Test {
             if (tryTimes > this.outNum) {
                 // todo 排队失败，取消订单
                 LOGGER.info("排队失败，取消订单");
+                // 加入小黑屋
+                LOGGER.info("车次{}加入小黑屋", this.trainNum);
+                this.blackRoom.put(this.trainNum, this.trainNum, 3 * 60);
                 break;
             }
             try {
@@ -805,7 +811,7 @@ public class Shakedown12306Test {
                                 "1481397688@qq.com",
                                 "12306抢票成功",
                                 "恭喜您订票成功，订单号为：" + orderId + ", 请立即打开浏览器登录12306，访问‘未完成订单’，在30分钟内完成支付!");
-                        break;
+                        return true;
                     } else {
                         LOGGER.info("正在排队，排队时间剩余：{}毫秒", dObj.get("waitTime"));
                     }
@@ -817,17 +823,22 @@ public class Shakedown12306Test {
                 LOGGER.info("第{}次排队中...", tryTimes);
             } catch (Exception e) {
                 LOGGER.error("排队发生异常：{}", e.getMessage());
+
                 // 排队发生异常，发送邮件告知抢票人重新登录
-                MailUtil.sendText(
+                /*MailUtil.sendText(
                         "1481397688@qq.com",
                         "抢票程序异常",
-                        "排队发生异常，抢票程序已终止的坐标，请手动重新登录");
+                        "排队发生异常，抢票程序已终止的坐标，请手动重新登录");*/
+                // 加入小黑屋
+                LOGGER.info("车次{}加入小黑屋", this.trainNum);
+                this.blackRoom.put(this.trainNum, this.trainNum, 3 * 60);
+                break;
             }
             this.sleep(2000);   // 睡眠2秒
         }
         // {“validateMessagesShowId”:”_validatorMessage”,”status”:true,”httpstatus”:200,”data”:{“queryOrderWaitTimeStatus”:true,”count”:0,”waitTime”:17,”requestId”:6217964314520123645,”waitCount”:366,”tourFlag”:”dc”,”orderId”:null},”messages”:[],”validateMessages”:{}}
         // {"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"queryOrderWaitTimeStatus":true,"count":0,"waitTime":4,"requestId":6493308224569738742,"waitCount":0,"tourFlag":"dc","orderId":null},"messages":[],"validateMessages":{}}
-
+        return false;
     }
 
     /**
@@ -1225,9 +1236,33 @@ public class Shakedown12306Test {
      */
     class MyCache {
 
-        private final HashMap<Object, Object> cacheMap = new HashMap<>();
+        private HashMap<String, Object> cacheMap = new HashMap<>();
+        private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
+        public void put(String key, Object value) {
+            this.put(key, value, 0);
+        }
 
+        public synchronized void put(String key, Object value, long expire) {
+
+            if (expire > 0) {   // 过期缓存
+                scheduledExecutorService.schedule(() -> {
+                    this.cacheMap.remove(key);
+                }, expire, TimeUnit.SECONDS);
+
+                this.cacheMap.put(key, value);
+            } else {    // 不过期缓存
+                this.cacheMap.put(key, value);
+            }
+        }
+
+        public Object get(String key) {
+            return this.cacheMap.get(key);
+        }
+
+        public int size() {
+            return this.cacheMap.size();
+        }
     }
 
     /**

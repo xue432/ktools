@@ -18,11 +18,11 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 public class Generator {
 
     private static String packageName = "com.kalvin.ktools"; // 生成的包名
-    private static String[] tableNames = {"kt_station_12306"};   // 表名
+    private static String[] tableNames = {"kt_user12306", "kt_ticket12306_task"};   // 表名
     private static String tablePrefix = "kt_";    // 配置了会自动去掉表名的前缀
     private static boolean serviceNameStartWithI = false;  //user -> UserService, 设置成true: user -> IUserService
     private static String author = "Kalvin";    // 作者
-    private static String outputDir = "H://genCode";   // 代码生成的路径目录
+    private static String outputDir = "D://genCode";   // 代码生成的路径目录
     private static String dbUrl = "jdbc:mysql://localhost:3306/ktools?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&tinyInt1isBit=false&serverTimezone=GMT%2B8";
     private static String dbUsername = "root";
     private static String dbPassword = "root";

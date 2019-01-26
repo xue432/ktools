@@ -13,7 +13,11 @@ import cn.hutool.json.JSONUtil;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,9 +36,30 @@ public class MainTest {
 //        splitI();
 //        handleStationNameData();
 
-        sendWithProxy();
+//        sendWithProxy();
 //        Shakedown12306Test.ImageAI.autoDELPHIl12306("C:\\Users\\Kalvin\\Desktop\\orderCheck.png");
+        Shakedown12306Test shakedown12306Test = new Shakedown12306Test("", "");
+        Shakedown12306Test.MyCache myCache = shakedown12306Test.new MyCache();
 
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        long start = System.currentTimeMillis();
+
+        Future[] futures = new Future[10];
+        for (int i = 0; i < 10; i++) {
+            futures[i] = executorService.submit(() -> {
+                for (int j = 0; j < 100000; j++) {
+                    myCache.put("id" + Thread.currentThread().getId() +  j, j);
+                }
+            });
+        }
+
+        for (Future future : futures) {
+            future.get();
+        }
+
+
+        System.out.printf("添加耗时：%dms\n", System.currentTimeMillis() - start);
+        System.out.println("myCache.size = " + myCache.size());
 
     }
 

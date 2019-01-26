@@ -80,6 +80,13 @@
             <version>2.10.6</version>
         </dependency>
 
+        <!--定时任务依赖-->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
         <!--模板引擎 只有开发环境用得到-->
         <dependency>
             <groupId>org.apache.velocity</groupId>

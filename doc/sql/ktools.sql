@@ -212,3 +212,27 @@ INSERT INTO `ktools`.`kt_linux_cmd`(`id`, `cmd_category_id`, `cmd`, `name`) VALU
 INSERT INTO `ktools`.`kt_linux_cmd`(`id`, `cmd_category_id`, `cmd`, `name`) VALUES (108, 10, 'tar -zxvf archive.tar.gz', '解压文件：以.tar.gz后缀的压缩文件');
 INSERT INTO `ktools`.`kt_linux_cmd`(`id`, `cmd_category_id`, `cmd`, `name`) VALUES (109, 10, 'zip file1.zip file1', '压缩文件：以.zip为后缀');
 INSERT INTO `ktools`.`kt_linux_cmd`(`id`, `cmd_category_id`, `cmd`, `name`) VALUES (110, 10, 'unzip file1.zip', '解压文件：以.zip后缀的压缩文件');
+
+
+CREATE TABLE `kt_user12306` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `username` varchar(150) COLLATE utf8mb4_general_ci NOT NULL COMMENT '12306账号',
+  `password` varchar(30) COLLATE utf8mb4_general_ci NOT NULL COMMENT '12306账号密码',
+  `passenger_id_no` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '乘客身份证号',
+  `passenger` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '乘客姓名',
+  `ticket_num` int(6) NOT NULL DEFAULT '0' COMMENT '成功出票次数',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `12306账号` (`username`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='12306账号信息表';
+
+CREATE TABLE `kt_ticket12306_task` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` bigint(18) NOT NULL COMMENT 'user12306表ID',
+  `train_date` varchar(200) COLLATE utf8mb4_general_ci NOT NULL COMMENT '乘客出发日期，多个使用英文逗号分隔',
+  `train_num` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '车次，多个使用英文逗号分隔',
+  `seat_type` varchar(20) COLLATE utf8mb4_general_ci NOT NULL COMMENT '座席类型。M：一等座；O：二等座；N：无座。多个用英文逗号分隔',
+  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '抢票状态：0：已停止；1：已开启',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='12306抢票任务信息表';

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>12306抢票助手 - Kalvin在线工具</title>
+    <meta name="keywords" content="设置关键词">
+    <meta name="description" content="设置描述">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">便民工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">12306抢票助手</li>
+        </ol>
+    </nav>
+</div>
+
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <div class="container kt-first-layout-module">
+            <form id="myForm">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>账号：</label>
+                            <input type="text" class="form-control" name="username" >
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>密码：</label>
+                            <input type="password" class="form-control" name="password" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <!--<label>出发日期：</label>-->
+                            <!--<input type="text" class="form-control" name="trainDate">-->
+                            <label>出发日期：</label>
+                            <!--指定 date标记-->
+                            <div class='input-group date' id='datetimepicker'>
+                                <input type='text' name="trainDate" class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>车次：</label>
+                            <input type="text" class="form-control" name="trainNum" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>始发站：</label>
+                            <input type="text" class="form-control" name="fromStation" value="IZQ">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>终点站：</label>
+                            <input type="text" class="form-control" name="toStation" value="FAQ">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>座席：</label>
+                            <input type="checkbox" name="seatType" id="seat1" value="M"> 一等座
+                            <input type="checkbox" name="seatType" id="seat2" value="O"> 二等座
+                            <input type="checkbox" name="seatType" id="seat3" value="N"> 无座
+                        </div>
+                    </div>
+                </div>
+
+                <button id="begin" type="submit" class="btn btn-primary">开始抢票</button>
+            </form>
+
+        </div>
+        <div class="container kt-layout-module">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">这是工具简介。。</p>
+            </blockquote>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="comm/base::footer"></footer>
+
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+<!--<script src="https://cdn.bootcss.com/moment.js/2.23.0/locale/zh-cn.js"></script>-->
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+    $(document).ready(function() {
+        init();
+
+        $('#datetimepicker').datetimepicker({
+            format: 'YYYY-MM-DD',
+            locale: moment.locale('zh-cn')
+        });
+
+        $('#myForm').submit(function () {
+            var fd = ktUtils.getFormJsonData("myForm");
+            log(fd);
+            ktUtils.aPost(ktConfig.api.shakedown12306, fd, function (r) {
+                log('shakedown12306 r=', r);
+            });
+
+            return false;
+        });
+
+        function init() {
+            ktUtils.renderNavTab(ktConfig.moduleType.convenience);
+        }
+    });
+</script>
+
+</body>
+</html>

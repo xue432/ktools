@@ -61,6 +61,7 @@ var ktConfig = {
         qrCode2Image: kfc + '/convenience/qrCode/2Image',
         linuxCmdCategory: kfc + '/dev/linuxCmd/category',
         linuxCmdQuery: kfc + '/dev/linuxCmd/query',
-        countToolsView: kfc + '/trafficRecords/count/toolsView'
+        countToolsView: kfc + '/trafficRecords/count/toolsView',
+        shakedown12306: kfc + '/convenience/shakedown'
     }
 };
