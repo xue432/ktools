@@ -1,5 +1,6 @@
 package com.kalvin.ktools.comm.job;
 
+import cn.hutool.core.date.DateUtil;
 import com.kalvin.ktools.comm.kit.Shakedown12306Kit;
 import com.kalvin.ktools.dto.User12306TicketOrderDTO;
 import com.kalvin.ktools.service.Ticket12306OrderService;
@@ -10,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -55,17 +57,40 @@ public class Jobs {
     @Scheduled(cron = "0 0 6 * * ?")
     public void startRobTickets() {
         LOGGER.info("每天06:00启动所有抢票订单...");
-        ticket12306OrderService.updateTicketStatusStartAllVail();
+//        ticket12306OrderService.updateTicketStatusStartAllVail();
+        this.runTickets();
     }
 
     /**
-     * 检查抢票订单：每分钟检查一遍
+     * 检查抢票订单：每分钟检查一遍   * 1-59 6-23 * * ?
      * 1、订单是否有效
      * 2、抢票状态是否正在进行
      */
     @Scheduled(fixedDelay = 60 * 1000)
     public void checkTicketOrder() {
         LOGGER.info("开始检查订单...");
+        String s = DateUtil.formatTime(new Date());
+        String[] split = s.split(":");
+        int hour = Integer.parseInt(split[0]);
+        int minute = Integer.parseInt(split[1]);
+        if (hour > 5 && hour < 23) {    // 6点~23点之间
+            if (hour == 6 && minute < 1) {
+                return;
+            }
+            this.runTickets();
+        }
+    }
+
+    /**
+     * 每天23:00停止所有抢票订单
+     */
+    @Scheduled(cron = "0 0 23 * * ?")
+    public void stopTakingTickets() {
+        LOGGER.info("每天23:00停止所有抢票订单...");
+        ticket12306OrderService.updateTicketStatusStopAllVail();
+    }
+
+    private void runTickets() {
         List<User12306TicketOrderDTO> ticketOrders = ticket12306OrderService.getAllValidAndStopTicketOrder();
         int size = ticketOrders.size();
         int maxPool = 10;   // 设置最大线程数10个
@@ -82,9 +107,9 @@ public class Jobs {
             ticket12306OrderService.updateTicketStatusStart(o.getId());
 
             Shakedown12306Kit.newInstance()
-                .initUser(o.getUsername(), o.getPassword())
-                .initQueryInfo(o.getTrainDate(), o.getFromStation(), o.getToStation(), o.getTrainNum(), o.getSeatType())
-                .run();
+                    .initUser(o.getUsername(), o.getPassword())
+                    .initQueryInfo(o.getTrainDate(), o.getFromStation(), o.getToStation(), o.getTrainNum(), o.getSeatType())
+                    .run();
 
             LOGGER.info("线程{}已成功启动抢票订单{}", Thread.currentThread().getName(), o.getId());
             try {
@@ -94,16 +119,6 @@ public class Jobs {
                 e.printStackTrace();
             }
         }));
-
-    }
-
-    /**
-     * 每天23:00停止所有抢票订单
-     */
-    @Scheduled(cron = "0 0 23 * * ?")
-    public void stopTakingTickets() {
-        LOGGER.info("每天23:00停止所有抢票订单...");
-        ticket12306OrderService.updateTicketStatusStopAllVail();
     }
 
 }
