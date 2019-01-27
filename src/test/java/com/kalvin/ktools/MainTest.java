@@ -3,6 +3,7 @@ package com.kalvin.ktools;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.mail.MailUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
@@ -39,27 +40,8 @@ public class MainTest {
 
 //        sendWithProxy();
 //        Shakedown12306Test.ImageAI.autoDELPHIl12306("C:\\Users\\Kalvin\\Desktop\\orderCheck.png");
-        Shakedown12306Kit shakedown12306Kit = new Shakedown12306Kit();
-
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        long start = System.currentTimeMillis();
-
-        Future[] futures = new Future[10];
-        for (int i = 0; i < 10; i++) {
-            futures[i] = executorService.submit(() -> {
-                for (int j = 0; j < 100000; j++) {
-//                    myCache.put("id" + Thread.currentThread().getId() +  j, j);
-                }
-            });
-        }
-
-        for (Future future : futures) {
-            future.get();
-        }
-
-
-        System.out.printf("添加耗时：%dms\n", System.currentTimeMillis() - start);
 //        System.out.println("myCache.size = " + myCache.size());
+        MailUtil.sendText("425195867@qq.com", "抢票成功", "恭喜您订票成功, 请立即打开浏览器登录12306，访问‘未完成订单’，在30分钟内完成支付!");
 
     }
 

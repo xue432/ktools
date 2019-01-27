@@ -1,6 +1,7 @@
 package com.kalvin.ktools;
 
 import cn.hutool.extra.mail.MailUtil;
+import com.kalvin.ktools.comm.kit.Shakedown12306Kit;
 import org.omg.PortableInterceptor.LOCATION_FORWARD;
 
 import java.util.Arrays;
@@ -17,23 +18,16 @@ import java.util.concurrent.Executors;
 public class MainTest2 {
 
     public static void main(String[] args) {
-        String src = "C:/Users/Kalvin/Desktop/water.png";
-//        src = "C:/Users/Kalvin/Desktop/one.jpg";
-        src = "C:/Users/Kalvin/Desktop/check.png";
-//        KToolkit.imageAddWaterMark(src, "http://tools.kalvinbg.cn");// http://tools.kalvinbg.cn // 20090910050659531
-
-//        MailUtil.sendText("1481397688@qq.com", "测试发送邮件", "测试发送邮件123");
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        for (int i = 0; i < 10; i++) {
-            executorService.submit(() -> {
-                System.out.println("线程启动：" + Thread.currentThread().getName());
-                try {
-                    Thread.sleep(10 * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("线程" + Thread.currentThread().getName() + "结束");
-            });
-        }
+        String trainDate = "2019-01-28";
+        String fromStation = "IZQ";
+        String toStation = "FAQ";
+        String trainNum = "D2985,D2959,D4707,D4285,D2951,G2901,D2809,D2367,D1801,D1867";
+        trainNum = "D1882,D2962,D1853,D4822,D2948,G2904,D1870,D2972,D1872,D2834,D1876";
+        String seats = "M,O,N";
+        Shakedown12306Kit
+                .newInstance()
+                .initUser("18819458084", "llytest123")
+                .initQueryInfo(trainDate, fromStation, toStation, trainNum, seats)
+                .run();
     }
 }
