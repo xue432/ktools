@@ -37,4 +37,8 @@ public class Constant {
 
     public final static String DEFAULT_BANNER = "/static/image/default_t_red.png";   // 默认的工具图片
     public final static String DEFAULT_ICON = "/static/image/icon/t.png";   // 默认的工具logo图
+
+    public final static int TICKET_STATUS_START = 1;  // 抢票中
+    public final static int TICKE_TSTATUS_STOP = 0;   // 已停止
+
 }

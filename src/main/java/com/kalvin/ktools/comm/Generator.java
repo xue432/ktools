@@ -18,7 +18,7 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 public class Generator {
 
     private static String packageName = "com.kalvin.ktools"; // 生成的包名
-    private static String[] tableNames = {"kt_user12306", "kt_ticket12306_task"};   // 表名
+    private static String[] tableNames = {"kt_ticket12306_order"};   // 表名
     private static String tablePrefix = "kt_";    // 配置了会自动去掉表名的前缀
     private static boolean serviceNameStartWithI = false;  //user -> UserService, 设置成true: user -> IUserService
     private static String author = "Kalvin";    // 作者

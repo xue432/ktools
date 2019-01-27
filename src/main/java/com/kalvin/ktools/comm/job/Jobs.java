@@ -1,13 +1,19 @@
 package com.kalvin.ktools.comm.job;
 
-import com.kalvin.ktools.service.Ticket12306TaskService;
-import com.kalvin.ktools.service.User12306Service;
+import com.kalvin.ktools.comm.kit.Shakedown12306Kit;
+import com.kalvin.ktools.dto.User12306TicketOrderDTO;
+import com.kalvin.ktools.service.Ticket12306OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 定时任务
@@ -41,25 +47,63 @@ public class Jobs {
     private final static Logger LOGGER = LoggerFactory.getLogger(Jobs.class);
 
     @Autowired
-    private User12306Service user12306Service;
-
-    @Autowired
-    private Ticket12306TaskService ticket12306TaskService;
+    private Ticket12306OrderService ticket12306OrderService;
 
     /**
-     * 启动所有抢票程序。每天06:00
+     * 每天06:00启动所有抢票订单
      */
     @Scheduled(cron = "0 0 6 * * ?")
     public void startRobTickets() {
+        LOGGER.info("每天06:00启动所有抢票订单...");
+        ticket12306OrderService.updateTicketStatusStartAllVail();
+    }
+
+    /**
+     * 检查抢票订单：每分钟检查一遍
+     * 1、订单是否有效
+     * 2、抢票状态是否正在进行
+     */
+    @Scheduled(fixedDelay = 60 * 1000)
+    public void checkTicketOrder() {
+        LOGGER.info("开始检查订单...");
+        List<User12306TicketOrderDTO> ticketOrders = ticket12306OrderService.getAllValidAndStopTicketOrder();
+        int size = ticketOrders.size();
+        int maxPool = 10;   // 设置最大线程数10个
+        if (size == 0) {
+            return;
+        }
+
+        // 启动抢票状态已停止的订单
+        ExecutorService executorService = Executors.newFixedThreadPool(size < maxPool ? size : maxPool);
+        ticketOrders.forEach(o -> executorService.submit(() -> {
+            LOGGER.info("线程{}正在启动抢票订单{}", Thread.currentThread().getName(), o.getId());
+
+            // 更新抢票状态为抢票中
+            ticket12306OrderService.updateTicketStatusStart(o.getId());
+
+            Shakedown12306Kit.newInstance()
+                .initUser(o.getUsername(), o.getPassword())
+                .initQueryInfo(o.getTrainDate(), o.getFromStation(), o.getToStation(), o.getTrainNum(), o.getSeatType())
+                .run();
+
+            LOGGER.info("线程{}已成功启动抢票订单{}", Thread.currentThread().getName(), o.getId());
+            try {
+                // 隔一分钟启动
+                Thread.sleep(60 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }));
 
     }
 
     /**
-     * 停止所有抢票程序。每天23:00
+     * 每天23:00停止所有抢票订单
      */
     @Scheduled(cron = "0 0 23 * * ?")
     public void stopTakingTickets() {
-
+        LOGGER.info("每天23:00停止所有抢票订单...");
+        ticket12306OrderService.updateTicketStatusStopAllVail();
     }
 
 }

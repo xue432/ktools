@@ -9,6 +9,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.kalvin.ktools.comm.kit.Shakedown12306Kit;
 
 import java.io.File;
 import java.util.HashMap;
@@ -38,8 +39,7 @@ public class MainTest {
 
 //        sendWithProxy();
 //        Shakedown12306Test.ImageAI.autoDELPHIl12306("C:\\Users\\Kalvin\\Desktop\\orderCheck.png");
-        Shakedown12306Test shakedown12306Test = new Shakedown12306Test("", "");
-        Shakedown12306Test.MyCache myCache = shakedown12306Test.new MyCache();
+        Shakedown12306Kit shakedown12306Kit = new Shakedown12306Kit();
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         long start = System.currentTimeMillis();
@@ -48,7 +48,7 @@ public class MainTest {
         for (int i = 0; i < 10; i++) {
             futures[i] = executorService.submit(() -> {
                 for (int j = 0; j < 100000; j++) {
-                    myCache.put("id" + Thread.currentThread().getId() +  j, j);
+//                    myCache.put("id" + Thread.currentThread().getId() +  j, j);
                 }
             });
         }
@@ -59,7 +59,7 @@ public class MainTest {
 
 
         System.out.printf("添加耗时：%dms\n", System.currentTimeMillis() - start);
-        System.out.println("myCache.size = " + myCache.size());
+//        System.out.println("myCache.size = " + myCache.size());
 
     }
 
@@ -262,9 +262,11 @@ public class MainTest {
         String toStation = "IZQ";
         String trainNum = "D4707,D2951,G2901,D2809,D2811,D1861,D2991,D1863,D2367,D1801,D1867,D1869,D2943,D2947,D2825";
         String seats = "M,O,N";
-        Shakedown12306Test s12306 = new Shakedown12306Test("18819458084", "llytest123");  // "18819458084", "llytest123"
-        s12306.initQueryInfo(trainDate, fromStation, toStation, trainNum, seats);
-        s12306.run(false);
+        Shakedown12306Kit
+                .newInstance()
+                .initUser("18819458084", "llytest123")
+                .initQueryInfo(trainDate, fromStation, toStation, trainNum, seats)
+                .run();
     }
 
 }

@@ -226,13 +226,14 @@ CREATE TABLE `kt_user12306` (
   UNIQUE KEY `12306账号` (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='12306账号信息表';
 
-CREATE TABLE `kt_ticket12306_task` (
+CREATE TABLE `kt_ticket12306_order` (
   `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_id` bigint(18) NOT NULL COMMENT 'user12306表ID',
   `train_date` varchar(200) COLLATE utf8mb4_general_ci NOT NULL COMMENT '乘客出发日期，多个使用英文逗号分隔',
   `train_num` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT '车次，多个使用英文逗号分隔',
   `seat_type` varchar(20) COLLATE utf8mb4_general_ci NOT NULL COMMENT '座席类型。M：一等座；O：二等座；N：无座。多个用英文逗号分隔',
-  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '抢票状态：0：已停止；1：已开启',
+  `ticket_status` tinyint(3) DEFAULT '0' COMMENT '抢票状态。0：已停止；1：进行中',
+  `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '订单状态：0：正常；1：已取消',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='12306抢票任务信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='12306抢票订单信息表';

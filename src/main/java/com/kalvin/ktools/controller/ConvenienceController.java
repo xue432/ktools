@@ -6,11 +6,10 @@ import cn.hutool.core.util.ImageUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.kit.KToolkit;
-import com.kalvin.ktools.comm.kit.Shakedown12306Kit;
 import com.kalvin.ktools.dto.R;
-import com.kalvin.ktools.entity.Ticket12306Task;
+import com.kalvin.ktools.entity.Ticket12306Order;
 import com.kalvin.ktools.entity.User12306;
-import com.kalvin.ktools.service.Ticket12306TaskService;
+import com.kalvin.ktools.service.Ticket12306OrderService;
 import com.kalvin.ktools.service.User12306Service;
 import com.kalvin.ktools.vo.ShakedownVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ public class ConvenienceController {
     private User12306Service user12306Service;
 
     @Autowired
-    private Ticket12306TaskService ticket12306TaskService;
+    private Ticket12306OrderService ticket12306OrderService;
 
     @SiteStats
     @GetMapping(value = "qrCode")
@@ -95,10 +94,10 @@ public class ConvenienceController {
         // 保存12306账号信息
         User12306 user12306 = user12306Service.saveUser12306(shakedownVO.getUsername(), shakedownVO.getPassword());
         // 保存12306抢票任务信息
-        Ticket12306Task ticketTask = new Ticket12306Task();
+        Ticket12306Order ticketTask = new Ticket12306Order();
         BeanUtil.copyProperties(shakedownVO, ticketTask);
         ticketTask.setUserId(user12306.getId());
-        ticket12306TaskService.save(ticketTask);
+        ticket12306OrderService.save(ticketTask);
 
         /*System.out.println(shakedownVO.toString());
         String trainDate = shakedownVO.getTrainDate();

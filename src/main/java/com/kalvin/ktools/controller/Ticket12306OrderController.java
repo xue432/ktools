@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 12306抢票任务信息表 前端控制器
+ * 12306抢票订单信息表 前端控制器
  * </p>
  *
  * @author Kalvin
- * @since 2019-01-26
+ * @since 2019-01-27
  */
 @RestController
-@RequestMapping("/ticket12306Task")
-public class Ticket12306TaskController {
+@RequestMapping("/ticket12306Order")
+public class Ticket12306OrderController {
 
 }
 
