@@ -117,6 +117,7 @@ public class Jobs {
                         .initUser(o.getUsername(), o.getPassword())
                         .initQueryInfo(o.getTrainDate(), o.getFromStation(), o.getToStation(), o.getTrainNum(), o.getSeatType())
                         .initCaptchaImgPath(captchaImagePath)
+                        .initBusiness(ticket12306OrderService, o.getId())
                         .initReceiver(StrUtil.isNotEmpty(o.getEmail()) ? o.getEmail() : defaultEmail)
                         .run();
 

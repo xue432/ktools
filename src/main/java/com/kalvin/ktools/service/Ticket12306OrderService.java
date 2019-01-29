@@ -42,4 +42,11 @@ public interface Ticket12306OrderService extends IService<Ticket12306Order> {
      */
     void updateTicketStatusStopAllVail();
 
+    /**
+     * 订单是否已取消
+     * @param id 订单id
+     * @return
+     */
+    boolean isCancel(Long id);
+
 }

@@ -33,7 +33,8 @@ public class MainTest {
 //        splitI();
 //        handleStationNameData();
 
-        sendWithProxy();
+//        sendWithProxy();
+        xiaoCai();
 //        Shakedown12306Test.ImageAI.autoDELPHIl12306("C:\\Users\\Kalvin\\Desktop\\orderCheck.png");
 //        System.out.println("myCache.size = " + myCache.size());
 //        MailUtil.sendText("425195867@qq.com", "抢票成功", "恭喜您订票成功, 请立即打开浏览器登录12306，访问‘未完成订单’，在30分钟内完成支付!");
@@ -248,6 +249,25 @@ public class MainTest {
                     .run();
         } catch (Exception e) {
             System.out.println("抢票程序已停止：" + e.getMessage());
+        }
+    }
+
+    public static void xiaoCai() {
+        String trainDate = "2019-01-31";
+        String fromStation = "IZQ";
+        String toStation = "FAQ";
+        String trainNum = "D2985,D2959,D4707,D4285,D2951,G2901,D2809,D2367,D1801,D1867";
+        trainNum = "D1882,D2962,D1853,D4822,D2948,G2904,D1870,D2972,D1872,D2834,D1876";
+//        trainNum = "D4822,D2948,G2904,D1870,D2972,D1872,D2834,D1876,D2842";
+        String seats = "M,O,N";
+        try {
+            Shakedown12306Kit
+                    .newInstance()
+                    .initUser("18027823617", "24aimoyuefang")
+                    .initQueryInfo(trainDate, fromStation, toStation, trainNum, seats)
+                    .run();
+        } catch (Exception e) {
+            System.out.println("抢票程序已停止:" + e.getMessage());
         }
     }
 

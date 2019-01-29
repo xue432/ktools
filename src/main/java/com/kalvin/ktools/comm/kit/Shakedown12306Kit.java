@@ -16,6 +16,7 @@ import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.kalvin.ktools.service.Ticket12306OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,8 @@ public class Shakedown12306Kit {
     private final static Logger LOGGER = LoggerFactory.getLogger(Shakedown12306Kit.class);
 
     private HttpRequest request12306;
+
+    private Ticket12306OrderService ticketOrderService;
 
     private static String loginInit = "https://kyfw.12306.cn/otn/login/init";
     // 生成验证码
@@ -164,6 +167,8 @@ public class Shakedown12306Kit {
 
     private String receiver;   // 邮件收件人
 
+    private Long orderId;   // 订单ID
+
     public static Shakedown12306Kit newInstance() {
         return new Shakedown12306Kit();
     }
@@ -201,6 +206,12 @@ public class Shakedown12306Kit {
         return this;
     }
 
+    public Shakedown12306Kit initBusiness(Ticket12306OrderService service, Long orderId) {
+        this.ticketOrderService = service;
+        this.orderId = orderId;
+        return this;
+    }
+
     public Shakedown12306Kit initPassenger(String passenger, String passengerIdNo) {
         this.passengerTicketStr = this.passengerTicketStr.replace("{username}", passenger).replace("{passengerIdCard}", passengerIdNo);
         this.oldPassengerStr = this.oldPassengerStr.replace("{username}", passenger).replace("{passengerIdCard}", passengerIdNo);
@@ -216,6 +227,7 @@ public class Shakedown12306Kit {
      * 进入登录页
      */
     private void loginInit() {
+        this.stopCancelOrderThread();
         this.reset();
 
         this.request12306 = HttpUtil.createGet(loginInit);
@@ -266,7 +278,7 @@ public class Shakedown12306Kit {
         String myCodes = scanner.nextLine();*/
 
         this.sleep(2000);
-        String autoCode = ImageAI.autoDELPHIl12306(captchaImagePath + this.loginCaptchaImageName);
+        String autoCode = new ImageAI().autoDELPHIl12306(captchaImagePath + this.loginCaptchaImageName);
         this.answer = this.getCaptchaCode(autoCode);
         LOGGER.info("answer={}", this.answer);
 
@@ -417,6 +429,8 @@ public class Shakedown12306Kit {
         if (hour >= 23 && minute >= 0) {
             throw new RuntimeException("每天23点后抛异常终止当前抢票线程" + Thread.currentThread().getName());
         }
+
+        this.stopCancelOrderThread();
 
         String[] split = this.trainDates.split(",");
         int len = split.length;
@@ -748,7 +762,7 @@ public class Shakedown12306Kit {
 
             String autoCode;
             try {
-                autoCode = ImageAI.autoDELPHIl12306(captchaImagePath + this.orderCaptchaImageName);
+                autoCode = new ImageAI().autoDELPHIl12306(captchaImagePath + this.orderCaptchaImageName);
             } catch (Exception e) {
                 LOGGER.info(e.getMessage());
                 return false;
@@ -1001,6 +1015,17 @@ public class Shakedown12306Kit {
             Thread.sleep(ms);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 终止已取消的订单线程
+     */
+    private void stopCancelOrderThread() {
+        if (this.ticketOrderService != null && this.orderId != null){
+            if (this.ticketOrderService.isCancel(this.orderId)) {
+                throw new RuntimeException("抢票订单已取消，终止当前抢票线程" + Thread.currentThread().getName());
+            }
         }
     }
 
@@ -1306,14 +1331,14 @@ public class Shakedown12306Kit {
      */
     static class ImageAI {
 
-        private static int reTime = 0;
+        private int reTime = 0;
 
         /**
          * 自动识别12306图片验证码
          * @param imgSrc 验证码图片路径
          * @return 验证码位置数字：12345678
          */
-        public static String autoDELPHIl12306(String imgSrc) {
+        public String autoDELPHIl12306(String imgSrc) {
             try {
                 HttpRequest post = HttpUtil.createPost("http://littlebigluo.qicp.net:47720/");
                 post.form("pic_xxfile", new File(imgSrc));

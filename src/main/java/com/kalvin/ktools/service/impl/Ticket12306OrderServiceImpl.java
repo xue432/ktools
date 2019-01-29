@@ -61,4 +61,13 @@ public class Ticket12306OrderServiceImpl extends ServiceImpl<Ticket12306OrderDao
                 .lambda().eq(Ticket12306Order::getStatus, Constant.STATUS_0);
         update(ticket12306Order, lambdaQueryWrapper);
     }
+
+    @Override
+    public boolean isCancel(Long id) {
+        Ticket12306Order order = getById(id);
+        if (order == null) {
+            return true;
+        }
+        return order.getStatus().equals(Constant.STATUS_1);
+    }
 }

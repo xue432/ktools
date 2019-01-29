@@ -4,6 +4,9 @@ import com.kalvin.ktools.comm.kit.Shakedown12306Kit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * 作用：<br>
  * 说明：(无)
@@ -16,7 +19,7 @@ public class MainTest2 {
     private final static Logger LOGGER = LoggerFactory.getLogger(MainTest2.class);
 
     public static void main(String[] args) {
-        String trainDate = "2019-02-03";
+        /*String trainDate = "2019-02-03";
         String fromStation = "IZQ";
         String toStation = "CBQ";
         String trainNum = "D2985,D2959,D4707,D4285,D2951,G2901,D2809,D2367,D1801,D1867";
@@ -32,6 +35,13 @@ public class MainTest2 {
                     .run();
         } catch (Exception e) {
             LOGGER.info("抢票程序已停止");
+        }*/
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        for (int i = 0; i < 4; i++) {
+            executorService.submit(() -> {
+                TestThread testThread = new TestThread();
+                testThread.tryCount();
+            });
         }
     }
 }
