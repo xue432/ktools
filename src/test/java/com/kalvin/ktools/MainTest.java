@@ -3,7 +3,6 @@ package com.kalvin.ktools;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.mail.MailUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
@@ -15,11 +14,7 @@ import com.kalvin.ktools.comm.kit.Shakedown12306Kit;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,10 +33,11 @@ public class MainTest {
 //        splitI();
 //        handleStationNameData();
 
-//        sendWithProxy();
+        sendWithProxy();
 //        Shakedown12306Test.ImageAI.autoDELPHIl12306("C:\\Users\\Kalvin\\Desktop\\orderCheck.png");
 //        System.out.println("myCache.size = " + myCache.size());
-        MailUtil.sendText("425195867@qq.com", "抢票成功", "恭喜您订票成功, 请立即打开浏览器登录12306，访问‘未完成订单’，在30分钟内完成支付!");
+//        MailUtil.sendText("425195867@qq.com", "抢票成功", "恭喜您订票成功, 请立即打开浏览器登录12306，访问‘未完成订单’，在30分钟内完成支付!");
+
 
     }
 
@@ -244,11 +240,15 @@ public class MainTest {
         String toStation = "IZQ";
         String trainNum = "D4707,D2951,G2901,D2809,D2811,D1861,D2991,D1863,D2367,D1801,D1867,D1869,D2943,D2947,D2825";
         String seats = "M,O,N";
-        Shakedown12306Kit
-                .newInstance()
-                .initUser("18819458084", "llytest123")
-                .initQueryInfo(trainDate, fromStation, toStation, trainNum, seats)
-                .run();
+        try {
+            Shakedown12306Kit
+                    .newInstance()
+                    .initUser("18819458084", "llytest123")
+                    .initQueryInfo(trainDate, fromStation, toStation, trainNum, seats)
+                    .run();
+        } catch (Exception e) {
+            System.out.println("抢票程序已停止：" + e.getMessage());
+        }
     }
 
 }

@@ -9,13 +9,14 @@
         <result column="password" property="password" />
         <result column="passenger_id_no" property="passengerIdNo" />
         <result column="passenger" property="passenger" />
+        <result column="email" property="email" />
         <result column="ticket_num" property="ticketNum" />
         <result column="create_time" property="createTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, username, password, passenger_id_no, passenger, ticket_num, create_time
+        id, username, password, passenger_id_no, passenger, email, ticket_num, create_time
     </sql>
 
 </mapper>

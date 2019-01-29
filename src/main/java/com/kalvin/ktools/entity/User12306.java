@@ -46,6 +46,11 @@ public class User12306 implements Serializable {
     private String passenger;
 
     /**
+     * 邮箱地址
+     */
+    private String email;
+
+    /**
      * 成功出票次数
      */
     private Integer ticketNum;
@@ -100,6 +105,14 @@ public class User12306 implements Serializable {
         this.passenger = passenger;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Integer getTicketNum() {
         return ticketNum;
     }
@@ -119,13 +132,14 @@ public class User12306 implements Serializable {
     @Override
     public String toString() {
         return "User12306{" +
-        "id=" + id +
-        ", username=" + username +
-        ", password=" + password +
-        ", passengerIdNo=" + passengerIdNo +
-        ", passenger=" + passenger +
-        ", ticketNum=" + ticketNum +
-        ", createTime=" + createTime +
-        "}";
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", passengerIdNo='" + passengerIdNo + '\'' +
+                ", passenger='" + passenger + '\'' +
+                ", email='" + email + '\'' +
+                ", ticketNum=" + ticketNum +
+                ", createTime=" + createTime +
+                '}';
     }
 }

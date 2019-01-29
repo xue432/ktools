@@ -99,16 +99,6 @@ public class ConvenienceController {
         ticketTask.setUserId(user12306.getId());
         ticket12306OrderService.save(ticketTask);
 
-        /*System.out.println(shakedownVO.toString());
-        String trainDate = shakedownVO.getTrainDate();
-        String fromStation = shakedownVO.getFromStation();
-        String toStation = shakedownVO.getToStation();
-        String trainNum = shakedownVO.getTrainNum();
-//        trainNum = "D1882,D2962,D1853,D4822,D2948,G2904,D1870,D2972,D1872,D2834,D1876";
-        String seats = shakedownVO.getSeatType();
-        Shakedown12306Kit s12306 = new Shakedown12306Kit(shakedownVO.getUsername(), shakedownVO.getPassword());
-        s12306.initQueryInfo(trainDate, fromStation, toStation, trainNum, seats);
-        s12306.run();*/
         return R.ok();
     }
 }

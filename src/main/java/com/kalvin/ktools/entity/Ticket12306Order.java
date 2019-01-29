@@ -46,7 +46,7 @@ public class Ticket12306Order implements Serializable {
     private String fromStation;
 
     /**
-     * 终点站
+     * 到达站
      */
     private String toStation;
 

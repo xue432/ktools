@@ -1,21 +1,22 @@
 package com.kalvin.ktools.comm.job;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.kalvin.ktools.comm.kit.Shakedown12306Kit;
 import com.kalvin.ktools.dto.User12306TicketOrderDTO;
 import com.kalvin.ktools.service.Ticket12306OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 定时任务
@@ -48,8 +49,13 @@ public class Jobs {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Jobs.class);
 
-    @Autowired
+    @Resource
     private Ticket12306OrderService ticket12306OrderService;
+
+    @Value("{kt.shakedown.captcha.image.path}")
+    private String captchaImagePath;
+
+    private final String defaultEmail = "1481397688@qq.com";
 
     /**
      * 每天06:00启动所有抢票订单
@@ -62,7 +68,7 @@ public class Jobs {
     }
 
     /**
-     * 检查抢票订单：每分钟检查一遍   * 1-59 6-23 * * ?
+     * 检查抢票订单：每分钟检查一遍
      * 1、订单是否有效
      * 2、抢票状态是否正在进行
      */
@@ -106,17 +112,23 @@ public class Jobs {
             // 更新抢票状态为抢票中
             ticket12306OrderService.updateTicketStatusStart(o.getId());
 
-            Shakedown12306Kit.newInstance()
-                    .initUser(o.getUsername(), o.getPassword())
-                    .initQueryInfo(o.getTrainDate(), o.getFromStation(), o.getToStation(), o.getTrainNum(), o.getSeatType())
-                    .run();
-
-            LOGGER.info("线程{}已成功启动抢票订单{}", Thread.currentThread().getName(), o.getId());
             try {
+                Shakedown12306Kit.newInstance()
+                        .initUser(o.getUsername(), o.getPassword())
+                        .initQueryInfo(o.getTrainDate(), o.getFromStation(), o.getToStation(), o.getTrainNum(), o.getSeatType())
+                        .initCaptchaImgPath(captchaImagePath)
+                        .initReceiver(StrUtil.isNotEmpty(o.getEmail()) ? o.getEmail() : defaultEmail)
+                        .run();
+
+                LOGGER.info("线程{}已成功启动抢票订单{}", Thread.currentThread().getName(), o.getId());
+
                 // 隔一分钟启动
                 Thread.sleep(60 * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                LOGGER.info("线程{}启动抢票订单{}时发生了异常：{}", Thread.currentThread().getName(), o.getId(), e.getMessage());
+
+                // 更新的订单抢票状态为已停止
+                ticket12306OrderService.updateTicketStatusStop(o.getId());
             }
         }));
     }
