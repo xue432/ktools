@@ -52,7 +52,7 @@ public class Jobs {
     @Resource
     private Ticket12306OrderService ticket12306OrderService;
 
-    @Value("{kt.shakedown.captcha.image.path}")
+    @Value("${kt.shakedown.captcha.image.path}")
     private String captchaImagePath;
 
     private final String defaultEmail = "1481397688@qq.com";
