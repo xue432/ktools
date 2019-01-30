@@ -404,7 +404,7 @@ public class Shakedown12306Kit {
         String idNo = object.get("id_no").toString();
         this.passenger = name;
         this.passengerIdCard = idNo;
-        LOGGER.info("name={},idTypeCode={},idNo={}", name, idTypeCode, idNo);
+        LOGGER.info("账号={},name={},idTypeCode={},idNo={}", this.username, name, idTypeCode, idNo);
         this.passengerTicketStr = this.passengerTicketStr.replace("{username}", name).replace("{passengerIdCard}", idNo);
         this.oldPassengerStr = this.oldPassengerStr.replace("{username}", name).replace("{passengerIdCard}", idNo);
     }
@@ -538,7 +538,7 @@ public class Shakedown12306Kit {
         }
 
         this.btn++;
-        LOGGER.info("-------已刷票{}次--------", btn);
+        LOGGER.info("-------线程{}已为账号{}刷票{}次--------", Thread.currentThread().getName(), this.username, btn);
         return false;
     }
 
@@ -822,9 +822,7 @@ public class Shakedown12306Kit {
                 if ((boolean) parse.getByPath("data.submitStatus")) {
                     return true;
                 } else {
-                    LOGGER.info("正式下单失败，{}", parse.getByPath("data.errMsg"));
-                    // todo 将此班次列车加入小黑屋
-                    LOGGER.info("车次{}加入小黑屋", this.trainNum);
+                    LOGGER.info("正式下单失败，{}。车次{}加入小黑屋", parse.getByPath("data.errMsg"), this.trainNum);
                     this.blackRoom.put(this.trainNum, this.trainNum, 3 * 60);
                 }
             } else {
@@ -1379,7 +1377,7 @@ public class Shakedown12306Kit {
             this.initTicket();
             // 6-查票
             while (!this.queryZAll()) {
-                this.sleep(3000);
+                this.sleep(2000);
             }
             // 7-预提交订单
             if (!this.submitOrderRequest(submitTime)) {

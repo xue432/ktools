@@ -15,8 +15,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 定时任务
@@ -104,34 +105,38 @@ public class Jobs {
             return;
         }
 
-        // 启动抢票状态已停止的订单
-        ExecutorService executorService = Executors.newFixedThreadPool(size < maxPool ? size : maxPool);
-        ticketOrders.forEach(o -> executorService.submit(() -> {
-            LOGGER.info("线程{}正在启动抢票订单{}", Thread.currentThread().getName(), o.getId());
+        /*
+         * 启动抢票状态已停止的订单
+         * 使用定时线程调度。每隔一分钟启动一条线程
+         */
+        ScheduledExecutorService ses = Executors.newScheduledThreadPool(size < maxPool ? size : maxPool);
+        int scheduledTime = 0;  // 分钟
+        for (User12306TicketOrderDTO o : ticketOrders) {
 
             // 更新抢票状态为抢票中
             ticket12306OrderService.updateTicketStatusStart(o.getId());
 
-            try {
-                Shakedown12306Kit.newInstance()
-                        .initUser(o.getUsername(), o.getPassword())
-                        .initQueryInfo(o.getTrainDate(), o.getFromStation(), o.getToStation(), o.getTrainNum(), o.getSeatType())
-                        .initCaptchaImgPath(captchaImagePath)
-                        .initBusiness(ticket12306OrderService, o.getId())
-                        .initReceiver(StrUtil.isNotEmpty(o.getEmail()) ? o.getEmail() : defaultEmail)
-                        .run();
+            ses.schedule(() -> {
+                LOGGER.info("线程{}正在启动抢票订单{}", Thread.currentThread().getName(), o.getId());
+                try {
+                    Shakedown12306Kit.newInstance()
+                            .initUser(o.getUsername(), o.getPassword())
+                            .initQueryInfo(o.getTrainDate(), o.getFromStation(), o.getToStation(), o.getTrainNum(), o.getSeatType())
+                            .initCaptchaImgPath(captchaImagePath)
+                            .initBusiness(ticket12306OrderService, o.getId())
+                            .initReceiver(StrUtil.isNotEmpty(o.getEmail()) ? o.getEmail() : defaultEmail)
+                            .run();
 
-                LOGGER.info("线程{}已成功启动抢票订单{}", Thread.currentThread().getName(), o.getId());
+                } catch (Exception e) {
+                    LOGGER.info("线程{}启动抢票订单{}时发生了异常：{}", Thread.currentThread().getName(), o.getId(), e.getMessage());
 
-                // 隔一分钟启动
-                Thread.sleep(60 * 1000);
-            } catch (Exception e) {
-                LOGGER.info("线程{}启动抢票订单{}时发生了异常：{}", Thread.currentThread().getName(), o.getId(), e.getMessage());
+                    // 更新的订单抢票状态为已停止
+                    ticket12306OrderService.updateTicketStatusStop(o.getId());
+                }
+            }, scheduledTime, TimeUnit.MINUTES);
 
-                // 更新的订单抢票状态为已停止
-                ticket12306OrderService.updateTicketStatusStop(o.getId());
-            }
-        }));
+            scheduledTime++;
+        }
     }
 
 }
