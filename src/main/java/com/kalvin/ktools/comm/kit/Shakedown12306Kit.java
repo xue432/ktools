@@ -762,7 +762,7 @@ public class Shakedown12306Kit {
 
             String autoCode;
             try {
-                autoCode = new ImageAI().autoDELPHIl12306(captchaImagePath + this.orderCaptchaImageName);
+                autoCode = new ImageAI().autoDELPHIl12306(this.captchaImagePath + this.orderCaptchaImageName);
             } catch (Exception e) {
                 LOGGER.info(e.getMessage());
                 return false;

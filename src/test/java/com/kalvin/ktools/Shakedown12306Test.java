@@ -30,7 +30,7 @@ public class Shakedown12306Test {
 
     public static void main(String[] args) {
 
-        String trainDate = "2019-01-31,2019-02-03";
+        String trainDate = "2019-02-03";
         String fromStation = "IZQ";
         String toStation = "FAQ";
         String trainNum = "D2985,D2959,D4707,D4285,D2951,G2901,D2809,D2367,D1801,D1867";
@@ -42,6 +42,8 @@ public class Shakedown12306Test {
                     .newInstance()
                     .initUser("15816541383", "XIExie569447830")
                     .initQueryInfo(trainDate, fromStation, toStation, trainNum, seats)
+                    .initCaptchaImgPath("C:/Users/14813/Desktop/captcha/")
+                    .initReceiver("1481397688@qq.com")
                     .run();
         } catch (Exception e) {
             LOGGER.info("抢票程序已停止:", e.getMessage());
