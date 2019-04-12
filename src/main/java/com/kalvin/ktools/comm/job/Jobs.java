@@ -8,6 +8,7 @@ import com.kalvin.ktools.service.Ticket12306OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -46,6 +47,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 @EnableScheduling
+@ConditionalOnProperty(name = "kt.job.open", havingValue = "true")
 public class Jobs {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Jobs.class);
