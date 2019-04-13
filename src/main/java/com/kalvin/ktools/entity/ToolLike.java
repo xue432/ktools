@@ -25,15 +25,29 @@ public class ToolLike implements Serializable {
     private Long id;
 
     /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
      * 菜单ID
      */
     private Long menuId;
 
     /**
-     * 工具喜欢数
+     * 是否喜欢当前工具：0-未喜欢 1-喜欢
      */
-    private Integer likeNum;
+    private Integer likeIt;
 
+    public ToolLike() {
+
+    }
+
+    public ToolLike(Long userId, Long menuId, Integer likeIt) {
+        this.userId = userId;
+        this.menuId = menuId;
+        this.likeIt = likeIt;
+    }
 
     public Long getId() {
         return id;
@@ -41,6 +55,14 @@ public class ToolLike implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getMenuId() {
@@ -51,20 +73,21 @@ public class ToolLike implements Serializable {
         this.menuId = menuId;
     }
 
-    public Integer getLikeNum() {
-        return likeNum;
+    public Integer getLikeIt() {
+        return likeIt;
     }
 
-    public void setLikeNum(Integer likeNum) {
-        this.likeNum = likeNum;
+    public void setLikeIt(Integer likeIt) {
+        this.likeIt = likeIt;
     }
 
     @Override
     public String toString() {
         return "ToolLike{" +
-        "id=" + id +
-        ", menuId=" + menuId +
-        ", likeNum=" + likeNum +
-        "}";
+                "id=" + id +
+                ", userId=" + userId +
+                ", menuId=" + menuId +
+                ", likeIt=" + likeIt +
+                '}';
     }
 }

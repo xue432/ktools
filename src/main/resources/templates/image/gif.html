@@ -87,6 +87,11 @@
                 <p class="kt-fs13 kt-fc-desc">3、尽量使用尺寸相差不大的图片效果更佳哦。</p>
             </blockquote>
         </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
     </div>
 </div>
 
@@ -154,6 +159,7 @@
 
             // 渲染页签
             ktUtils.renderNavTab(ktConfig.moduleType.image);
+            ktUtils.initComments();
 
             // 初始化时间间隔选项
             var i = 0.1;

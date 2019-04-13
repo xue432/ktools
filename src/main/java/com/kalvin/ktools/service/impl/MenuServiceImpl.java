@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kalvin.ktools.comm.constant.Constant;
 import com.kalvin.ktools.dao.MenuDao;
 import com.kalvin.ktools.entity.Menu;
+import com.kalvin.ktools.exception.KTException;
 import com.kalvin.ktools.service.MenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,25 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
             jsonArray.add(jsonObject);
         });
         return jsonArray;
+    }
+
+    @Override
+    public void upLikeNum(Long id) {
+        Menu menu = super.getById(id);
+        Integer likeNum = menu.getLikeNum();
+        menu.setLikeNum(++likeNum);
+        super.updateById(menu);
+    }
+
+    @Override
+    public void downLikeNum(Long id) {
+        Menu menu = super.getById(id);
+        Integer likeNum = menu.getLikeNum();
+        if (likeNum == 0) {
+            throw new KTException("downLikeNum fail. the likeNum is 0");
+        }
+        menu.setLikeNum(--likeNum);
+        super.updateById(menu);
     }
 
     /**

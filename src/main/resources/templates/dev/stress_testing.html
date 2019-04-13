@@ -141,6 +141,11 @@
                 <p class="kt-fs13 kt-fc-desc">Shortest transaction:	        0.02(满足一个请求所需最短时间)</p>
             </blockquote>
         </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
     </div>
 </div>
 
@@ -200,6 +205,7 @@
         function init() {
             $('[data-toggle="popover"]').popover();
             ktUtils.renderNavTab(ktConfig.moduleType.dev);
+            ktUtils.initComments();
         }
 
         /**

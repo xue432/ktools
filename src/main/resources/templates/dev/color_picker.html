@@ -10,6 +10,7 @@
     <static th:replace="comm/base::static"></static>
     <link rel="stylesheet" th:href="@{/static/css/colpick.css}">
     <link rel="stylesheet" th:href="@{/static/css/bigcolorpicker.css}">
+<!--    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
     <style>
         .colorCode {
             background: white;
@@ -98,6 +99,11 @@
                 <p class="kt-fs13 kt-fc-desc font-weight-bold"><code>},'L', 10, true); </code></p>
             </blockquote>
         </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
     </div>
 </div>
 
@@ -111,6 +117,7 @@
 <script>
     $(document).ready(function() {
         ktUtils.renderNavTab(ktConfig.moduleType.dev);
+        ktUtils.initComments();
         $('#picker1').colpick({
             flat: true,
             layout: 'full',
@@ -149,6 +156,7 @@
         });
 
     });
+
 </script>
 
 </body>

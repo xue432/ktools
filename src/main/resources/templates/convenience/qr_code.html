@@ -98,6 +98,11 @@
                 <p class="kt-fs13 kt-fc-desc">3)二维码支持下载成图片</p>
             </blockquote>
         </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
     </div>
 </div>
 
@@ -178,6 +183,7 @@
 
         function init() {
             ktUtils.renderNavTab(ktConfig.moduleType.convenience);
+            ktUtils.initComments();
 
             // 颜色选择器初始化
             var i = 1;

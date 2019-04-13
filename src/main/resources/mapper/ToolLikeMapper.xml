@@ -5,13 +5,14 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.kalvin.ktools.entity.ToolLike">
         <id column="id" property="id" />
+        <result column="user_id" property="userId" />
         <result column="menu_id" property="menuId" />
-        <result column="like_num" property="likeNum" />
+        <result column="like_it" property="likeIt" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, menu_id, like_num
+        id, user_id, menu_id, like_it
     </sql>
 
 </mapper>

@@ -407,3 +407,175 @@ a.kt-text-decoration {
 .kt-box-shadow:hover {
     box-shadow: 0 35px 77px -17px rgba(0,0,0,0.44);
 }
+
+/*评论模块样式 start*/
+.commentbox{
+    width: 900px;
+    margin: 20px auto;
+}
+.mytextarea {
+    width: 100%;
+    overflow: auto;
+    word-break: break-all;
+    height: 100px;
+    color: #000;
+    font-size: 1em;
+    resize: none;
+}
+.comment-list{
+    /*width: 900px;
+    margin: 20px auto;
+    clear: both;
+    padding-top: 20px;*/
+}
+.comment-list .comment-info{
+    position: relative;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+.comment-list .comment-info header{
+    /*width: 10%;*/
+    position: absolute;
+}
+.comment-list .comment-info header img{
+    /*width: 100%;*/
+    border-radius: 50%;
+    padding: 5px;
+}
+.comment-list .comment-info .comment-right{
+    /*padding:5px 0px 5px 11%; */
+    padding: 5px 0 5px 56px;
+}
+.comment-list .comment-info .comment-right h3{
+    margin: 5px 0;
+}
+.comment-list .comment-info .comment-right .comment-content-header{
+    height: 25px;
+}
+.comment-list .comment-info .comment-right .comment-content-header span,.comment-list .comment-info .comment-right .comment-content-footer span{
+    padding-right: 2em;
+    color: #aaa;
+}
+.comment-list .comment-info .comment-right .comment-content-header span,.comment-list .comment-info .comment-right .comment-content-footer span.reply-btn,.send,.reply-list-btn{
+    cursor: pointer;
+}
+.comment-list .comment-info .comment-right .reply-list {
+    font-size: 13px;
+    color: #777777;
+    border-left: 3px solid #ccc;
+    padding-left: 7px;
+}
+.comment-list .comment-info .comment-right .reply-list .reply{
+    border-bottom: 1px dashed #ccc;
+}
+.comment-list .comment-info .comment-right .reply-list .reply div span{
+    padding-left: 10px;
+}
+.comment-list .comment-info .comment-right .reply-list .reply p span{
+    padding-right: 2em;
+    color: #aaa;
+}
+
+/*addComment*/
+
+.takeComment{
+    padding:10px 20px;
+    border:1px solid #ccc;
+    background-color: #eef3fa;
+}
+.takeComment .takeSbmComment{
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+.takeComment .takeSbmComment button,.takeComment .takeSbmComment span{
+
+    vertical-align: middle;
+}
+.takeComment .takeSbmComment span{
+    color: #aaa;
+    font-size: 12px;
+    margin:0 10px;
+}
+.commentOn{
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    background-color: #eef3fa;
+}
+.commentOn .messList,.commentOn .noContent{
+    background-color: #fff;
+}
+/*.commentOn .messList .reply{
+    border-bottom: 1px solid #ccc;
+    padding:10px;
+}*/
+.commentOn .noContent,.commentOn .messList .operation{
+    color: #aaa;
+}
+.commentOn .noContent{
+    text-align: center;
+    padding:10px;
+}
+.commentOn .messList .operation .replyTime{
+    float: left;
+}
+.commentOn .messList .operation .handle{
+    float: right;
+}
+.commentOn .messList .operation .handle a{
+    display: inline-block;
+    color: #666;
+    text-decoration: none;
+
+}
+.commentOn .messList .operation .handle a span.fa{
+    margin-left: 5px;
+    color: #aaa;
+}
+.commentOn .messList .operation .handle a span{
+    vertical-align: middle;
+}
+.commentOn .page{
+    text-align: center;
+}
+.commentOn .page ul{
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+/*评论模块样式 end*/
+
+.kt-heart25-empty {
+    font-size: 25px;
+    color: #b0b0b0;
+    display: block;
+    width: 30px;
+    float: left;
+}
+
+.kt-heart25-red {
+    font-size: 25px;
+    color: red;
+    display: block;
+    width: 30px;
+    float: left;
+}
+
+.kt-heart15-empty {
+    font-size: 15px;
+    color: #b0b0b0;
+    display: block;
+    width: 19px;
+    float: left;
+    padding-top: 4px;
+}
+
+.kt-heart15-red {
+    font-size: 15px;
+    color: red;
+    display: block;
+    width: 19px;
+    float: left;
+    padding-top: 4px;
+}

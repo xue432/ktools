@@ -20,4 +20,16 @@ public interface MenuService extends IService<Menu> {
      */
     JSONArray getAllMenuHierarchy();
 
+    /**
+     * 喜欢+1
+     * @param id 菜单ID
+     */
+    void upLikeNum(Long id);
+
+    /**
+     * 喜欢-1
+     * @param id 菜单ID
+     */
+    void downLikeNum(Long id);
+
 }

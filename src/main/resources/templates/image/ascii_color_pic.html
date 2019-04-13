@@ -80,6 +80,11 @@
                 <!--<footer class="blockquote-footer">图片转艺术图</footer>-->
             </blockquote>
         </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
     </div>
     <!--<div class="tab-pane container p-0" id="ascll">2222</div>-->
 </div>
@@ -156,6 +161,7 @@
 
             // 渲染页签
             ktUtils.renderNavTab(ktConfig.moduleType.image);
+            ktUtils.initComments();
         }
 
         var ajax = true;

@@ -4,6 +4,9 @@
  */
 var kfc = ktcfg.ctx;
 var ktConfig = {
+    menuId: null,
+    userId: null,
+    nickname: null,
     logEnable: true,    // 日志开关
     request: {  // 请求相关
         okCode: 200,
@@ -62,6 +65,13 @@ var ktConfig = {
         linuxCmdCategory: kfc + '/dev/linuxCmd/category',
         linuxCmdQuery: kfc + '/dev/linuxCmd/query',
         countToolsView: kfc + '/trafficRecords/count/toolsView',
-        shakedown12306: kfc + '/convenience/shakedown'
+        shakedown12306: kfc + '/convenience/shakedown',
+        userComments: kfc + '/comment/userComments',
+        addComment: kfc + '/comment/add',
+        giveLikeTool: kfc + '/toolLike/giveLike',
+        dislikeTool: kfc + '/toolLike/dislike',
+        giveLikeComment: kfc + '/comment/giveLike',
+        dislikeComment: kfc + '/comment/dislike'
+
     }
 };

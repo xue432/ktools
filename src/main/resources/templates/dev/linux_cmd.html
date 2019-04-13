@@ -84,6 +84,11 @@
                 <p class="kt-fs13 kt-fc-desc">注意：带[]括号的只是方便区分一下内容是可变的，真正的命令中不需要带上[]括号的</p>
             </blockquote>
         </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
     </div>
 </div>
 
@@ -97,6 +102,7 @@
 <script>
     $(document).ready(function() {
         ktUtils.renderNavTab(ktConfig.moduleType.dev);
+        ktUtils.initComments();
 
         // 搜索
         $('#query').on('click', function () {

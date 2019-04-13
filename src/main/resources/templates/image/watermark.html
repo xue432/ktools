@@ -74,6 +74,11 @@
                 <p class="kt-fs13 kt-fc-desc">为图片添加自定义水印字体和颜色</p>
             </blockquote>
         </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
     </div>
 </div>
 
@@ -177,6 +182,7 @@
 
         function init() {
             ktUtils.renderNavTab(ktConfig.moduleType.image);
+            ktUtils.initComments();
         }
 
     });

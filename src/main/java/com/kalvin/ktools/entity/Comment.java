@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @since 2019-04-12
  */
 @TableName("kt_comment")
-public class Comment implements Serializable {
+public class Comment extends BasePage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -44,11 +44,6 @@ public class Comment implements Serializable {
      * 当前评论喜欢数
      */
     private Integer commentLikeNum;
-
-    /**
-     * 是否喜欢当前工具：0-未喜欢 1-喜欢
-     */
-    private Integer like;
 
     /**
      * 创建时间
@@ -96,14 +91,6 @@ public class Comment implements Serializable {
         this.commentLikeNum = commentLikeNum;
     }
 
-    public Integer getLike() {
-        return like;
-    }
-
-    public void setLike(Integer like) {
-        this.like = like;
-    }
-
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -120,7 +107,6 @@ public class Comment implements Serializable {
         ", menuId=" + menuId +
         ", comment=" + comment +
         ", commentLikeNum=" + commentLikeNum +
-        ", like=" + like +
         ", createTime=" + createTime +
         "}";
     }

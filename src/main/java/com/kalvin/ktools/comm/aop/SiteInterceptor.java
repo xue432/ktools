@@ -2,14 +2,18 @@ package com.kalvin.ktools.comm.aop;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
 import com.kalvin.ktools.comm.constant.Constant;
 import com.kalvin.ktools.comm.kit.HttpServletContextKit;
 import com.kalvin.ktools.comm.kit.KToolkit;
 import com.kalvin.ktools.entity.TrafficRecords;
 import com.kalvin.ktools.entity.TrafficStatistics;
+import com.kalvin.ktools.entity.User;
 import com.kalvin.ktools.service.TrafficRecordsService;
 import com.kalvin.ktools.service.TrafficStatisticsService;
+import com.kalvin.ktools.service.UserService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -36,6 +40,9 @@ public class SiteInterceptor {
 
     @Resource
     private TrafficStatisticsService statisticsService;
+
+    @Resource
+    private UserService userService;
 
     @Pointcut("@annotation(com.kalvin.ktools.comm.annotation.SiteStats)")
     public void siteStats() { }
@@ -96,6 +103,7 @@ public class SiteInterceptor {
      */
     private void addOrVisitTimesUp(TrafficRecords reqInfo) {
         TrafficStatistics statistics = statisticsService.getById(reqInfo.getIp());
+        boolean createUser = false;
         if (statistics == null) {
             statistics = new TrafficStatistics();
             statistics.setIp(reqInfo.getIp());
@@ -105,12 +113,30 @@ public class SiteInterceptor {
             } else {
                 statistics.setApiVisitTimes(1);
             }
+            createUser = true;
+
         } else {    // 访问次数加1
             if (Constant.REQ_URL_TYPE_PAGE == reqInfo.getReqUrlType()) {
                 statistics.setPageVisitTimes(statistics.getPageVisitTimes() + 1);
             } else {
                 statistics.setApiVisitTimes(statistics.getApiVisitTimes() + 1);
             }
+
+            if (statistics.getUserId() == 0) {
+                createUser = true;
+            }
+        }
+
+        // 注册游客用户
+        if (createUser) {
+            String rs = RandomUtil.randomNumbers(6);
+            User user = new User();
+            user.setUsername("ku" + rs);
+            user.setNickname("游客_" + rs);
+            // 设置头像 使用IP的md5值，通过http://www.gravatar.com/avatar/{md5}?s=200&d=identicon 生成头像
+            user.setAvatar(SecureUtil.md5(statistics.getIp()));
+            userService.save(user);
+            statistics.setUserId(user.getId());
         }
         statisticsService.saveOrUpdate(statistics);
     }

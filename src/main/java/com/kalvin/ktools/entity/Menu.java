@@ -65,6 +65,11 @@ public class Menu implements Serializable {
     private String intro;
 
     /**
+     * 菜单工具喜欢数
+     */
+    private Integer likeNum;
+
+    /**
      * 排序值。越小越靠前
      */
     private Integer sort;
@@ -152,6 +157,14 @@ public class Menu implements Serializable {
         this.intro = intro;
     }
 
+    public Integer getLikeNum() {
+        return likeNum;
+    }
+
+    public void setLikeNum(Integer likeNum) {
+        this.likeNum = likeNum;
+    }
+
     public Integer getSort() {
         return sort;
     }
@@ -188,6 +201,7 @@ public class Menu implements Serializable {
                 ", icon='" + icon + '\'' +
                 ", banner='" + banner + '\'' +
                 ", intro='" + intro + '\'' +
+                ", likeNum=" + likeNum +
                 ", sort=" + sort +
                 ", status=" + status +
                 ", createTime=" + createTime +

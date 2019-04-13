@@ -25,6 +25,11 @@ public class TrafficStatistics implements Serializable {
     private String ip;
 
     /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
      * 访客地理位置
      */
     private String gegraphicPos;
@@ -46,6 +51,14 @@ public class TrafficStatistics implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getGegraphicPos() {
@@ -75,10 +88,11 @@ public class TrafficStatistics implements Serializable {
     @Override
     public String toString() {
         return "TrafficStatistics{" +
-        "ip=" + ip +
-        ", gegraphicPos=" + gegraphicPos +
-        ", pageVisitTimes=" + pageVisitTimes +
-        ", apiVisitTimes=" + apiVisitTimes +
-        "}";
+                "ip='" + ip + '\'' +
+                ", userId=" + userId +
+                ", gegraphicPos='" + gegraphicPos + '\'' +
+                ", pageVisitTimes=" + pageVisitTimes +
+                ", apiVisitTimes=" + apiVisitTimes +
+                '}';
     }
 }

@@ -68,6 +68,11 @@
                 <p class="kt-fs13 kt-fc-desc">json格式化、校验工具</p>
             </blockquote>
         </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
     </div>
 </div>
 
@@ -117,6 +122,7 @@
 
         function init() {
             ktUtils.renderNavTab(ktConfig.moduleType.dev);
+            ktUtils.initComments();
         }
 
     });

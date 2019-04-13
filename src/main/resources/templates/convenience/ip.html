@@ -65,6 +65,11 @@
                 <p class="kt-fs13 kt-fc-desc">查询IP所在的地理位置地址及网络供应商。</p>
             </blockquote>
         </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
     </div>
 </div>
 
@@ -78,7 +83,7 @@
 <script>
     $(document).ready(function() {
         ktUtils.renderNavTab(ktConfig.moduleType.convenience);
-
+        ktUtils.initComments();
         // http://119.29.193.127
         $('#query').on('click', function () {
             var ip = $('#ip').val();

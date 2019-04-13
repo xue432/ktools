@@ -9,13 +9,24 @@
         <result column="menu_id" property="menuId" />
         <result column="comment" property="comment" />
         <result column="comment_like_num" property="commentLikeNum" />
-        <result column="like" property="like" />
         <result column="create_time" property="createTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, menu_id, comment, comment_like_num, like, create_time
+        id, user_id, menu_id, comment, comment_like_num, create_time
     </sql>
+
+    <sql id="C_Base_Column_List">
+        c.id, c.user_id, c.menu_id, c.comment, c.comment_like_num, c.create_time
+    </sql>
+
+    <select id="selectCommentsWithUser" resultType="com.kalvin.ktools.dto.CommentDTO">
+        select <include refid="C_Base_Column_List"/>, su.nickname, su.avatar,
+        (select like_it from kt_comment_give_detail where comment_id=c.id and give_like_user_id=1) as likeIt
+        from kt_comment c left join sys_user su on c.user_id=su.id
+        where c.menu_id=#{menuId}
+        order by c.create_time desc
+    </select>
 
 </mapper>

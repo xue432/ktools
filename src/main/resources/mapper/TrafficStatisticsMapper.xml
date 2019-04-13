@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.kalvin.ktools.entity.TrafficStatistics">
         <id column="ip" property="ip" />
+        <result column="user_id" property="userId" />
         <result column="gegraphic_pos" property="gegraphicPos" />
         <result column="page_visit_times" property="pageVisitTimes" />
         <result column="api_visit_times" property="apiVisitTimes" />
@@ -12,7 +13,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        ip, gegraphic_pos, page_visit_times, api_visit_times
+        ip, user_id, gegraphic_pos, page_visit_times, api_visit_times
     </sql>
 
 </mapper>

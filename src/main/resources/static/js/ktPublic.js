@@ -88,3 +88,150 @@ function autoPushLink() {
         s.parentNode.insertBefore(bp, s);
     }
 }
+
+/**
+ * 发表评论
+ */
+function addComment() {
+    var commentContext = $('#commentContext').val();
+    var $cl = $('.gitment-comments-list');
+    if (commentContext) {
+
+        // 新增评论
+        var params = {userId: ktConfig.userId, menuId: ktConfig.menuId, comment: commentContext};
+        ktUtils.aPost(ktConfig.api.addComment, params, function (r) {
+            if (r.errorCode === ktConfig.request.okCode) {
+
+                var avatarUrl = $('.gitment-editor-avatar').attr('href');
+
+                var commentHtml = '<li class="gitment-comment" id="' + r.data + '">\n' +
+                    '                                    <!--头像-->\n' +
+                    '                                    <a class="gitment-comment-avatar" href="' + avatarUrl + '" target="_blank">\n' +
+                    '                                        <img class="gitment-comment-avatar-img" src="' + avatarUrl + '">\n' +
+                    '                                    </a>\n' +
+                    '                                    <!-- 主要内容 -->\n' +
+                    '                                    <div class="gitment-comment-main">\n' +
+                    '                                        <div class="gitment-comment-header">\n' +
+                    '                                            <a class="gitment-comment-name" href="javascript:void();" target="_blank" id="' + ktConfig.userId + '">' + ktConfig.nickname + '</a>\n' +
+                    '                                            发表于\n' +
+                    '                                            <span title="">' + new Date().format('yyyy-MM-dd hh:mm:ss') + '</span>\n' +
+                    // '                                            <div data-likeIt="0" onclick="likeComment(this)" class="gitment-comment-like-btn"><svg class="gitment-heart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M25 39.7l-.6-.5C11.5 28.7 8 25 8 19c0-5 4-9 9-9 4.1 0 6.4 2.3 8 4.1 1.6-1.8 3.9-4.1 8-4.1 5 0 9 4 9 9 0 6-3.5 9.7-16.4 20.2l-.6.5zM17 12c-3.9 0-7 3.1-7 7 0 5.1 3.2 8.5 15 18.1 11.8-9.6 15-13 15-18.1 0-3.9-3.1-7-7-7-3.5 0-5.4 2.1-6.9 3.8L25 17.1l-1.1-1.3C22.4 14.1 20.5 12 17 12z"></path></svg><span class="commentLikeNum">0</span></div>\n' +
+                    '                                            <div data-likeIt="0" onclick="likeComment(this)" class="gitment-comment-like-btn"><span class="glyphicon glyphicon-heart-empty kt-heart15-empty"></span><span class="commentLikeNum">0</span></div>\n' +
+                    '                                        </div>\n' +
+                    '                                        <div class="gitment-comment-body gitment-markdown"><p>' + commentContext + '</p></div>\n' +
+                    '                                    </div>\n' +
+                    '                                </li>';
+
+                if ($cl.find('li').length === 0) {
+                    $('.gitment-comments-error').remove();
+                    $cl.append(commentHtml);
+                } else {
+                    $cl.find('li').first().before(commentHtml);
+                }
+            } else {
+                alert('评论发表失败，请重试');
+            }
+        });
+
+    } else {
+        alert('你啥都没有发表~~!');
+    }
+}
+
+/**
+ * 点赞工具
+ * @param obj
+ */
+function likeTool(obj) {
+    var $l = $('.gitment-header-like-btn');
+    var likeIt = $(obj).attr('data-likeIt');
+    var params = {userId: ktConfig.userId, menuId: ktConfig.menuId};
+    var $lnEl = $('#likeNum');
+
+    if (Number(likeIt) === 0) { // 执行点赞/喜欢操作
+        ktUtils.aPost(ktConfig.api.giveLikeTool, params, function (r) {
+            if (r.errorCode === ktConfig.request.okCode) {
+                // likeNum+1
+                var likeNum = Number($lnEl.text());
+                $lnEl.text(likeNum + 1);
+                $l.attr('data-likeIt', '1');
+
+                // 更新心的颜色为 红色
+                $(obj).find('span.glyphicon').attr('class', 'glyphicon glyphicon-heart kt-heart25-red');
+            }
+        });
+    }
+    if (Number(likeIt) === 1) { // 执行取消点赞/喜欢操作
+        ktUtils.aPost(ktConfig.api.dislikeTool, params, function (r) {
+            if (r.errorCode === ktConfig.request.okCode) {
+                // likeNum+1
+                var likeNum = Number($lnEl.text());
+                $lnEl.text(likeNum - 1);
+                $l.attr('data-likeIt', '0');
+
+                // 更新心的颜色为 白色
+                $(obj).find('span.glyphicon').attr('class', 'glyphicon glyphicon-heart-empty kt-heart25-empty');
+            }
+        });
+    }
+}
+
+/**
+ * 点赞评论
+ * @param obj
+ */
+function likeComment(obj) {
+    var likeIt = $(obj).attr('data-likeIt');
+    var commentId = $(obj).parents('.gitment-comment').attr('id');
+    var params = {giveLikeUserId: ktConfig.userId, id: commentId};
+    var $lnEl = $(obj).find('.commentLikeNum');
+    if (Number(likeIt) === 0) { // 执行点赞/喜欢操作
+        ktUtils.aPost(ktConfig.api.giveLikeComment, params, function (r) {
+            if (r.errorCode === ktConfig.request.okCode) {
+                // likeNum+1
+                var likeNum = Number($lnEl.text());
+                $lnEl.text(likeNum + 1);
+                $(obj).attr('data-likeIt', '1');
+                // todo 更新心的颜色为 红色
+
+                $(obj).find('span.glyphicon').attr('class', 'glyphicon glyphicon-heart kt-heart15-red');
+            }
+        });
+    }
+    if (Number(likeIt) === 1) { // 执行取消点赞/喜欢操作
+        ktUtils.aPost(ktConfig.api.dislikeComment, params, function (r) {
+            if (r.errorCode === ktConfig.request.okCode) {
+                // likeNum+1
+                var likeNum = Number($lnEl.text());
+                $lnEl.text(likeNum - 1);
+                $(obj).attr('data-likeIt', '0');
+
+                // todo 更新心的颜色为 白色
+                $(obj).find('span.glyphicon').attr('class', 'glyphicon glyphicon-heart-empty kt-heart15-empty');
+            }
+        });
+    }
+}
+
+/**
+ * 分页查看评论 事件
+ */
+$('#commentPage').on('click', '.gitment-comments-page-item', function () {
+    var $preSelEl = $('#commentPage').find('.gitment-selected');
+    var preSelVal = $preSelEl.text();
+    $preSelEl.removeClass('gitment-selected');
+
+    var val = $(this).text();
+    if (val && val !== 'Next' && val !== 'Previous') {
+        $(this).attr('class', 'gitment-comments-page-item gitment-selected');
+        ktUtils.initComments(Number(val));  // 重新加载评论列表
+    } else if (val === 'Next') {
+        val = Number(preSelVal) + 1;
+        $preSelEl.next().attr('class', 'gitment-comments-page-item gitment-selected');
+        ktUtils.initComments(val);
+    } else if (val === 'Previous') {
+        val = Number(preSelVal) - 1;
+        $preSelEl.prev().attr('class', 'gitment-comments-page-item gitment-selected');
+        ktUtils.initComments(val);
+    }
+});
