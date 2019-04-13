@@ -128,6 +128,8 @@ function addComment() {
                 } else {
                     $cl.find('li').first().before(commentHtml);
                 }
+                // 清空评论框
+                $('#commentContext').val('');
             } else {
                 alert('评论发表失败，请重试');
             }
