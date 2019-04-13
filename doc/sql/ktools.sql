@@ -1,12 +1,13 @@
 
 CREATE TABLE `kt_traffic_statistics` (
-  `ip` varchar(15) NOT NULL COMMENT '访客IP(主键)',
-  `gegraphic_pos` varchar(255) NOT NULL COMMENT '访客地理位置',
+  `ip` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '访客IP(主键)',
+  `user_id` bigint(18) NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `gegraphic_pos` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '访客地理位置',
   `page_visit_times` int(11) NOT NULL DEFAULT '0' COMMENT '页面访问总次数',
   `api_visit_times` int(11) NOT NULL DEFAULT '0' COMMENT 'api访问总次数',
   `first_visit_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '第一次访问时间',
   PRIMARY KEY (`ip`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='网站流量统计表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='网站流量统计表';
 
 CREATE TABLE `kt_traffic_records` (
   `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -27,17 +28,19 @@ CREATE TABLE `kt_traffic_records` (
 CREATE TABLE `sys_menu` (
   `id` bigint(18) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `parent_id` bigint(18) NOT NULL COMMENT '父菜单ID，一级菜单为0',
-  `name` varchar(50) NOT NULL COMMENT '菜单名称',
-  `url` varchar(200) NOT NULL COMMENT '菜单URL',
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单名称',
+  `url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单URL',
   `level` tinyint(2) NOT NULL DEFAULT '0' COMMENT '层级。0：模块；1：一级菜单；2：二级菜单(暂无)',
-  `module_type` varchar(25) DEFAULT NULL COMMENT '模块类型',
-  `icon` varchar(50) DEFAULT NULL COMMENT '菜单图标',
-  `banner` varchar(50) NOT NULL COMMENT '菜单牌面图片',
+  `module_type` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '模块类型',
+  `icon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '菜单图标',
+  `banner` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单牌面图片',
+  `intro` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '简介',
+  `like_num` int(6) NOT NULL DEFAULT '0' COMMENT '菜单工具喜欢数',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序值。越小越靠前',
   `status` tinyint(2) NOT NULL DEFAULT '0' COMMENT '状态。0：正常；1：禁用',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='菜单表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='菜单表';
 
 CREATE TABLE `kt_cmd_category` (
   `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT '主键',
