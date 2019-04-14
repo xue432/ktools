@@ -468,82 +468,94 @@ var ktUtils = {
             current = 1;
         }
         var params = {menuId: ktConfig.menuId, current: current, size: size | 20};  // 默认每页显示20条评论
-        var r = this.get(ktConfig.api.userComments, params);
-        if (r.errorCode === ktConfig.request.okCode) {
-            var data = r.data;
-            ktConfig.userId = data.userId;
-            ktConfig.nickname = data.nickname;
-            var $lnEl = $('#likeNum');
-            $lnEl.text(data.likeNum);
-            $lnEl.parent().attr('data-likeIt', data.likeIt);    // 当前用户 对当前工具的喜欢与否：0-不喜欢 1-喜欢
-            if (data.likeIt === 1) {    // 设置为红心
-                $lnEl.prev().attr('class', 'glyphicon glyphicon-heart kt-heart25-red');
-            }
-            $('#isLike').text(data.likeIt);
-            var $geaEl = $('.gitment-editor-avatar');
-            $geaEl.attr('title', data.nickname);
-            $geaEl.attr('href', 'http://www.gravatar.com/avatar/' + data.avatar + '?s=200&d=identicon');
-            $geaEl.find('img').attr('src', 'http://www.gravatar.com/avatar/' + data.avatar + '?s=200&d=identicon');
+        // var r = this.get(ktConfig.api.userComments, params);
+        this.aGet(ktConfig.api.userComments, params, function (r) {
+            if (r.errorCode === ktConfig.request.okCode) {
+                var data = r.data;
+                ktConfig.userId = data.userId;
+                ktConfig.nickname = data.nickname;
+                var $lnEl = $('#likeNum');
+                $lnEl.text(data.likeNum);
+                $lnEl.parent().attr('data-likeIt', data.likeIt);    // 当前用户 对当前工具的喜欢与否：0-不喜欢 1-喜欢
+                if (data.likeIt === 1) {    // 设置为红心
+                    $lnEl.prev().attr('class', 'glyphicon glyphicon-heart kt-heart25-red');
+                }
+                $('#isLike').text(data.likeIt);
+                var $geaEl = $('.gitment-editor-avatar');
+                $geaEl.attr('title', data.nickname);
+                $geaEl.attr('href', 'http://www.gravatar.com/avatar/' + data.avatar + '?s=200&d=identicon');
+                $geaEl.find('img').attr('src', 'http://www.gravatar.com/avatar/' + data.avatar + '?s=200&d=identicon');
 
-            var comments = data.comments;
-            var total = comments.total; // 总条数
-            var records = comments.records; // 评论条目
-            var pages = comments.pages; // 页数
-            log('total=', total);
-            // log('records=', records);
-            if (total > 0) {  // 有评论
-                $('#noComment').attr('style', 'display:none');
-                $('#totalComment').text(total + '条评论');
-                $('#totalComment').show();
-                var commentsHtml = new StringBuilder();
-                records.forEach(function (item) {
-                    var heartClass = '';
-                    if (item.likeIt === 1) {
-                        heartClass = 'glyphicon glyphicon-heart kt-heart15-red';
-                    } else {
-                        heartClass = 'glyphicon glyphicon-heart-empty kt-heart15-empty';
-                    }
-                    commentsHtml.append('<li class="gitment-comment" id="' + item.id + '">\n' +
-                        '                                    <!--头像-->\n' +
-                        '                                    <a class="gitment-comment-avatar" href="#" target="_blank">\n' +
-                        '                                        <img class="gitment-comment-avatar-img" src="http://www.gravatar.com/avatar/' + item.avatar + '?s=200&d=identicon">\n' +
-                        '                                    </a>\n' +
-                        '                                    <!-- 主要内容 -->\n' +
-                        '                                    <div class="gitment-comment-main">\n' +
-                        '                                        <div class="gitment-comment-header">\n' +
-                        '                                            <a class="gitment-comment-name" href="javascript:void();" target="_blank" id="' + item.userId + '">' + item.nickname +'</a>\n' +
-                        '                                            发表于\n' +
-                        '                                            <span title="">' + item.createTime + '</span>\n' +
-                        // '                                            <div data-likeIt="' +item.likeIt+ '" onclick="likeComment(this)" class="gitment-comment-like-btn"><svg class="gitment-heart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M25 39.7l-.6-.5C11.5 28.7 8 25 8 19c0-5 4-9 9-9 4.1 0 6.4 2.3 8 4.1 1.6-1.8 3.9-4.1 8-4.1 5 0 9 4 9 9 0 6-3.5 9.7-16.4 20.2l-.6.5zM17 12c-3.9 0-7 3.1-7 7 0 5.1 3.2 8.5 15 18.1 11.8-9.6 15-13 15-18.1 0-3.9-3.1-7-7-7-3.5 0-5.4 2.1-6.9 3.8L25 17.1l-1.1-1.3C22.4 14.1 20.5 12 17 12z"></path></svg><span class="commentLikeNum">'+ item.commentLikeNum +'</span></div>\n' +
-                        '                                            <div data-likeIt="' +item.likeIt+ '" onclick="likeComment(this)" class="gitment-comment-like-btn"><span class="' + heartClass + '"></span><span class="commentLikeNum">'+ item.commentLikeNum +'</span></div>\n' +
-                        '                                        </div>\n' +
-                        '                                        <div class="gitment-comment-body gitment-markdown"><p>' + item.comment + '</p></div>\n' +
-                        '                                    </div>\n' +
-                        '                                </li>');
-                });
-                $('#commentList').html(commentsHtml.toString());
+                var comments = data.comments;
+                var total = comments.total; // 总条数
+                var records = comments.records; // 评论条目
+                var pages = comments.pages; // 页数
+                log('total=', total);
+                // log('records=', records);
+                if (total > 0) {  // 有评论
+                    $('#noComment').attr('style', 'display:none');
+                    $('#totalComment').text(total + '条评论');
+                    $('#totalComment').show();
+                    var commentsHtml = new StringBuilder();
+                    records.forEach(function (item) {
+                        var heartClass = '';
+                        if (item.likeIt === 1) {
+                            heartClass = 'glyphicon glyphicon-heart kt-heart15-red';
+                        } else {
+                            heartClass = 'glyphicon glyphicon-heart-empty kt-heart15-empty';
+                        }
+                        commentsHtml.append('<li class="gitment-comment" id="' + item.id + '">\n' +
+                            '                                    <!--头像-->\n' +
+                            '                                    <a class="gitment-comment-avatar" href="#" target="_blank">\n' +
+                            '                                        <img class="gitment-comment-avatar-img" src="http://www.gravatar.com/avatar/' + item.avatar + '?s=200&d=identicon">\n' +
+                            '                                    </a>\n' +
+                            '                                    <!-- 主要内容 -->\n' +
+                            '                                    <div class="gitment-comment-main">\n' +
+                            '                                        <div class="gitment-comment-header">\n' +
+                            '                                            <a class="gitment-comment-name" href="javascript:void();" target="_blank" id="' + item.userId + '">' + item.nickname +'</a>\n' +
+                            '                                            发表于\n' +
+                            '                                            <span title="">' + item.createTime + '</span>\n' +
+                            // '                                            <div data-likeIt="' +item.likeIt+ '" onclick="likeComment(this)" class="gitment-comment-like-btn"><svg class="gitment-heart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M25 39.7l-.6-.5C11.5 28.7 8 25 8 19c0-5 4-9 9-9 4.1 0 6.4 2.3 8 4.1 1.6-1.8 3.9-4.1 8-4.1 5 0 9 4 9 9 0 6-3.5 9.7-16.4 20.2l-.6.5zM17 12c-3.9 0-7 3.1-7 7 0 5.1 3.2 8.5 15 18.1 11.8-9.6 15-13 15-18.1 0-3.9-3.1-7-7-7-3.5 0-5.4 2.1-6.9 3.8L25 17.1l-1.1-1.3C22.4 14.1 20.5 12 17 12z"></path></svg><span class="commentLikeNum">'+ item.commentLikeNum +'</span></div>\n' +
+                            '                                            <div data-likeIt="' +item.likeIt+ '" onclick="likeComment(this)" class="gitment-comment-like-btn"><span class="' + heartClass + '"></span><span class="commentLikeNum">'+ item.commentLikeNum +'</span></div>\n' +
+                            '                                        </div>\n' +
+                            '                                        <div class="gitment-comment-body gitment-markdown"><p>' + ktUtils.makeHtml(item.comment) + '</p></div>\n' +
+                            '                                    </div>\n' +
+                            '                                </li>');
+                    });
+                    $('#commentList').html(commentsHtml.toString());
 
-                // 初始化分页
-                var $cpEl = $('#commentPage');
-                var pageHtml = new StringBuilder();
-                for (var i = 1; i <= pages; i++) {
-                    if (i === current) {  // gitment-selected
-                        pageHtml.append('<li class="gitment-comments-page-item gitment-selected">' + i + '</li>');
-                    } else {
-                        pageHtml.append('<li class="gitment-comments-page-item">' + i + '</li>');
-                        var y = i % 40;
-                        if (i % 40 === 0 && pages > y) {
-                            pageHtml.append('<li class="gitment-comments-page-item">Next</li>');
-                            break;
+                    // 初始化分页
+                    var $cpEl = $('#commentPage');
+                    var pageHtml = new StringBuilder();
+                    for (var i = 1; i <= pages; i++) {
+                        if (i === current) {  // gitment-selected
+                            pageHtml.append('<li class="gitment-comments-page-item gitment-selected">' + i + '</li>');
+                        } else {
+                            pageHtml.append('<li class="gitment-comments-page-item">' + i + '</li>');
+                            var y = i % 40;
+                            if (i % 40 === 0 && pages > y) {
+                                pageHtml.append('<li class="gitment-comments-page-item">Next</li>');
+                                break;
+                            }
                         }
                     }
+                    $cpEl.html(pageHtml.toString());
                 }
-                $cpEl.html(pageHtml.toString());
+            } else {
+                error('initComments error.');
             }
-        } else {
-            error('initComments error.');
-        }
-        // log('userComments=', r);
+            // log('userComments=', r);
+        });
+
+    },
+    /**
+     * 转化成html
+     * @param content 需要转化的内容
+     * @returns {*}
+     */
+    makeHtml: function (content) {
+        var converter = new showdown.Converter();
+        return converter.makeHtml(content);
     }
 };
 

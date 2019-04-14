@@ -21,9 +21,10 @@ public interface CommentDao extends BaseMapper<Comment> {
     /**
      * 查询用户评论列表，带用户信息
      * @param menuId 菜单ID
+     * @param giveUserId 点赞用户ID
      * @param page 分页
      * @return
      */
-    List<CommentDTO> selectCommentsWithUser(Long menuId, Page page);
+    List<CommentDTO> selectCommentsWithUser(Long menuId, Long giveUserId, Page page);
 
 }

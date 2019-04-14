@@ -23,7 +23,7 @@
 
     <select id="selectCommentsWithUser" resultType="com.kalvin.ktools.dto.CommentDTO">
         select <include refid="C_Base_Column_List"/>, su.nickname, su.avatar,
-        (select like_it from kt_comment_give_detail where comment_id=c.id and give_like_user_id=1) as likeIt
+        (select like_it from kt_comment_give_detail where comment_id=c.id and give_like_user_id=#{giveUserId}) as likeIt
         from kt_comment c left join sys_user su on c.user_id=su.id
         where c.menu_id=#{menuId}
         order by c.create_time desc

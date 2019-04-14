@@ -74,6 +74,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentDao, Comment> impleme
         userComments.setAvatar(user.getAvatar());
 
 //        List<Comment> comments = commentService.list(new QueryWrapper<Comment>().lambda().eq(Comment::getMenuId, menuId));
+        comment.setUserId(userId);
         Page<CommentDTO> commentsPage = this.getCommentsByPage(comment);
 
         userComments.setComments(commentsPage);
@@ -84,7 +85,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentDao, Comment> impleme
     @Override
     public Page<CommentDTO> getCommentsByPage(Comment comment) {
         Page<CommentDTO> page = new Page<>(comment.getCurrent(), comment.getSize());
-        List<CommentDTO> commentDTOS = baseMapper.selectCommentsWithUser(comment.getMenuId(), page);
+        List<CommentDTO> commentDTOS = baseMapper.selectCommentsWithUser(comment.getMenuId(), comment.getUserId(), page);
         page.setRecords(commentDTOS);
         return page;
     }
