@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
-    <title>IP归属地查询 - Kalvin在线工具</title>
-    <meta name="keywords" content="IP归属地查询、IP运营商查询、IP所在地区查询">
-    <meta name="description" content="在线IP归属地查询、IIP运营商查询、P所在地区查询、IP所在地址查询、IP运营商查询">
+    <title>IP查询 - Kalvin在线工具</title>
+    <meta name="keywords" content="IP查询、域名IP查询、IP归属地查询、IP运营商查询、IP所在地区查询">
+    <meta name="description" content="在线IP归属地查询、IP运营商查询、IP所在地区查询、IP所在地址查询、IP运营商查询">
     <link th:replace="comm/base::icon"/>
     <static th:replace="comm/base::static"></static>
 
@@ -22,7 +22,7 @@
             <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
             <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
             <li class="breadcrumb-item kt-fs13"><a href="#">便民工具</a></li>
-            <li class="breadcrumb-item kt-fs13 active">IP归属地查询</li>
+            <li class="breadcrumb-item kt-fs13 active">IP查询</li>
         </ol>
     </nav>
 </div>
@@ -36,24 +36,39 @@
         <div class="container kt-first-layout-module">
             <div class="row">
                 <div class="col-sm-12 text-center mt-lg-5">
-                    <img th:src="@{/static/image/ip.png}"/>
+                    <img th:src="@{/static/image/ip_seach.png}"/>
                 </div>
                 <div class="col-sm-6 offset-sm-3">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">IP地址:</span>
+                            <span class="input-group-text">IP/域名:</span>
                         </div>
-                        <input type="text" class="form-control" id="ip" placeholder="117.18.112.27" data-toggle="popover" title="说明" data-content="并发数，不建议设置过大，否则会很慢" data-trigger="hover" data-placement="top">
-                        <button id="query" class="btn btn-primary btn-sm glyphicon glyphicon-search">查询</button>
+                        <input type="text" class="form-control" id="ip" placeholder="www.baidu.com">
+                        <button id="query" class="btn btn-primary btn-sm glyphicon glyphicon-search">IP查询</button>
                     </div>
                 </div>
                 <div class="col-sm-6 offset-3 mb-5">
+                    <p class="kt-fs14" id="errorMsg" style="display: none">
+                        <label class="font-weight-bold">提示:</label>
+                        <span style="background-color: #e9ecef; color: red">查询失败，请重试</span>
+                    </p>
+                    <p class="kt-fs14">
+                        <label class="font-weight-bold">IP:</label>
+                        <span id="_ip" style="background-color: #e9ecef">14.215.177.39</span>
+                    </p>
+                    <p class="kt-fs14">
+                        <label class="font-weight-bold">域名:</label>
+                        <span id="domain" style="background-color: #e9ecef">www.baidu.com</span>
+                    </p>
+                    <p class="kt-fs14">
+                        <label class="font-weight-bold">isp：</label>
+                        <span id="isp" style="background-color: #e9ecef">电信</span>
+                    </p>
                     <p class="kt-fs14">
                         <label class="font-weight-bold">IP归属地：</label>
-                        <mark id="ipAddress">中国广东省广州市天河区</mark>
-                        <label class="font-weight-bold" style="margin-left: 10px">isp：</label>
-                        <mark id="isp">电信</mark>
+                        <span id="ipAddress" style="background-color: #e9ecef">中国广东广州</span>
                     </p>
+
                 </div>
             </div>
         </div>
@@ -62,7 +77,7 @@
             <h4 class="kt-fs16">工具简介</h4>
             <hr>
             <blockquote class="blockquote">
-                <p class="kt-fs13 kt-fc-desc">查询IP所在的地理位置地址及网络供应商。</p>
+                <p class="kt-fs13 kt-fc-desc">查询域名IP以为IP所在的地理位置地址及网络供应商信息。</p>
             </blockquote>
         </div>
 
@@ -78,33 +93,53 @@
 
 <!--js脚本-->
 <script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::config"></script>
 <script th:replace="comm/base::jquery"></script>
 <script th:replace="comm/base::publicjs"></script>
+
 <script>
     $(document).ready(function() {
         ktUtils.renderNavTab(ktConfig.moduleType.convenience);
         ktUtils.initComments();
         // http://119.29.193.127
         $('#query').on('click', function () {
+            ipQuery();
+        });
+
+        $('#ip').on('keyup', function (e) {
+            if (e.which === 13) {
+                ipQuery();
+            }
+        });
+
+
+        function ipQuery() {
             var ip = $('#ip').val();
             if (!ip) {
-                ktUtils.warnMsg('请填写IP地址');
+                alert('请输入IP地址或域名再查询');
                 return false;
             }
-            log(ktConfig.api.getIpInfo);
             $.get(ktConfig.api.getIpInfo, {ip: ip}, function (r) {
-                log('r=', r);
-                if (r.data && r.data !== ' ') {
-                    var dr = r.data.split(' ');
-                    $('#ipAddress').text(dr[0]);
-                    $('#isp').text(dr[1]);
+                if (r.errorCode === ktConfig.request.okCode) {
+                    $('#_ip').text(r.data.ip);
+                    $('#domain').text(r.data.domain);
+                    $('#ipAddress').text(r.data.ipAddress);
+                    $('#isp').text(r.data.isp);
+                    $('#errorMsg').hide();
                 } else {
-                    $('#ipAddress').text('获取失败请重试');
-                    $('#isp').text('');
+                    $('#errorMsg').show();
+                    alert('查询失败：' + r.msg);
                 }
-
             });
-        });
+        }
+
+        function isIp(value){
+            var exp = /^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]).(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0).(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0).(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/;
+            var reg = value.match(exp);
+            if (reg == null) {
+                return false;
+            }
+        }
     });
 </script>
 

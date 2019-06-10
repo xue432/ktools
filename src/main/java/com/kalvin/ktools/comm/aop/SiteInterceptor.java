@@ -58,24 +58,16 @@ public class SiteInterceptor {
         LOGGER.info("{}正在请求:{}", clientIP, request.getContextPath() + request.getRequestURI());
     }
 
-    /*@After(value = "siteStats()")
-    public void after(JoinPoint joinPoint) {
-        LOGGER.info("after.............");
-    }*/
-
-    /*@AfterReturning(value = "siteStats()")
-    public void afterReturn(JoinPoint joinPoint) {
-        LOGGER.info("afterReturn.............");
-    }*/
-
     @AfterThrowing(value = "siteStats()")
     public void afterThrowing(JoinPoint joinPoint) {
         // 记录请求信息
         TrafficRecords reqInfo = this.getReqInfo(joinPoint);
-        reqInfo.setReqStatus(1);    // 设置请求状态:失败
-        recordsService.save(reqInfo);
+        if (reqInfo != null) {
+            reqInfo.setReqStatus(1);    // 设置请求状态:失败
+            recordsService.save(reqInfo);
 
-        addOrVisitTimesUp(reqInfo);
+            addOrVisitTimesUp(reqInfo);
+        }
     }
 
     @Around(value = "siteStats()")
@@ -89,10 +81,11 @@ public class SiteInterceptor {
 
         // 记录请求信息
         TrafficRecords reqInfo = this.getReqInfo(pjp);
-        reqInfo.setReqTime((int) dft);
-        recordsService.save(reqInfo);
-
-        addOrVisitTimesUp(reqInfo);
+        if (reqInfo != null) {
+            reqInfo.setReqTime((int) dft);
+            recordsService.save(reqInfo);
+            addOrVisitTimesUp(reqInfo);
+        }
 
         return proceed;
     }
@@ -133,7 +126,7 @@ public class SiteInterceptor {
             User user = new User();
             user.setUsername("ku" + rs);
             user.setNickname("游客_" + rs);
-            // 设置头像 使用IP的md5值，通过http://www.gravatar.com/avatar/{md5}?s=200&d=identicon 生成头像
+            // 设置头像 使用IP的md5值，通过https://www.gravatar.com/avatar/{md5}?s=200&d=identicon 生成头像
             user.setAvatar(SecureUtil.md5(statistics.getIp()));
             userService.save(user);
             statistics.setUserId(user.getId());
@@ -146,11 +139,21 @@ public class SiteInterceptor {
      * @param pjp JoinPoint
      */
     private TrafficRecords getReqInfo(JoinPoint pjp) {
-        HttpServletRequest request = HttpServletContextKit.getHttpServletRequest();
-        String ip = HttpUtil.getClientIP(request);
+
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
+        Class returnType = signature.getReturnType();
+        String name = signature.getName();  // 请求方法名
+        if ("index".equals(name)) { // 不再统计访问主页网址了，因为请求实在太多，且统计数据作用不大
+            return null;
+        }
 
         // 获取IP信息
-        ip = "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
+        HttpServletRequest request = HttpServletContextKit.getHttpServletRequest();
+        String ip = HttpUtil.getClientIP(request);
+        if ("0:0:0:0:0:0:0:1".equals(ip) || "119.29.193.127".equals(ip)) {
+            return null;
+        }
+
         String url = request.getRequestURI();
         String method = request.getMethod();
         String ipInfo = KToolkit.getIPInfo(ip);   // ip信息
@@ -160,11 +163,7 @@ public class SiteInterceptor {
             address = ipInfo.split(" ")[0];
             isp = ipInfo.split(" ")[1];
         }
-//        LOGGER.info("ip={}, url={}, method={}, address={}, isp={}", ip, url, method, address, isp);
 
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
-        Class returnType = signature.getReturnType();
-        String name = signature.getName();  // 请求方法名
         int reqUrlType;
         if (returnType == ModelAndView.class) {
             reqUrlType = 0;

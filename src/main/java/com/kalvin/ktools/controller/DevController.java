@@ -72,6 +72,9 @@ public class DevController {
     @SiteStats
     @PostMapping(value = "stressTesting")
     public R stressTesting(StressTestingVO stressTestingVO) {
+        if (stressTestingVO.getUrls().contains("tools.kalvinbg.cn")) {
+            return R.fail("你坏坏哦，用本站网址测试，我不答应。");
+        }
         if (stressTestingVO.getConcurrent() > 300) { // 并发数最大限制300
             stressTestingVO.setConcurrent(300);
         }

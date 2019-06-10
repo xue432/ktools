@@ -54,7 +54,7 @@
             </div>
             <div class="row mt-5">
                 <div class="col-sm-12">
-                    <button class="btn" id="transpic" style="background: #20c997;color: white; margin-left: 0;">开始转化</button>
+                    <button class="btn btn-primary" id="transpic" style="margin-left: 0;">生成</button>
                     <label for="comment" class="kt-fc-title">ascii字体预览:</label>
                     <!--<textarea class="ascii" disabled rows="5" id="comment"></textarea>-->
                     <pre id="comment" class="kt-pre-font12 kt-border"></pre>
@@ -145,7 +145,6 @@
                     } else {
                         ktUtils.errorMsg('request fail:' + r.status);
                     }
-                    log(r);
                 }
             });
         });

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ImageUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.kit.KToolkit;
 import com.kalvin.ktools.dto.R;
@@ -25,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * 便民工具 控制层
@@ -84,7 +86,31 @@ public class ConvenienceController {
     @SiteStats
     @GetMapping(value = "get/ipInfo")
     public R getIpInfo(String ip) {
-        return R.ok(KToolkit.getIPInfo(ip));
+        HashMap<String, Object> hashMap = new HashMap<>();
+        String ipInfo = "";
+        if (KToolkit.isIp(ip)) {
+            ipInfo = KToolkit.getIPInfo(ip);
+            hashMap.put("domain", "");
+        } else if (KToolkit.isDomain(ip)) {
+            String ipInfoDomain = KToolkit.getIPInfoDomain(ip);
+            if (StrUtil.isNotBlank(ipInfoDomain)) {
+                String[] s = ipInfoDomain.split(",");
+                ip = s[0];
+                ipInfo = KToolkit.getIPInfo(ip);
+                hashMap.put("domain", s[1]);
+            }
+        } else {
+            return R.fail("不是合法的IP或域名");
+        }
+        if (StrUtil.isNotBlank(ipInfo)) {
+            String[] s = ipInfo.split(" ");
+            hashMap.put("ip", ip);
+            hashMap.put("ipAddress", s[0]);
+            hashMap.put("isp", s[1]);
+            return R.ok(hashMap);
+        } else {
+            return R.fail("没有查询到相关IP信息，请确认IP或域名的正确性");
+        }
     }
 
     @SiteStats

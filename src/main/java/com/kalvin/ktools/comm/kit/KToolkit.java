@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.UnknownHostException;
 
 /**
  * 工具集合类
@@ -47,6 +48,24 @@ public class KToolkit {
             return null;
         }
 
+    }
+
+    /**
+     * 获取IP信息
+     *
+     * @param domain 域名地址
+     * @return ipInfo
+     */
+    public static String getIPInfoDomain(String domain) {
+        try {
+            InetAddress ip = InetAddress.getByName(domain);
+            System.out.println("IP地址:"+ip.getHostAddress());
+            System.out.println("域名："+ip.getHostName());
+            return ip.getHostAddress() + "," + ip.getHostName();
+        } catch (UnknownHostException e) {
+            LOGGER.info("通过域名获取IP信息异常：{}", e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -177,6 +196,17 @@ public class KToolkit {
      */
     public static String replacePunctuation(String str) {
         return str.replaceAll("[\\pP]", "");
+    }
+
+    public static boolean isIp(String ip) {
+        String ipReg = "^(1\\d{2}|2[0-4 ]\\d|25[0-5]|[1-9]\\d|[1-9])\\." + "(1\\d{2}|2[0-4]\\ d|25[0-5]|[1-9]\\d|\\d)\\." + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\." + "(1\\d{2}|2[0-4]\\ d|25[0-5]|[1-9]\\d|\\d)$";
+        return ip.matches(ipReg);
+    }
+
+    public static boolean isDomain(String domain) {
+        // 验证二级域名是否合法
+        String domainReg = "^([A-Z]|[a-z]|[0-9]|[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）――+|{}【】‘；：”“'。，、？]){6,20}$";
+        return domain.matches(domainReg);
     }
 
 }

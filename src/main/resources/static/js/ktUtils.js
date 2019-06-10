@@ -483,8 +483,8 @@ var ktUtils = {
                 $('#isLike').text(data.likeIt);
                 var $geaEl = $('.gitment-editor-avatar');
                 $geaEl.attr('title', data.nickname);
-                $geaEl.attr('href', 'http://www.gravatar.com/avatar/' + data.avatar + '?s=200&d=identicon');
-                $geaEl.find('img').attr('src', 'http://www.gravatar.com/avatar/' + data.avatar + '?s=200&d=identicon');
+                $geaEl.attr('href', 'https://www.gravatar.com/avatar/' + data.avatar + '?s=200&d=identicon');
+                $geaEl.find('img').attr('src', 'https://www.gravatar.com/avatar/' + data.avatar + '?s=200&d=identicon');
 
                 var comments = data.comments;
                 var total = comments.total; // 总条数
@@ -506,8 +506,8 @@ var ktUtils = {
                         }
                         commentsHtml.append('<li class="gitment-comment" id="' + item.id + '">\n' +
                             '                                    <!--头像-->\n' +
-                            '                                    <a class="gitment-comment-avatar" href="#" target="_blank">\n' +
-                            '                                        <img class="gitment-comment-avatar-img" src="http://www.gravatar.com/avatar/' + item.avatar + '?s=200&d=identicon">\n' +
+                            '                                    <a class="gitment-comment-avatar" href="https://www.gravatar.com/avatar/' + item.avatar + '?s=200&d=identicon" target="_blank">\n' +
+                            '                                        <img class="gitment-comment-avatar-img" src="https://www.gravatar.com/avatar/' + item.avatar + '?s=200&d=identicon">\n' +
                             '                                    </a>\n' +
                             '                                    <!-- 主要内容 -->\n' +
                             '                                    <div class="gitment-comment-main">\n' +
