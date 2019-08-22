@@ -241,3 +241,16 @@ $('#commentPage').on('click', '.gitment-comments-page-item', function () {
         ktUtils.initComments(val);
     }
 });
+
+/**
+ * 实例化更新日志通知条
+ * http://www.bootstrapmb.com/item/1855
+ */
+$(".updateLogTicker").smarticker({
+    theme: 4,
+    speed: 3000,
+    pausetime: 3600,
+    // animation: "fade",  // slide、typing、fade
+    // rounded: true,
+    title: "更新日志"
+});

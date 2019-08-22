@@ -19,5 +19,9 @@ INSERT INTO `sys_menu` VALUES (18, 12, '二维码生成', '/convenience/qrCode',
 INSERT INTO `sys_menu` VALUES (19, 12, 'IP归属地查询', '/convenience/ip', 1, '', '/static/image/icon/ip.png', '', '查询IP或域名信息、如归属地查询、运营商查询', 1, 0, 0, '2018-12-07 14:36:37');
 INSERT INTO `sys_menu` VALUES (20, 13, 'linux常用命令字典', '/dev/linux/cmd', 1, '', '/static/image/icon/linux.png', '', '集合开发者常用linux命令，提供快速搜索', 2, 0, 0, '2018-12-10 16:30:33');
 INSERT INTO `sys_menu` VALUES (21, 13, '颜色选择器', '/dev/colorPicker', 1, '', '/static/image/icon/yuan.png', '', '颜色选择器、网站颜色代码选择、拾色器', 3, 0, 0, '2018-12-20 11:51:37');
-INSERT INTO `sys_menu` VALUES (22, 1, '图片加水印', '/image/watermark', 1, '', '', '', '图片添加自定义水印文字和水印颜色', 1, 0, 0, '2019-01-24 11:07:34');
+INSERT INTO `sys_menu` VALUES (22, 1, '图片加水印', '/image/watermark', 1, '', '/static/image/icon/water.png', '', '图片添加自定义水印文字和水印颜色', 1, 0, 0, '2019-01-24 11:07:34');
 INSERT INTO `sys_menu` VALUES (23, 12, '12306抢票助手', '/convenience/shakedown12306', 1, '', '', '', '12306自动抢票程序，稳定快速', 0, 0, 1, '2019-01-28 17:42:04');
+INSERT INTO `sys_menu` VALUES (24, 1, '词云图生成', '/image/wordCloud', 1, '', '/static/image/icon/cy.png', '', '一键生成逼格满满的词云图', 0, 0, 0, '2019-06-21 11:09:01');
+INSERT INTO `sys_menu` VALUES (25, 13, 'markdown编辑器', '/dev/markdown', 1, '', '/static/image/icon/md.png', '', 'markdown在线编辑器', 0, 0, 0, '2019-08-20 17:17:30');
+INSERT INTO `sys_menu` VALUES (26, 13, 'JS/HTML/CSS格式化', '/dev/jsHtmlCss/format', 1, '', '/static/image/icon/jhc.png', '', ' JS/HTML/CSS代码一键格式化、美化', 0, 0, 0, '2019-08-21 13:46:40');
+INSERT INTO `sys_menu` VALUES (27, 3, '字符统计', '/txt/charStatistics', 1, '', '/static/image/icon/char.png', '', '在线实时分析统计各类字符个数', 0, 0, 0, '2019-08-21 17:51:11');

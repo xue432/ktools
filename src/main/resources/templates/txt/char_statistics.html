@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>在线字符统计 - Kalvin在线工具</title>
+    <meta name="keywords" content="字符个数统计、中文字符统计、英文字母统计">
+    <meta name="description" content="在线统计分析一段文字包括的中文字符个数、英文字符个数、数字字符个数等字符统计工具">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">文字工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">字符统计</li>
+        </ol>
+    </nav>
+</div>
+
+<!--更新日志通知条-->
+<div th:replace="comm/base::updateLog"></div>
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-first-layout-module">
+            <div class="row">
+                <div class="col-sm-6 mt-3">
+                    <label for="charContent" class="kt-fc-title">请粘贴字符内容:</label>
+                    <textarea class="form-control" rows="10" id="charContent" name="charContent" placeholder="粘这里，快速统计~"></textarea>
+                </div>
+                <div class="col-sm-6 mt-3">
+                    <label class="kt-fc-title">字符统计分析结果:</label>
+                    <div class="row" style="height: 254px; border: 1px solid #ced4da">
+                        <div id="total" class="col-sm-12" style="margin-top: 15px;">总字符个数：0</div>
+                        <div id="char" class="col-sm-12">中文字符个数：0</div>
+                        <div id="letter" class="col-sm-12">英文/字母字符个数：0</div>
+                        <div id="number" class="col-sm-12">数字字符个数：0</div>
+                        <div id="blank" class="col-sm-12">空格字符个数：0</div>
+                        <div id="other" class="col-sm-12">其它字符个数：0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--文字说明块-->
+        <div class="container kt-layout-module">
+            <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">在线实时分析统计各类字符（中文、英文字母、数字、空格、标点符号/特殊字符）各自占用的字符个数。</p>
+            </blockquote>
+        </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
+
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script>
+    $(document).ready(function() {
+        init();
+
+        $('#charContent').on('keyup', function () {
+            charStatistics($(this).val());
+        }).on('change', function () {
+            charStatistics($(this).val());
+        });
+
+        /**
+         * 初始化代码
+         */
+        function init() {
+            // 渲染页签
+            ktUtils.renderNavTab(ktConfig.moduleType.txt);
+            ktUtils.initComments();
+
+            charStatistics('');
+        }
+
+        /**
+         * 字符统计
+         * @param str
+         */
+        function charStatistics(str) {
+            // 所有字符总个数
+            var allCharLen = str.length || 0;
+            $('#total').text('总字符个数：' + allCharLen);
+
+            // 空格字符个数
+            var blankLen = 0;
+            var blankArr = str.match(/\s+/g) || [];
+            $.each(blankArr, function (i, item) {
+                blankLen += item.length
+            });
+            $('#blank').text('空格字符个数：' + blankLen);
+
+            // 英文/字母字符个数
+            var letterArr = str.match(/[A-Za-z]/g) || [];
+            var letterLen = letterArr.length;
+            $('#letter').text('英文/字母字符个数：' + letterLen);
+
+            // 数字字符个数
+            var numberArr = str.match(/[0-9]/g) || [];
+            var numberLen = numberArr.length;
+            $('#number').text('数字字符个数：' + numberLen);
+            // 中文字符个数
+            var charLen = 0;
+            var charArr = str.match(/[\u4e00-\u9fa5]+/g) || [];
+            $.each(charArr, function (i, item) {
+                charLen += item.length
+            });
+            $('#char').text('中文字符个数：' + charLen);
+
+            // 其它字符个数
+            var otherLen = Number(allCharLen) - Number(blankLen) - Number(letterLen) - Number(numberLen) - Number(charLen);
+            $('#other').text('其它字符个数：' + otherLen);
+
+            // str = str.replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\、|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g,"");
+            // log('rep=', str)
+        }
+
+    });
+</script>
+
+</body>
+</html>

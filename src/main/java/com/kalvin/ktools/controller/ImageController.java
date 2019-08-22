@@ -9,7 +9,6 @@ import com.kalvin.ktools.comm.constant.KApi;
 import com.kalvin.ktools.comm.kit.*;
 import com.kalvin.ktools.dto.ImageDTO;
 import com.kalvin.ktools.dto.R;
-import com.kalvin.ktools.entity.RGB;
 import com.kalvin.ktools.exception.KTException;
 import com.kalvin.ktools.vo.ImageWatermarkVO;
 import org.slf4j.Logger;
@@ -77,18 +76,35 @@ public class ImageController {
         return new ModelAndView("image/ascii_color_pic.html");
     }
 
+    @SiteStats
+    @GetMapping(value = "wordCloud")
+    public ModelAndView wordCloud() {
+        return new ModelAndView("image/wordcloud.html");
+    }
+
     /**
      * 异步上传
      * @param file f
+     * @param type 类型。0：上传后不改变文件名称；1：上传后使用自定义文件名称
      * @return r
      */
     @SiteStats
-    @PostMapping(value = "upload")
-    public R upload(@RequestParam(value = "file") MultipartFile file) {
+    @PostMapping(value = "upload/{type}")
+    public R upload(@RequestParam(value = "file") MultipartFile file, @PathVariable Integer type) {
         if (file == null) {
             throw new KTException("请先选择要上传的图片");
         }
-        File f = IoKit.writeMultipartFile(file, imageUploadDir);
+        File f;
+        switch (type) {
+            case 0:
+                f = IoKit.writeMultipartFile(file, imageUploadDir, false);
+                break;
+            case 1:
+                f = IoKit.writeMultipartFile(file, imageUploadDir, true);
+                break;
+            default:
+                throw new KTException("上传类型参数不正确");
+        }
         return R.ok(f.getName());
     }
 
@@ -104,7 +120,7 @@ public class ImageController {
     }
 
     /**
-     * 图片处理
+     * 艺术图片处理
      * @param fileName 文件名
      * @param type  转化类型
      * @return r
@@ -129,7 +145,7 @@ public class ImageController {
     @SiteStats
     @PostMapping(value = "uploadAndHandle")
     public R uploadAndHandle(Integer type, @RequestParam(value = "file") MultipartFile file) {
-        final R upload = this.upload(file);
+        final R upload = this.upload(file, 1);
         return this.handle(upload.getData().toString(), type);   // 转化图片
     }
 
@@ -166,7 +182,7 @@ public class ImageController {
     @SiteStats
     @PostMapping(value = "to/ascii")
     public R toAscii(@RequestParam(value = "file") MultipartFile file) {
-        R upload = this.upload(file);
+        R upload = this.upload(file, 1);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("filename", upload.getData());
         String post = HttpUtil.post(kApi.getImg2AsciiUrl(), hashMap);
@@ -257,6 +273,27 @@ public class ImageController {
                 imageWatermarkVO.getRgb());
         String fileUrl = imageHandleDir + handleName;
         return R.ok(new ImageDTO(handleName, ImageKit.toBase64(new File(fileUrl))));
+    }
+
+    /**
+     * 生成词云图
+     * @param filename 文件名
+     * @param wordContent 词云内容
+     * @return r
+     */
+    @SiteStats
+    @PostMapping(value = "generateWordCloud")
+    public R generateWordCloud(String filename, String wordContent) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("filename", filename);
+        hashMap.put("content", wordContent);
+        String post = HttpUtil.post(kApi.getImgGenerateWordCloudUrl(), hashMap);
+        R r = KApiKit.respone2R(post);
+        if (KApiKit.isSuccess(post)) {
+            final String fileUrl = imageHandleDir + r.getData().toString();
+            return R.ok(new ImageDTO(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
+        }
+        return r;
     }
 
 }

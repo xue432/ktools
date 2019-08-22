@@ -15,6 +15,8 @@
         <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/css/bootstrap.min.css}">
         <link rel="stylesheet" th:href="@{/static/css/ktools.css}">
         <link rel="stylesheet" th:href="@{/static/css/gitment.css}">
+        <link rel="stylesheet" th:href="@{/static/css/jquery.smarticker.css}">
+<!--        <link rel="stylesheet" th:href="@{/static/css/style.css}">-->
     </static>
 
     <!--网页头部-->
@@ -145,7 +147,8 @@
         <p class="kt-fc-desc kt-fs14" style="margin-bottom: 2px;">Copyright © Kalvin在线工具 <a class="kt-fc-desc" href="http://www.miitbeian.gov.cn" target="_blank">粤ICP备18152502号</a></p>
 
         <div class="kt-fixed-bar">
-            <a href="#top" data-toggle="tooltip" data-placement="left" title="回到顶部" class="glyphicon glyphicon-arrow-up"></a>
+            <a href="#top" data-toggle="tooltip" data-placement="left" title="回到顶部" class="kt-top-bar">
+            </a>
         </div>
     </div>
 
@@ -165,9 +168,9 @@
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
         <script th:src="@{/static/js/ktUtils.js}"></script>
+        <script th:src="@{/static/js/smarticker.js}"></script>
         <script th:src="@{/static/js/ktPublic.js}"></script>
         <script th:src="@{/static/js/showdown.min.js}"></script>
-<!--        <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.4.2/markdown-it.min.js"></script>-->
 <!--        <script th:src="@{/static/js/gitment.browser.js}"></script>-->
         <!--动态线条背景-->
         <script type="text/javascript"
@@ -178,6 +181,22 @@
     <div th:fragment="uploadjs">
         <script th:src="@{/static/plugin/bootstrap4/fileinput/js/fileinput.min.js}"></script>
         <script th:src="@{/static/plugin/bootstrap4/fileinput/js/zh.js}"></script>
+    </div>
+
+    <!--更新日志模板-->
+    <div th:fragment="updateLog" class="container p-0">
+        <div class="content border-top lightgray blue">
+            <div class="padding">
+                <div class="updateLogTicker">
+                    <ul>
+                        <li><a th:href="@{/image/wordCloud}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-22：新增词云图生成工具！</a></li>
+                        <li><a th:href="@{/dev/markdown}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-22：新增markdown在线编辑器工具！</a></li>
+                        <li><a th:href="@{/dev/jsHtmlCss/format}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-22：新增JS/HTML/CSS代码格式化、美化工具！</a></li>
+                        <li><a th:href="@{/txt/charStatistics}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-22：新增在线字符统计工具！</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>

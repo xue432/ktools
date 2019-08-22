@@ -15,6 +15,7 @@ public class KApi {
     private String img2AsciiUrl;
     private String img2GifUrl;
     private String img2ColorAsciiUrl;
+    private String imgGenerateWordCloudUrl;
     private String gif2AsciiUrl;
     private String txt2AsciiUrl;
     private String video2AsciiGifUrl;
@@ -58,6 +59,14 @@ public class KApi {
 
     public void setImg2ColorAsciiUrl(String img2ColorAsciiUrl) {
         this.img2ColorAsciiUrl = img2ColorAsciiUrl;
+    }
+
+    public String getImgGenerateWordCloudUrl() {
+        return imgGenerateWordCloudUrl;
+    }
+
+    public void setImgGenerateWordCloudUrl(String imgGenerateWordCloudUrl) {
+        this.imgGenerateWordCloudUrl = imgGenerateWordCloudUrl;
     }
 
     public String getGif2AsciiUrl() {

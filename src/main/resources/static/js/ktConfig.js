@@ -47,11 +47,12 @@ var ktConfig = {
         firefox: 'Firefox'
     },
     api: {  // 网站数据接口api
-        imageUpload: kfc + '/image/upload',
+        imageUpload: kfc + '/image/upload/{type}',
         imageUploadAndHandle: kfc + '/image/uploadAndHandle',
         imageHandle: kfc + '/image/handle',
         imageDownload: kfc + '/image/download',
         imageAscii: kfc + '/image/to/ascii',
+        imageGenerateWordCloud: kfc + '/image/generateWordCloud',
         txtAscii: kfc + '/txt/to/ascii',
         image2Gif: kfc + '/image/to/gif',
         gif2AsciiGif: kfc + '/image/gif/2AsciiGif',

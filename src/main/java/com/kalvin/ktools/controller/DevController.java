@@ -64,6 +64,18 @@ public class DevController {
         return new ModelAndView("dev/color_picker.html");
     }
 
+    @SiteStats
+    @GetMapping(value = "markdown")
+    public ModelAndView markdown() {
+        return new ModelAndView("dev/markdown_editor");
+    }
+
+    @SiteStats
+    @GetMapping(value = "jsHtmlCss/format")
+    public ModelAndView jsHtmlCssFormat() {
+        return new ModelAndView("dev/js_html_css_format");
+    }
+
     /**
      * 压力测试
      * @param stressTestingVO 压力测试参数

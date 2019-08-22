@@ -19,17 +19,20 @@ public class IoKit {
      * multipartFile写入磁盘文件
      * @param multipartFile m
      * @param dest 目标目录
+     * @param changeFilename 是否改变原文件名称。默认不改变
      * @return file
      */
-    public static File writeMultipartFile(MultipartFile multipartFile, String dest) {
+    public static File writeMultipartFile(MultipartFile multipartFile, String dest, boolean changeFilename) {
         File file;
         assert multipartFile != null;
         String fileName = multipartFile.getOriginalFilename();
         assert fileName != null;
-        String suffix = fileName.substring(fileName.lastIndexOf("."));
-        fileName = Constant.UPLOAD_PREFIX_FILENAME +
-                DateUtil.format(new Date(), "yyMMddhhmmss") + "_" +
-                RandomUtil.randomString(3) + suffix;
+        if (changeFilename) {
+            String suffix = fileName.substring(fileName.lastIndexOf("."));
+            fileName = Constant.UPLOAD_PREFIX_FILENAME +
+                    DateUtil.format(new Date(), "yyMMddhhmmss") + "_" +
+                    RandomUtil.randomString(3) + suffix;
+        }
         try {
             file = new File(dest + fileName);
             file.createNewFile();
@@ -39,5 +42,9 @@ public class IoKit {
             throw new KTException("写入文件时发生异常");
         }
         return file;
+    }
+
+    public static File writeMultipartFile(MultipartFile multipartFile, String dest) {
+        return IoKit.writeMultipartFile(multipartFile, dest, false);
     }
 }

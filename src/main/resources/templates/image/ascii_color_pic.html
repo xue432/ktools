@@ -20,7 +20,7 @@
 <div class="container p-0">
     <nav>
         <ol class="breadcrumb mb-0 kt-bread-bg">
-            <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+            <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
             <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
             <li class="breadcrumb-item kt-fs13"><a th:href="@{/image/artPic}">图片工具</a></li>
             <li class="breadcrumb-item kt-fs13 active">彩色ASCII图生成</li>
@@ -28,6 +28,8 @@
     </nav>
 </div>
 
+<!--更新日志通知条-->
+<div th:replace="comm/base::updateLog"></div>
 <div th:replace="comm/base::tab"></div>
 
 <!-- Tab panes -->
@@ -104,7 +106,7 @@
         var uploadSucc = false;
         var handleFileEle = $("#handleFileName");
         var uploadFileEle = $("#uploadFileName");
-        var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUpload);
+        var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUpload.replace('{type}', 1));
 
         // 选择文件后事件
         control.on("filebatchselected", function(event, files) {

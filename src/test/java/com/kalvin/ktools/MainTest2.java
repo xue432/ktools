@@ -29,9 +29,9 @@ public class MainTest2 {
         try {
             Shakedown12306Kit
                     .newInstance()
-                    .initUser("18218798420", "qr_kh_6926641746")
+                    .initUser("1821879xxxx", "xxxx")
                     .initQueryInfo(trainDate, fromStation, toStation, trainNum, seats)
-                    .initPassenger("刘畅澈", "445281199502020033")
+                    .initPassenger("xxx", "xxx")
                     .run();
         } catch (Exception e) {
             LOGGER.info("抢票程序已停止");

@@ -46,7 +46,7 @@ public class VideoController {
         if (multipartFile == null) {
             throw new KTException("请先选择要上传的视频");
         }
-        File file = IoKit.writeMultipartFile(multipartFile, videoUploadDir);
+        File file = IoKit.writeMultipartFile(multipartFile, videoUploadDir, true);
         return R.ok(file.getName());
     }
 

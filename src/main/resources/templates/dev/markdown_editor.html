@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>markdown在线编辑器 - Kalvin在线工具</title>
+    <meta name="keywords" content="markdown、markdown编辑器、markdown在线编辑器">
+    <meta name="description" content="精美好看的markdown在线编辑器">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <link rel="stylesheet" th:href="@{/static/plugin/editormd/css/editormd.min.css}">
+    <style>
+        pre {
+            color: #206ee2;
+            font-weight: bold!important;
+            background: antiquewhite;
+        }
+    </style>
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">开发者工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">markdown编辑器</li>
+        </ol>
+    </nav>
+</div>
+
+<!--更新日志通知条-->
+<div th:replace="comm/base::updateLog"></div>
+
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="stress">
+        <!--主要内容块-->
+        <div class="container kt-first-layout-module">
+            <div class="row">
+                <div class="col-sm-12 mt-lg-4">
+                    <div id="layout" class="editor">
+                        <div id="mmd" style="z-index: 999;">
+                            <textarea></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-layout-module">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            Markdown是一种可以使用普通文本编辑器编写的标记语言，通过简单的标记语法，它可以使普通文本内容具有一定的格式。
+            <br>
+            <a href="http://www.markdown.cn/" target="_blank">Markdown语法文档</a>
+        </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script th:src="@{/static/plugin/editormd/js/editormd.min.js}"></script>
+<script>
+
+    $(document).ready(function() {
+        init();
+
+        // 实例化editormd
+        var mmdt = editormd("mmd", {
+            placeholder:'本编辑器支持Markdown编辑，左边编写，右边预览。建议最大化编辑哦~~',  //默认显示的文字，这里就不解释了
+            width: "100%",
+            height: 640,
+            syncScrolling: "single",
+            path: "/static/plugin/editormd/lib/",   //你的path路径（原资源文件中lib包在我们项目中所放的位置）
+            theme: "dark",//工具栏主题
+            previewTheme: "dark",//预览主题
+            editorTheme: "pastel-on-dark",//编辑主题
+            saveHTMLToTextarea: true,
+            emoji: false,
+            taskList: true,
+            tocm: true,         // Using [TOCM]
+            tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+            flowChart: true,             // 开启流程图支持，默认关闭
+            sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
+            toolbarIcons : function() {  //自定义工具栏，后面有详细介绍
+                return editormd.toolbarModes['full']; // full, simple, mini
+            }
+        });
+
+        function init() {
+            ktUtils.renderNavTab(ktConfig.moduleType.dev);
+            ktUtils.initComments();
+        }
+
+    });
+</script>
+
+</body>
+</html>

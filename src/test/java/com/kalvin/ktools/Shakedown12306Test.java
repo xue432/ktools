@@ -40,7 +40,7 @@ public class Shakedown12306Test {
         try {
             Shakedown12306Kit
                     .newInstance()
-                    .initUser("15816541383", "XIExie569447830")
+                    .initUser("1581654xxxx", "xxxx")
                     .initQueryInfo(trainDate, fromStation, toStation, trainNum, seats)
                     .initCaptchaImgPath("C:/Users/14813/Desktop/captcha/")
                     .initReceiver("1481397688@qq.com")

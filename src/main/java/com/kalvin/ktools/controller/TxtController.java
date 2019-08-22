@@ -21,16 +21,19 @@ import java.util.HashMap;
 @RequestMapping(value = "txt")
 public class TxtController {
 
-    /*@Value(value = "${kt.kapi.txt.ascii.url}")
-    private String kApiTxtAsciiUrl;*/
-
     @Resource
     private KApi kApi;
 
     @SiteStats
     @GetMapping(value = "ascii")
     public ModelAndView ascii() {
-        return new ModelAndView("txt/ascii_txt.html");
+        return new ModelAndView("txt/ascii_txt");
+    }
+
+    @SiteStats
+    @GetMapping(value = "charStatistics")
+    public ModelAndView charStatistics() {
+        return new ModelAndView("txt/char_statistics");
     }
 
     @SiteStats

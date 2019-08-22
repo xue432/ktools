@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>词云图在线生成 - Kalvin在线工具</title>
+    <meta name="keywords" content="词云图、文字云、词云图生成、词云图在线生成">
+    <meta name="description" content="提供在线把图片生成自定义词云图">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/fileinput/css/fileinput.min.css}">
+
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">图片工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">词云图生成</li>
+        </ol>
+    </nav>
+</div>
+
+<!--更新日志通知条-->
+<div th:replace="comm/base::updateLog"></div>
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="art">
+        <!--主要内容块-->
+        <div class="container kt-first-layout-module">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="p-lg-5">
+                        <input id="upload" type="file" name="file" class="file-loading" value="image.png"/>
+                        <hr class="hidden-sm hidden-md hidden-lg">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="p-lg-5">
+                        <!--转换后显示图片区块-->
+                        <div class="row kt-border">
+                            <div class="col-sm-12" style="height: 300px">
+                                <a th:href="@{/static/image/wxwc.jpg}" target="_blank" title="pic">
+                                    <img th:src="@{/static/image/wxwc.jpg}" id="handle" class="rounded fakeimg" alt="pic">
+                                </a>
+                                <input type="text" hidden id="uploadFileName" value=""/>
+                                <input type="text" hidden id="handleFileName" value=""/>
+                            </div>
+                        </div>
+
+                        <hr class="hidden-sm hidden-md hidden-lg">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <hr class="hidden-sm hidden-md hidden-lg">
+                    <h5 class="kt-fs16 kt-fc-title">词云内容</h5>
+                    <textarea class="form-control" rows="10" id="wordContent" name="wordContent" placeholder="词云内容。文字不要太少也不要太多，只有这样效果才最佳哦！比如一遍日志或文章。"></textarea>
+                </div>
+                <div class="col-sm-12">
+                    <!--进度条-->
+                    <div class="row" style="margin: 10px 0 0 0">
+                        <div id="pbg" class="col-xl|sm-12" style="width: 100%;"></div>
+                    </div>
+                    <div class="row mt-lg-3">
+                        <div class="col-xl|sm-12 ml-3">
+                            <button class="btn btn-primary" id="transpic" style="margin-left: 0;">生成词云图</button>
+                            <button class="btn btn-success" id="download" style="margin-left: 1rem;"><i class="glyphicon glyphicon-download-alt"></i>下载词云图</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-layout-module">
+            <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">词云。又称文字云。该工具可自定义图片（<span style="color: red;">图片使用纯色背景更佳哟</span>）及词云（文字）内容，一键生成逼格满满的词云图。</p>
+            </blockquote>
+        </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
+    </div>
+    <!--<div class="tab-pane container p-0" id="ascll">2222</div>-->
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script th:replace="comm/base::uploadjs"></script>
+<script>
+    $(document).ready(function() {
+        init();
+        var uploadSucc = false;
+        var handleFileEle = $("#handleFileName");
+        var uploadFileEle = $("#uploadFileName");
+        var wordContent;
+        var obj = {};
+        var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUpload.replace('{type}', 0), null, obj);
+
+        // 上传前事件
+        control.on('filepreajax', function(event, previewId, index) {
+            $(".file-preview").next().remove();
+        });
+
+        $("#transpic").on('click', function () {
+            wordContent = $('#wordContent').val();
+            if (!wordContent) {
+                return alert('请设置词云内容');
+            }
+            if (!uploadSucc) {  // 图片还没上传就选上传
+                control.fileinput("upload");
+            } else {    // 已上传直接生成词云图
+                var uploadFileName = uploadFileEle.val();
+                generateWordCloud(uploadFileName, wordContent);
+            }
+        });
+
+        $("#download").on('click', function () {
+            var handleFileName = handleFileEle.val();
+            log("download file=", handleFileName);
+            if (!handleFileName) {
+                alert('请先生成词云图再下载');
+                return false;
+            }
+            // 开始下载
+            window.open(ktConfig.api.imageDownload + '?fileName=' + handleFileName);
+        });
+
+        // 上传完成后事件
+        control.on("fileuploaded", function (event, data, previewId, index) {
+            if (data.response.errorCode === 200) {
+                uploadFileEle.val(data.response.data);   // 保存upload filename
+                uploadSucc = true;
+                generateWordCloud(data.response.data, wordContent);
+            } else {
+                alert('生成词云图失败，请客官再试一次哦');
+            }
+        });
+
+        // 若已经上传，先清除图片
+        $("input[name='file']").on('click', function () {
+            if (uploadSucc) {
+                control.fileinput("clear");
+                uploadSucc = false;
+            }
+        });
+
+        /**
+         * 初始化代码
+         */
+        function init() {
+            // 渲染页签
+            ktUtils.renderNavTab(ktConfig.moduleType.image);
+            ktUtils.initComments();
+        }
+
+        var ajax = true;
+
+        /**
+         * 生成词云图
+         * @param filename
+         * @param wordContent
+         */
+        function generateWordCloud(filename, wordContent) {
+            if (ajax) {
+                ajax = false;
+                showLoading();
+                $.ajax({
+                    type:'POST',
+                    url: ktConfig.api.imageGenerateWordCloud,
+                    data: {filename: filename, wordContent: wordContent},
+                    success: function (r) {
+                        if (r.errorCode === 200) {
+                            // var handleFileName = url.substring(url.lastIndexOf("/") + 1);
+                            var img = r.data;
+                            handleFileEle.val(img.name);   // 保存handle filename
+                            var url = '/comm/static/image/' + img.name;
+                            $("#handle").attr("src", img.base64);
+                            $('#handle').parent().attr('href', ktcfg.ctx + url);
+                            ktUtils.fixedImg(img.base64);
+                        } else {
+                            alert('生成词云图失败，请客官再试一次哦！msg：' + r.msg);
+                        }
+                    },
+                    complete: function (xmlHttpRequest) {
+                        var r = xmlHttpRequest.responseJSON;
+                        if (r.errorCode) {
+                            finishLoading(r.errorCode);
+                        } else {
+                            finishLoading(r.status);
+                            alert('request fail:' + r.status);
+                        }
+                        log(r);
+                        ajax = true;
+                    }
+                });
+            }
+        }
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>JS/HTML/CSS代码格式化 - Kalvin在线工具</title>
+    <meta name="keywords" content="JS代码格式化、HTML代码格式化、CSS代码格式化">
+    <meta name="description" content="JS/HTML/CSS代码格式化、代码格式美化工具">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <link href="https://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">
+
+</head>
+<body class="kt-bg">
+
+<!--网页头部-->
+<div th:replace="comm/base::head"></div>
+
+<!--Ktools导航栏-->
+<div th:replace="comm/base::navbar"></div>
+
+<!--面包悄-->
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">开发者工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">JS/HTML/CSS格式化</li>
+        </ol>
+    </nav>
+</div>
+
+<!--更新日志通知条-->
+<div th:replace="comm/base::updateLog"></div>
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-first-layout-module">
+            <div class="row">
+                <div class="col-sm-12 mt-lg-4">
+                    <div class="form-group">
+                        <label>待格式化或美化JS/HTML/CSS：</label>
+                        <textarea class="form-control" required rows="10" id="beforeFormat"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <button class="btn btn-primary btn-sm" id="format">格式化/美化</button>
+                    <button class="btn btn-secondary btn-sm" data-clipboard-action="copy" data-clipboard-target="#code" id="copy">复制代码</button>
+                </div>
+                <div class="col-sm-12 mt-2">
+                    <div class="form-group">
+                        <label>格式化/美化后代码：<span id="jsonStatus" class="badge badge-success"></span></label>
+                        <pre id="afterFormat" class="kt-pre-font12 kt-border mt-0" style="background: antiquewhite">
+                            <code id="code" style="margin:0 8px 0 8px;">
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-layout-module">
+            <h4 class="kt-fs16">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">该工具支持JS/HTML/CSS代码自动识别及一键格式化、美化代码，并进行高亮显示。</p>
+            </blockquote>
+        </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="comm/base::footer"></footer>
+
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
+<script th:src="@{/static/js/clipboard.js}"></script>
+<script th:src="@{/static/plugin/beautify/beautify.js}"></script>
+<script th:src="@{/static/plugin/beautify/beautify-html.js}"></script>
+<!--<script th:src="@{/static/plugin/beautify/beautify-css.js}"></script>-->
+<script>
+    $(document).ready(function() {
+        init();
+
+        $('#format').on('click', function () {
+            try {
+                var bfEle = $('#beforeFormat');
+                // log(bfEle.text());
+                var bfCode = bfEle.val();
+                beautify(bfCode);
+            } catch (e) {
+                alert('格式化失败，请重试：\n' + e);
+            }
+        });
+
+        // 复制到剪贴板
+        var clipboard = new ClipboardJS('#copy');
+        clipboard.on('success', function(e) {
+            alert('代码复制成功');
+            e.clearSelection();
+        });
+
+        function init() {
+            ktUtils.renderNavTab(ktConfig.moduleType.dev);
+            ktUtils.initComments();
+        }
+
+        var the = {
+            beautify_in_progress: false
+        };
+
+        if (/chrome/.test(navigator.userAgent.toLowerCase())) {
+            String.prototype.old_charAt = String.prototype.charAt;
+            String.prototype.charAt = function (n) { return this.old_charAt(n); }
+        }
+
+        function unpacker_filter(source) {
+            var trailing_comments = '';
+            var comment = '';
+            var found = false;
+
+            do {
+                found = false;
+                if (/^\s*\/\*/.test(source)) {
+                    found = true;
+                    comment = source.substr(0, source.indexOf('*/') + 2);
+                    source = source.substr(comment.length).replace(/^\s+/, '');
+                    trailing_comments += comment + "\n";
+                } else if (/^\s*\/\//.test(source)) {
+                    found = true;
+                    comment = source.match(/^\s*\/\/.*/)[0];
+                    source = source.substr(comment.length).replace(/^\s+/, '');
+                    trailing_comments += comment + "\n";
+                }
+            } while (found);
+
+            return trailing_comments + source;
+        }
+
+
+        function beautify(source) {
+            var elem = $('#afterFormat');
+            var afCode = '';
+            if (the.beautify_in_progress) return;
+
+            the.beautify_in_progress = true;
+
+            var indent_size = 4;//$('#tabsize').val();
+            var indent_char = indent_size == 1 ? '\t' : ' ';
+            var preserve_newlines = 5;//$('#preserve-newlines').attr('checked');
+            var keep_array_indentation = false;//$('#keep-array-indentation').attr('checked');
+            var brace_style = 'collapse';$('#brace-style').val();
+
+            var opts = {
+                indent_size: indent_size,
+                indent_char: indent_char,
+                preserve_newlines:preserve_newlines,
+                brace_style: brace_style,
+                keep_array_indentation:keep_array_indentation,
+                space_after_anon_function:true};
+
+            if (isHtml(source)) {
+                afCode = html_beautify(source, opts);
+            } else {
+                afCode = js_beautify(unpacker_filter(source), opts);
+            }
+
+            // 高亮显示
+            var obj = hljs.highlightAuto(afCode);
+            $(elem).find('code').html(obj.value);
+            hljs.initHighlighting();
+
+            the.beautify_in_progress = false;
+        }
+
+        function isHtml(source) {
+            var trimmed = source.replace(/^[ \t\n\r]+/, '');
+            var comment_mark = '<' + '!-' + '-';
+            return (trimmed && (trimmed.substring(0, 1) === '<' && trimmed.substring(0, 4) !== comment_mark));
+        }
+
+    });
+</script>
+
+</body>
+</html>

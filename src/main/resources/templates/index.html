@@ -6,8 +6,8 @@
     <meta name="baidu_union_verify" content="19e71aa13329cfa8079a282bf805aaeb">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
     <title>Kalvin在线工具 - 有趣及实用的工具箱</title>
-    <meta name="keywords" content="在线工具、在线生成器、图片转换工具、图片制作、开发者工具、ASCII图片生成、艺术图片生成、ASCII艺术字在线生成、压力测试、linux命令、JSON格式化、二维码生成、颜色选择器">
-    <meta name="description" content="在线工具、照片变卡通/素描/黑白、ASCII图片在线生成、GIF动态图片在线制作、GIF字符动画在线制作、ASCII艺术字在线生成、在线网站/接口压力测试、JSON格式化、二维码生成、在线颜色选择器、IP信息查询">
+    <meta name="keywords" content="在线工具、在线生成器、图片转换工具、图片制作、开发者工具、ASCII图片生成、艺术图片生成、ASCII艺术字在线生成、压力测试、代码格式化、JSON格式化、二维码生成、颜色选择器、词云图生成">
+    <meta name="description" content="在线工具、照片变卡通/素描/黑白、ASCII图片在线生成、GIF动态图片在线制作、GIF字符动画在线制作、ASCII艺术字在线生成、在线网站/接口压力测试、JSON格式化、代码格式化、二维码生成、在线颜色选择器、IP信息查询、markdown编辑器、字符统计">
     <meta name="Author" content="Kalvin">
     <link th:replace="comm/base::icon"/>
     <static th:replace="comm/base::static"></static>
@@ -22,22 +22,23 @@
     <div class="container p-0">
         <nav>
             <ol class="breadcrumb mb-0 kt-bread-bg">
-                <li class="kt-fs13" style="float: left;"><span style="color: #bf282e;font-weight: bold">您的当前位置：</span></li>
+                <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
                 <li class="breadcrumb-item kt-fs13 active"><a href="#">首页</a></li>
             </ol>
         </nav>
     </div>
 
+    <!--更新日志通知条-->
+    <div th:replace="comm/base::updateLog"></div>
+
     <div class="container kt-first-layout-module" style="background: white" th:with="ctx=${#httpServletRequest.getContextPath()}">
 
         <div class="row ml-1 mr-1 mt-2">
-            <!--<label class="kt-fc-title mb-0 mt-3" style="background: #f5ecec">在线工具</label>-->
             <h4 class="kt-fs16 kt-fc-title" style="margin-top: 8px;">在线工具</h4>
             <div id="toolsBox" class="col-sm-12 p-0">
-
                 <div class="row module" th:each="module,moduleStat:${allMenu}" th:if="${module.moduleType!='HEAD'}">
                     <div class="col-sm-12 pl-0 pr-0" th:each="menu0,menu0Stat:${module.menu}" th:if="${menu0Stat.index==0}">
-                        <h5 class="float-left"><span class="badge badge-primary glyphicon glyphicon-tags" style="background: #0068a1;border-radius: 0;" th:text="${module.module}">图片相关</span></h5>
+                        <h5 class="float-left"><span class="badge badge-primary glyphicon glyphicon-th-large" style="background: #0068a1;border-radius: 0;" th:text="${module.module}">图片相关</span></h5>
                         <hr>
                     </div>
                     <div class="kt-tl-box kt-border float-left kt-box-shadow" th:each="menu:${module.menu}">
@@ -52,27 +53,15 @@
                         </div>
                     </div>
                 </div>
-
-                <!--<div class="row module" th:each="module,moduleStat:${allMenu}" th:if="${module.moduleType!='HEAD'}">
-                    <div class="col-sm-12 pl-0 pr-0" th:each="menu0,menu0Stat:${module.menu}" th:if="${menu0Stat.index==0}">
-                        <h5 class="float-left"><span class="badge badge-primary glyphicon glyphicon-tags" style="background: #0068a1;border-radius: 0;" th:text="${module.module}">图片相关</span></h5>
-                        <hr>
-                    </div>
-                    <div class="kt-tl-box kt-border float-left" th:each="menu:${module.menu}">
-                        <div><img th:src="${ctx + menu.banner}"></div>
-                        <div><a class="kt-fc-title" th:href="${ctx + menu.url}" th:utext="${menu.name} + '&nbsp;<i class=\'glyphicon glyphicon-forward\'></i>'" target="_blank">图片转换艺术图工具&nbsp;<i class='glyphicon glyphicon-forward'></i></a></div>
-                    </div>
-                </div>-->
-
             </div>
         </div>
     </div>
 
-    <div class="container kt-ctx-bg mt-3">
+    <div class="container kt-ctx-bg mt-3 pt-3">
         <h4 class="kt-fs16 kt-fc-title">网站简介</h4>
         <hr>
         <blockquote class="blockquote">
-            <p class="kt-fs13 kt-fc-desc">网站旨在集成更多有趣及实用方便的在线工具；如艺术图片生成、生成字符画、ASCII艺术字生成、颜色选择器、IP归属地查询、linux常用命令字典、在线压力测试、JSON格式化等在线工具。</p>
+            <p class="kt-fs13 kt-fc-desc" style="margin-bottom: 15px;">网站旨在集成更多有趣及实用方便的在线工具；如艺术图片生成、生成字符画、ASCII艺术字生成、颜色选择器、IP归属地查询、词云图生成、markdown在线编辑器、在线压力测试、JSON/代码格式化、字符统计等在线工具。工具在不断完善中。如您有宝贵的意见或建议，请<a href="mailto:1481397688@qq.com" title="您的宝贵意见是我前进的动力">点击这里</a>可告知我哟~~！</p>
         </blockquote>
     </div>
 
@@ -109,7 +98,6 @@
                 } else {
                     $ktlbEl.width(boxMaxWidth - 2);
                 }
-
             }
 
             $.get(ktConfig.api.countToolsView, function (r) {
