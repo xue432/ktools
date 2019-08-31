@@ -25,6 +25,6 @@ public interface CommentDao extends BaseMapper<Comment> {
      * @param page 分页
      * @return
      */
-    List<CommentDTO> selectCommentsWithUser(Long menuId, Long giveUserId, Page page);
+    List<CommentDTO> selectCommentsWithUser(@Param("menuId") Long menuId, @Param("giveUserId") Long giveUserId, Page page);
 
 }
