@@ -16,7 +16,6 @@
         <link rel="stylesheet" th:href="@{/static/css/ktools.css}">
         <link rel="stylesheet" th:href="@{/static/css/gitment.css}">
         <link rel="stylesheet" th:href="@{/static/css/jquery.smarticker.css}">
-<!--        <link rel="stylesheet" th:href="@{/static/css/style.css}">-->
     </static>
 
     <!--网页头部-->
@@ -130,7 +129,7 @@
                         <a class="gitment-editor-footer-tip"
                            href="https://guides.github.com/features/mastering-markdown/" target="_blank">
 <!--                            Styling with Markdown is supported-->
-                            支持带有标记的样式
+                            支持Markdown语法
                         </a>
                         <button class="gitment-editor-submit" onclick="addComment()" title="发表评论">评论</button>
                     </div>
@@ -142,7 +141,7 @@
     <!-- 网站footer -->
     <div th:fragment="footer" class="jumbotron text-center kt-bg" style="margin-bottom:0; padding:10px 0 20px 0;">
         <p style="margin-bottom: 2px; font-size: 15px;">
-            <a class="kt-a-color" th:href="@{/}">返回首页</a> - <a class="kt-a-color" href="mailto:1481397688@qq.com" title="您的宝贵意见是我前进的动力">意见反馈</a> - <a class="kt-a-color" href="#">关于Kalvin在线工具</a>
+            <a class="kt-a-color" th:href="@{/}">返回首页</a> - <a class="kt-a-color" href="mailto:1481397688@qq.com" title="您的宝贵意见是我前进的动力">意见反馈</a> - <a class="kt-a-color" target="_blank" th:href="@{/about}">关于Kalvin在线工具</a>
         </p>
         <p class="kt-fc-desc kt-fs14" style="margin-bottom: 2px;">Copyright © Kalvin在线工具 <a class="kt-fc-desc" href="http://www.miitbeian.gov.cn" target="_blank">粤ICP备18152502号</a></p>
 
@@ -189,10 +188,12 @@
             <div class="padding">
                 <div class="updateLogTicker">
                     <ul>
-                        <li><a th:href="@{/image/wordCloud}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-22：新增词云图生成工具！</a></li>
-                        <li><a th:href="@{/dev/markdown}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-22：新增markdown在线编辑器工具！</a></li>
-                        <li><a th:href="@{/dev/jsHtmlCss/format}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-22：新增JS/HTML/CSS代码格式化、美化工具！</a></li>
-                        <li><a th:href="@{/txt/charStatistics}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-22：新增在线字符统计工具！</a></li>
+                        <li><a th:href="@{/image/compress}" target="_blank"><img src="/static/image/icon/new.png"> 2019-09-01：新增图片压缩工具！</a></li>
+                        <li><a th:href="@{/convenience/selectors}" target="_blank"><img src="/static/image/icon/new.png"> 2019-09-01：新增困难选择器工具！</a></li>
+                        <li><a th:href="@{/image/wordCloud}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-25：新增词云图生成工具！</a></li>
+                        <li><a th:href="@{/dev/markdown}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-25：新增markdown在线编辑器工具！</a></li>
+                        <li><a th:href="@{/dev/jsHtmlCss/format}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-25：新增JS/HTML/CSS代码格式化、美化工具！</a></li>
+                        <li><a th:href="@{/txt/charStatistics}" target="_blank"><img src="/static/image/icon/new.png"> 2019-08-25：新增在线字符统计工具！</a></li>
                     </ul>
                 </div>
             </div>

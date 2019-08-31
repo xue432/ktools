@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>关于Kalvin在线工具 - Kalvin在线工具</title>
+    <meta name="keywords" content="在线工具、关于Kalvin在线工具">
+    <meta name="description" content="关于Kalvin在线工具">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <style>
+        blockquote ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        blockquote ul li {
+            display: list-item;
+            text-align: -webkit-match-parent;
+            font-size: 12px;
+            line-height: 1.8;
+            margin: 0;
+        }
+        .emotion img {
+            height: 50px;
+        }
+    </style>
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13 active">关于Kalvin在线工具</li>
+        </ol>
+    </nav>
+</div>
+
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="art">
+        <!--主要内容块-->
+        <div class="container kt-first-layout-module">
+            <div class="row">
+                <div class="col-sm-12 mt-3">
+                    <h1 style="font-size: 1.3em; font-weight: normal;">关于Kalvin在线工具</h1>
+                    <hr>
+                    <blockquote class="blockquote">
+                        <p class="kt-fs14" style="line-height: 1.8">
+                            大家好！我是站长Kalvin，系一位热爱技术、喜欢折腾的后端程序猿。
+                            网站上线于2018年11月19号，是集有趣实用于一体的工具网站，我将不断更新集成更多的工具方便大家使用。
+                            如您有宝贵的意见或建议，欢迎联系我：
+                        </p>
+                        <p class="kt-fs14">
+                            邮箱：1481397688@qq.com
+                        </p>
+                        <p class="kt-fs14">
+                            企鹅号：1481397688
+                        </p>
+                        <br>
+                        <h4 style="font-weight: normal; font-size: 15px;">为了让页面不辣么单调，来一组兔斯基~~！</h4>
+                        <div class="emotion">
+                            <img th:src="@{/static/image/emotion/tuzki/1.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/2.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/4.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/5.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/6.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/7.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/8.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/9.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/11.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/12.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/13.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/14.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/15.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/16.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/17.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/18.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/19.gif}">
+                            <img th:src="@{/static/image/emotion/tuzki/20.gif}">
+
+                            <img th:src="@{/static/image/emotion/tuzki/21.gif}">
+                        </div>
+                        <hr>
+                        <h4 style="font-weight: normal; font-size: 15px;">更新日志：</h4>
+                        <ul>
+                            <li>2019-09-01：新增困难选择器工具、图片压缩工具；新增工具搜索功能；新增“关于Kalvin在线工具”页面介绍（现在才上这个页面感觉有点迟呀，哈哈！）。</li>
+                            <li>2019-08-25：新增词云图生成工具、markdown在线编辑工具、新增JS/HTML/CSS代码格式化工具、字符统计工具。</li>
+                            <li>2019-08-03：网站背景增加动态线条特效。</li>
+                            <li>2019-07-21：优化网站关键词(keywords)。</li>
+                            <li>2019-04-14：新增评论系统。</li>
+                            <li>2019-01-30：新增图片加水印工具、12306抢票程序（后因抢票程序在服务器上容易被12306检测到并封IP导致无法使用，故上线不久就被迫下线~~！）；优化网站移动端自适应问题。</li>
+                            <li>2018-12-29：网站UI大改；页面加载速度优化（从7、8秒优化到秒级加载）；功能优化；代码优化。</li>
+                            <li>2018-11-23：菜单渲染方式更改为动态渲染。</li>
+                            <li>2018-11-19：初版上线啦~~。</li>
+                        </ul>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+
+</body>
+</html>

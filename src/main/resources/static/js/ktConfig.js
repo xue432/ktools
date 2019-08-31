@@ -53,6 +53,7 @@ var ktConfig = {
         imageDownload: kfc + '/image/download',
         imageAscii: kfc + '/image/to/ascii',
         imageGenerateWordCloud: kfc + '/image/generateWordCloud',
+        imageCompress: kfc + '/image/compress',
         txtAscii: kfc + '/txt/to/ascii',
         image2Gif: kfc + '/image/to/gif',
         gif2AsciiGif: kfc + '/image/gif/2AsciiGif',
@@ -72,7 +73,8 @@ var ktConfig = {
         giveLikeTool: kfc + '/toolLike/giveLike',
         dislikeTool: kfc + '/toolLike/dislike',
         giveLikeComment: kfc + '/comment/giveLike',
-        dislikeComment: kfc + '/comment/dislike'
+        dislikeComment: kfc + '/comment/dislike',
+        search: kfc + '/search/tool'
 
     }
 };

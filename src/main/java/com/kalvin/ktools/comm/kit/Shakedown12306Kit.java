@@ -292,7 +292,7 @@ public class Shakedown12306Kit {
         hashMap.put("rand", "sjrand");
         this.request12306.form(hashMap);
         String body = this.request12306.execute().body();
-        LOGGER.info("body={}", body);
+        LOGGER.info("authCode body={}", body);
 
         JSONObject jsonObject = JSONUtil.parseObj(body);
         String resultCode = jsonObject.get("result_code").toString();
@@ -320,7 +320,7 @@ public class Shakedown12306Kit {
         this.request12306.form(formData);
 
         String body = this.request12306.execute().body();
-        LOGGER.info("body={}", body);
+        LOGGER.info("login body={}", body);
 
         JSONObject jsonObject = JSONUtil.parseObj(body);
         Integer resultCode = (Integer) jsonObject.get("result_code");

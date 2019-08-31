@@ -25,3 +25,5 @@ INSERT INTO `sys_menu` VALUES (24, 1, '词云图生成', '/image/wordCloud', 1, 
 INSERT INTO `sys_menu` VALUES (25, 13, 'markdown编辑器', '/dev/markdown', 1, '', '/static/image/icon/md.png', '', 'markdown在线编辑器', 0, 0, 0, '2019-08-20 17:17:30');
 INSERT INTO `sys_menu` VALUES (26, 13, 'JS/HTML/CSS格式化', '/dev/jsHtmlCss/format', 1, '', '/static/image/icon/jhc.png', '', ' JS/HTML/CSS代码一键格式化、美化', 0, 0, 0, '2019-08-21 13:46:40');
 INSERT INTO `sys_menu` VALUES (27, 3, '字符统计', '/txt/charStatistics', 1, '', '/static/image/icon/char.png', '', '在线实时分析统计各类字符个数', 0, 0, 0, '2019-08-21 17:51:11');
+INSERT INTO `sys_menu` VALUES (28, 12, '困难选择器', '/convenience/selectors', 1, '', '/static/image/icon/diffc.png', '', '选择，交给我', 0, 0, 0, '2019-08-26 11:33:11');
+INSERT INTO `sys_menu` VALUES (29, 1, '图片压缩', '/image/compress', 1, '', '/static/image/icon/compress.png', '', '在线压缩图片', 0, 0, 0, '2019-08-28 10:57:23');

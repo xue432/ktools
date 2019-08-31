@@ -31,7 +31,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
         integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
         crossorigin="anonymous"></script>
-<script src="/static/plugin/editormd/js/editormd.min.js"></script>
+<!--<script src="/static/plugin/editormd/js/editormd.min.js"></script>-->
     <textarea style="height: 600px;width: 700px" wrap="logical">
          .!\//?:.'^^""""""""^`.  `,,^.
           .|######;^'.        .`^"-####/!
@@ -67,7 +67,9 @@
     </div>
     <!--工具图标icon -->
     <div style="margin: 5px;">
-        <div style="width: 40px; height: 40px;color: goldenrod;line-height: 40px;text-align: center;font-size: 20px;border: 1px solid;">JHC</div>
+        <div style="width: 40px; height: 40px;color: rgba(173,137,50,0.9);line-height: 40px;text-align: center;font-size: 20px;border: 1px solid;">
+            压
+        </div>
     </div>
     <div>
         <div  style='display:inline;font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;font-weight: bold;font-size: 40px;text-shadow: 3px 3px black;color: #a6b3c3;'>Kalvin</div>
@@ -90,15 +92,15 @@
         <span style="color: #6f42c1; font-weight: bold;">令</span>-->
     </div>
 
-    <div id="layout" class="editor">
+    <!--<div id="layout" class="editor">
         <div id="tmd">
             <textarea></textarea>
         </div>
-    </div>
+    </div>-->
 <script>
     var testEditor;
     // 挑有用的写上去就行
-    testEditor = editormd("tmd", {
+    /*testEditor = editormd("tmd", {
         placeholder:'本编辑器支持Markdown编辑，左边编写，右边预览',  //默认显示的文字，这里就不解释了
         width: "90%",
         height: 640,
@@ -117,7 +119,7 @@
         toolbarIcons : function() {  //自定义工具栏，后面有详细介绍
             return editormd.toolbarModes['simple']; // full, simple, mini
         },
-    });
+    });*/
 
     // 在js中调用getMarkdown这个方法可以获得Markdown格式的文本。
     // testEditor.getMarkdown();

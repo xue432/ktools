@@ -556,6 +556,18 @@ var ktUtils = {
     makeHtml: function (content) {
         var converter = new showdown.Converter();
         return converter.makeHtml(content);
+    },
+    /**
+     * 获取url参数值
+     * @param name
+     * @returns {string|null}
+     */
+    getUrlParam: function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var l = decodeURI(window.location.search);  // 解决中文乱码问题
+        var r = l.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
     }
 };
 
@@ -641,7 +653,7 @@ function interval() {
         if (pro >= 99.8) {    // 如果大于或等于99%就停止定时器
             clearInterval(itl);
         }
-    }, 20);
+    }, 50);
 }
 
 /**

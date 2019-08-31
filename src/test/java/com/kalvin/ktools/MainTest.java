@@ -9,6 +9,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.kalvin.ktools.comm.kit.ImageKit;
 import com.kalvin.ktools.comm.kit.Shakedown12306Kit;
 
 import java.io.File;
@@ -34,11 +35,11 @@ public class MainTest {
 //        handleStationNameData();
 
 //        sendWithProxy();
-        xiaoCai();
+//        xiaoCai();
 //        Shakedown12306Test.ImageAI.autoDELPHIl12306("C:\\Users\\Kalvin\\Desktop\\orderCheck.png");
 //        System.out.println("myCache.size = " + myCache.size());
 //        MailUtil.sendText("425195867@qq.com", "抢票成功", "恭喜您订票成功, 请立即打开浏览器登录12306，访问‘未完成订单’，在30分钟内完成支付!");
-
+        imageResize();
 
     }
 
@@ -271,6 +272,12 @@ public class MainTest {
         } catch (Exception e) {
             System.out.println("抢票程序已停止:" + e.getMessage());
         }
+    }
+
+    public static void imageResize() throws Exception {
+        ImageKit.compressPic("C:\\Users\\Kalvin\\Desktop\\1.jpg",
+                "C:\\Users\\Kalvin\\Desktop\\2.jpg",
+                500, 0.8f);
     }
 
 }

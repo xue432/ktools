@@ -56,10 +56,11 @@
             </div>
             <div class="row mt-5">
                 <div class="col-sm-12">
-                    <button class="btn btn-primary" id="transpic" style="margin-left: 0;">生成</button>
-                    <label for="comment" class="kt-fc-title">ascii字体预览:</label>
+                    <label for="comment" class="kt-fc-title mb-0">ASCII预览:</label>
                     <!--<textarea class="ascii" disabled rows="5" id="comment"></textarea>-->
-                    <pre id="comment" class="kt-pre-font12 kt-border"></pre>
+                    <pre id="comment" class="kt-pre-font12 kt-border mt-0"></pre>
+                    <button class="btn btn-primary" id="generate" style="margin-left: 0;">生成</button>
+                    <button class="btn btn-secondary" id="copy" style="" data-clipboard-action="copy" data-clipboard-target="#comment">复制</button>
                 </div>
             </div>
         </div>
@@ -73,39 +74,12 @@
             </blockquote>
         </div>
 
-
         <!--评论模块-->
         <div class="container kt-layout-module">
             <div th:replace="comm/base::comment"></div>
         </div>
 
-        <!--<div class="container kt-layout-module">
-            &lt;!&ndash;留言&ndash;&gt;
-            <div class="takeComment">
-                <textarea name="textarea" rows="6" class="takeTextField form-control" placeholder="在这里输入你想说的话吧" id="content"></textarea>
-                <div class="takeSbmComment">
-                    <button type="button" class="inputs btn btn-success btn-sm" value="" id="addComment">提交评论</button>
-                </div>
-            </div>
-            &lt;!&ndash;已留&ndash;&gt;
-            <div class="commentOn">
-                &lt;!&ndash; <div class="noContent" v-show="datalist.length==0">暂无留言</div> &ndash;&gt;
-                <div class="page">
-                    <a href="javascript:;" class=""></a>
-                </div>
-                <div class="messList" >
-                    <div class="comment-list">
-                    </div>
-                </div>
-                &lt;!&ndash; 分页 &ndash;&gt;
-                <div class="page">
-                    <ul class="pagination" id="pagebox">
-                    </ul>
-                </div>
-            </div>
-        </div>-->
     </div>
-    <!--<div class="tab-pane container p-0" id="ascii">2222</div>-->
 </div>
 
 <!--网页footer-->
@@ -115,12 +89,13 @@
 <script th:replace="comm/base::config"></script>
 <script th:replace="comm/base::jquery"></script>
 <script th:replace="comm/base::publicjs"></script>
+<script th:src="@{/static/js/clipboard.js}"></script>
 <script>
     $(document).ready(function() {
 
         init();
 
-        $('#transpic').on('click', function () {
+        $('#generate').on('click', function () {
             var txt = $('#txt').val();
             var font = $('#font').find('option:selected').val();
             var allFont = $('#allFont').find('option:selected').val();
@@ -128,7 +103,7 @@
                 font = allFont;
             }
             if (!txt) {
-                ktUtils.hintMsg('请填写文字');
+                alert('请先填写文字');
                 return false;
             }
             $.ajax({
@@ -149,6 +124,13 @@
                     }
                 }
             });
+        });
+
+        // 复制到剪贴板
+        var clipboard = new ClipboardJS('#copy');
+        clipboard.on('success', function(e) {
+            alert('复制成功');
+            e.clearSelection();
         });
 
         /**
@@ -179,24 +161,6 @@
                 '                                                  ';
             $('#comment').text(defaultAscii);
 
-            //初始化数据
-            /*var arr = [
-                {id:1,img:ktcfg.ctx + "/static/image/icon/t.png",replyName:"帅大叔",beReplyName:"匿名",content:"同学聚会，看到当年追我的屌丝开着宝马车带着他老婆来了，他老婆是我隔壁宿舍的同班同学，心里后悔极了。",time:"2017-10-17 11:42:53",address:"深圳",osname:"",browse:"谷歌",replyBody:[]},
-                {id:2,img:ktcfg.ctx + "/static/image/icon/t.png",replyName:"匿名",beReplyName:"",content:"到菜市场买菜，看到一个孩子在看摊，我问：“一只鸡多少钱？” 那孩子回答：“23。” 我又问：“两只鸡多少钱？” 孩子愣了一下，一时间没算过来，急中生智大吼一声：“一次只能买一只！”",time:"2017-10-17 11:42:53",address:"深圳",osname:"",browse:"谷歌",replyBody:[{id:3,img:"",replyName:"帅大叔",beReplyName:"匿名",content:"来啊，我们一起吃鸡",time:"2017-10-17 11:42:53",address:"",osname:"",browse:"谷歌"}]},
-                {id:3,img:ktcfg.ctx + "/static/image/icon/t.png",replyName:"帅大叔",beReplyName:"匿名",content:"同学聚会，看到当年追我的屌丝开着宝马车带着他老婆来了，他老婆是我隔壁宿舍的同班同学，心里后悔极了。",time:"2017-10-17 11:42:53",address:"深圳",osname:"win10",browse:"谷歌",replyBody:[]}
-            ];
-
-            $(".comment-list").addCommentList({data:arr,add:""});
-            $("#addComment").on('click', function(){
-                var obj = {};
-                obj.img= ktcfg.ctx + "/static/image/icon/t.png";
-                obj.replyName="匿名";
-                obj.content=$("#content").val();
-                obj.browse="深圳";
-                obj.osname="win10";
-                obj.replyBody="";
-                $(".comment-list").addCommentList({data:[],add:obj});
-            });*/
         }
 
     });

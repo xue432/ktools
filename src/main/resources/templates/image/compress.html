@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>在线图片压缩 - Kalvin在线工具</title>
+    <meta name="keywords" content="在线图片压缩">
+    <meta name="description" content="在线图片压缩，可设置图片质量（质量从0.1~1越大质量越高，1表示原质量）和图片压缩宽度分辨率，高度会自动等比自适应，若自定义宽度大于原图则使用原图分辨率。">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <link rel="stylesheet" th:href="@{/static/plugin/bootstrap4/fileinput/css/fileinput.min.css}">
+
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">图片工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">图片压缩</li>
+        </ol>
+    </nav>
+</div>
+
+<!--更新日志通知条-->
+<div th:replace="comm/base::updateLog"></div>
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="art">
+        <!--主要内容块-->
+        <div class="container kt-first-layout-module">
+            <div class="row">
+                <div class="col-sm-12 pt-3">
+                    <div class="">
+                        <input id="upload" type="file" name="file" class="file-loading" value="image.png"/>
+                        <input type="text" hidden id="uploadFileName" value=""/>
+                        <input type="text" hidden id="handleFileName" value=""/>
+                        <hr class="hidden-sm hidden-md hidden-lg">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <!--进度条-->
+                    <div id="pbg" class="col-xl|sm-12" style="width: 100%;"></div>
+                </div>
+            </div>
+            <form class="">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">宽度(高度等比自适应)</span>
+                            </div>
+                            <input type="text" value="" class="form-control" id="width" name="width" placeholder="宽度(单位px)。不设置默认使用原图分辨率">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">图片质量(默认0.8)</span>
+                            </div>
+                            <select name="quality" id="quality" class="custom-select" style="width: 100px;">
+                                <option value="0.1">0.1</option>
+                                <option value="0.2">0.2</option>
+                                <option value="0.3">0.3</option>
+                                <option value="0.4">0.4</option>
+                                <option value="0.5">0.5</option>
+                                <option value="0.6">0.6</option>
+                                <option value="0.7">0.7</option>
+                                <option value="0.8" selected>0.8</option>
+                                <option value="0.9">0.9</option>
+                                <option value="1">1</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="kt-fs14 kt-fc-desc">压缩前大小：<span class="badge badge-info" id="preCompressSize">-- KB</span></div>
+                        <div class="kt-fs14 kt-fc-desc">压缩后大小：<span class="badge badge-success" id="afterCompressSize">-- KB</span></div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="transpic" style="margin-left: 0;">立即压缩</button>
+                <button class="btn btn-success" id="download" style="margin-left: 1rem;"><i class="glyphicon glyphicon-download-alt"></i>下载压缩图</button>
+            </form>
+        </div>
+        <!--文字说明块-->
+        <div class="container kt-layout-module">
+            <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">在线图片压缩，可设置图片质量（质量从0.1~1越大质量越高，1表示原质量）和图片压缩宽度分辨率，高度会自动等比自适应，若自定义宽度大于原图则使用原图分辨率。</p>
+            </blockquote>
+        </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
+    </div>
+    <!--<div class="tab-pane container p-0" id="ascll">2222</div>-->
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script th:replace="comm/base::uploadjs"></script>
+<script>
+    $(document).ready(function() {
+        init();
+        var uploadSucc = false;
+        var handleFileEle = $("#handleFileName");
+        var uploadFileEle = $("#uploadFileName");
+        var width, quality;
+        var obj = {};
+        var control = ktUtils.initFileUploadControl('upload', ktConfig.api.imageUpload.replace('{type}', 0), null, obj);
+
+        // 上传前事件
+        control.on('filepreajax', function(event, previewId, index) {
+            $(".file-preview").next().remove();
+        });
+
+        control.on('filebatchselected', function (event, file) {
+            var fileSize = (file[0].size / 1024).toFixed(2);
+            $('#preCompressSize').text(fileSize + ' KB');
+        });
+
+        $("#transpic").on('click', function () {
+            width = $('#width').val();
+            quality = $('#quality option:selected').val();
+            if (!uploadSucc) {  // 图片还没上传就选上传
+                control.fileinput("upload");
+            } else {    // 已上传直接生成词云图
+                var uploadFileName = uploadFileEle.val();
+                compressPic(uploadFileName);
+            }
+            return false;
+        });
+
+        $("#download").on('click', function () {
+            var handleFileName = handleFileEle.val();
+            log("download file=", handleFileName);
+            if (!handleFileName) {
+                alert('请压缩图片再下载');
+                return false;
+            }
+            // 开始下载
+            window.open(ktConfig.api.imageDownload + '?fileName=' + handleFileName);
+        });
+
+        // 上传完成后事件
+        control.on("fileuploaded", function (event, data, previewId, index) {
+            if (data.response.errorCode === 200) {
+                uploadFileEle.val(data.response.data);   // 保存upload filename
+                uploadSucc = true;
+                compressPic(data.response.data);
+            } else {
+                alert('图片压缩失败，请客官再试一次哦');
+            }
+        });
+
+        // 若已经上传，先清除图片
+        $("input[name='file']").on('click', function () {
+            if (uploadSucc) {
+                control.fileinput("clear");
+                uploadSucc = false;
+            }
+        });
+
+        /**
+         * 初始化代码
+         */
+        function init() {
+            // 渲染页签
+            ktUtils.renderNavTab(ktConfig.moduleType.image);
+            ktUtils.initComments();
+        }
+
+        var ajax = true;
+
+        /**
+         * 生成词云图
+         * @param filename
+         * @param wordContent
+         */
+        function compressPic(filename) {
+            if (ajax) {
+                ajax = false;
+                showLoading();
+                $.ajax({
+                    type:'POST',
+                    url: ktConfig.api.imageCompress,
+                    data: {filename: filename, width: width, quality: quality},
+                    success: function (r) {
+                        if (r.errorCode === 200) {
+                            var img = r.data;
+                            var afterFileSize = (img.size / 1024).toFixed(2);
+                            $('#afterCompressSize').text(afterFileSize + ' KB');
+                            handleFileEle.val(img.name);   // 保存handle filename
+                        } else {
+                            alert('图片压缩失败，请客官再试一次哦！msg：' + r.msg);
+                        }
+                    },
+                    complete: function (xmlHttpRequest) {
+                        var r = xmlHttpRequest.responseJSON;
+                        if (r.errorCode) {
+                            finishLoading(r.errorCode);
+                        } else {
+                            finishLoading(r.status);
+                            alert('request fail:' + r.status);
+                        }
+                        ajax = true;
+                    }
+                });
+            }
+        }
+
+    });
+</script>
+
+</body>
+</html>

@@ -254,3 +254,13 @@ $(".updateLogTicker").smarticker({
     // rounded: true,
     title: "更新日志"
 });
+
+/**
+ * 点击跳转到关于页面
+ */
+$('.updateLogTicker').on('click', 'div', function (e) {
+    var cls = $(e.currentTarget).attr('class');
+    if (cls.indexOf('tickertitle') !== -1) {
+        window.open(kfc + '/about');
+    }
+});

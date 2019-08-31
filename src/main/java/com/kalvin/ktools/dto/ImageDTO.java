@@ -11,6 +11,7 @@ public class ImageDTO implements Serializable {
 
     private String name;
     private String base64;
+    private Long size;
 
     public ImageDTO(String name, String base64) {
         this.name = name;
@@ -33,11 +34,20 @@ public class ImageDTO implements Serializable {
         this.base64 = base64;
     }
 
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
     @Override
     public String toString() {
         return "ImageDTO{" +
                 "name='" + name + '\'' +
                 ", base64='" + base64 + '\'' +
+                ", size=" + size +
                 '}';
     }
 }

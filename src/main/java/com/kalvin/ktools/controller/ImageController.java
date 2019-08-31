@@ -82,6 +82,12 @@ public class ImageController {
         return new ModelAndView("image/wordcloud.html");
     }
 
+    @SiteStats
+    @GetMapping(value = "compress")
+    public ModelAndView compress() {
+        return new ModelAndView("image/compress");
+    }
+
     /**
      * 异步上传
      * @param file f
@@ -294,6 +300,24 @@ public class ImageController {
             return R.ok(new ImageDTO(r.getData().toString(), ImageKit.toBase64(new File(fileUrl))));
         }
         return r;
+    }
+
+    /**
+     * 压缩图片
+     * @param filename 图片名称(xx.jpg)
+     * @param width 图片新宽度，若比原图宽度还大则使用原图宽度
+     * @param quality 图片质量参数 0.8f 相当于80%质量
+     * @return r
+     */
+    @SiteStats
+    @PostMapping(value = "compress")
+    public R compress(String filename, Integer width, Float quality) {
+        final String handleFileUrl = imageHandleDir + filename;
+        ImageKit.compressPic(imageUploadDir + filename, handleFileUrl, width, quality);
+        File file = new File(handleFileUrl);
+        ImageDTO imageDTO = new ImageDTO(filename, ImageKit.toBase64(file));
+        imageDTO.setSize(file.length());
+        return R.ok(imageDTO);
     }
 
 }

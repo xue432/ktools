@@ -603,3 +603,9 @@ a.kt-text-decoration {
     float: left;
     padding-top: 4px;
 }
+
+/*自定义更新日志通知条样式*/
+.smarticker .sec1-2 {
+    width: 100px!important;
+    cursor: pointer;
+}

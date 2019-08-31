@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kalvin.ktools.comm.constant.Constant;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,6 +69,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
         }
         menu.setLikeNum(--likeNum);
         super.updateById(menu);
+    }
+
+    @Override
+    public List<Menu> listMenuByName(String name) {
+        if (StrUtil.isBlank(name)) {
+            return new ArrayList<>();
+        }
+        return super.list(new LambdaQueryWrapper<Menu>().like(Menu::getName, name));
     }
 
     /**

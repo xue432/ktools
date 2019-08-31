@@ -4,6 +4,8 @@ import cn.hutool.json.JSONArray;
 import com.kalvin.ktools.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 菜单表 服务类
@@ -31,5 +33,7 @@ public interface MenuService extends IService<Menu> {
      * @param id 菜单ID
      */
     void downLikeNum(Long id);
+
+    List<Menu> listMenuByName(String name);
 
 }

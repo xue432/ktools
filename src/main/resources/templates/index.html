@@ -11,6 +11,14 @@
     <meta name="Author" content="Kalvin">
     <link th:replace="comm/base::icon"/>
     <static th:replace="comm/base::static"></static>
+    <style>
+        .hot .badge {
+            cursor: pointer
+        }
+        .hot .badge a {
+            color: #ffffff;
+        }
+    </style>
 </head>
 
 <body class="kt-bg">
@@ -18,6 +26,19 @@
     <div th:replace="comm/base::head"></div>
 
     <div th:replace="comm/base::navbar"></div>
+
+    <div class="container kt-layout-module mt-0">
+        <div class="input-group">
+            <input id="word" type="text" class="form-control input-lg" placeholder="搜索一下你就知道了"><span id="search" class="input-group-addon btn btn-primary">搜索</span>
+        </div>
+        <div class="hot">
+            <span class="badge badge-danger"><a th:href="@{/txt/ascii}">ASCII艺术字生成</a></span>
+            <span class="badge badge-info"><a th:href="@{/image/wordcloud}">词云图生成</a></span>
+            <span class="badge badge-dark"><a th:href="@{/convenience/selectors}">困难选择器</a></span>
+            <span class="badge badge-warning"><a th:href="@{/dev/colorPicker}">颜色选择器</a></span>
+            <span class="badge badge-success"><a th:href="@{/image/artPic}">艺术图片生成</a></span>
+        </div>
+    </div>
 
     <div class="container p-0">
         <nav>
@@ -86,13 +107,13 @@
                 var outBoxWidth = $tbEl.width();
                 var boxMinWidth = 240;
                 var pl = 20;
-                log('win=', windowWidth);
-                log('out=', outBoxWidth);
+                // log('win=', windowWidth);
+                // log('out=', outBoxWidth);
                 // num(boxMinWidth + pl) - pl = outBoxWidth
                 var maxNum = Math.floor((outBoxWidth - pl) / (boxMinWidth + pl));   // 求出每行最大容纳的盒子个数
                 // maxW = (outBoxWidth - (num-1) * pl) / num
                 var boxMaxWidth = Number(((outBoxWidth - (maxNum) * pl) / maxNum).toFixed(2));  // 求出盒子的最大宽度
-                log('boxMaxWidth=', boxMaxWidth);
+                // log('boxMaxWidth=', boxMaxWidth);
                 if (windowWidth + 17 <= 766) {
                     $ktlbEl.width(boxMaxWidth + 20 - 2);
                 } else {
@@ -109,6 +130,29 @@
                     $eyeEl.parent().attr('title', data[key] + '位网友使用过')
                 });
             });
+
+            // 热门工具搜索
+            $('.hot .badge').on('click', function () {
+                var hotWord = $(this).text();
+                $('#word').val(hotWord);
+            });
+
+            // 搜索
+            $('#search').on('click', function () {
+                search();
+            });
+
+            $('#word').on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    search();
+                }
+            });
+
+            function search() {
+                var word = $('#word').val();
+                log('beginning search => ', word);
+                window.location.href = ktcfg.ctx + "/search?word=" + word;
+            }
 
         });
     </script>

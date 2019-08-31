@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>Kalvin在线工具</title>
+    <meta name="keywords" content="在线工具、在线生成器、图片转换工具、图片制作、开发者工具、ASCII图片生成、艺术图片生成、ASCII艺术字在线生成、压力测试、代码格式化、JSON格式化、二维码生成、颜色选择器、词云图生成">
+    <meta name="description" content="在线工具、照片变卡通/素描/黑白、ASCII图片在线生成、GIF动态图片在线制作、GIF字符动画在线制作、ASCII艺术字在线生成、在线网站/接口压力测试、JSON格式化、代码格式化、二维码生成、在线颜色选择器、IP信息查询、markdown编辑器、字符统计">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <style>
+        .list-group-item .glyphicon {
+            margin-right: 3px;
+        }
+        .list-group-item img {
+            width: 20px;
+            height: 20px;
+            margin-right: 2px;
+        }
+    </style>
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13 active">搜索</li>
+        </ol>
+    </nav>
+</div>
+
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="art">
+        <!--主要内容块-->
+        <div class="container kt-first-layout-module">
+            <div class="row">
+                <div class="col-sm-12 mt-3">
+                    <div class="input-group">
+                        <input id="word" type="text" class="form-control input-lg" placeholder="搜索一下你就知道了"><span id="search" class="input-group-addon btn btn-primary">搜索</span>
+                    </div>
+                </div>
+                <div class="col-sm-12 mt-3">
+                    <ul class="list-group" id="result">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-sm-12"><a href="#" target="_blank"><img src="/static/image/icon/compress.png"/>图片压缩</a></div>
+                                <div class="col-sm-12"><span class="kt-fc-desc">文件相关而为人女3的23白乌拉圭2</span></div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-sm-12"><a href="#" target="_blank"><span class="glyphicon glyphicon-briefcase"></span>图片加水印</a></div>
+                                <div class="col-sm-12"><span class="kt-fc-desc">23白白 24土持2土对于4技术3垢</span></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+
+<script>
+    $(document).ready(function () {
+        var word = ktUtils.getUrlParam('word');
+        log('word=', word);
+
+        search(word);
+
+        // 搜索
+        $('#search').on('click', function () {
+            word = $('#word').val();
+            search(word);
+        });
+
+        $('#word').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                word = $('#word').val();
+                search(word);
+            }
+        });
+
+        /**
+         * 展示搜索后的命令列表
+         * @param data 命令列表数据
+         * @param word 关键词
+         */
+        function search(word) {
+            var listGroupEle = $('.list-group');
+            var sb = new StringBuilder();
+            var ntHtml = new StringBuilder();
+            ntHtml.append('                        <li class="list-group-item">\n');
+            ntHtml.append('                            <div class="row">\n');
+            ntHtml.append('                                <div class="col-sm-12 text-center"><h3>无相关工具</h3></div>\n');
+            ntHtml.append('                            </div>\n');
+            ntHtml.append('                        </li>\n');
+
+            if (!word) {
+                listGroupEle.html(ntHtml.toString());
+                return false;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: ktConfig.api.search,
+                data: {word: word},
+                success: function (r) {
+                    var data = r.data;
+                    log(data);
+                    if (data.length > 0) {
+                        data.forEach(function (item) {
+                            sb.append('                        <li class="list-group-item">\n');
+                            sb.append('                            <div class="row">\n');
+                            sb.append('                                <div class="col-sm-12"><a href="');
+                            sb.append(kfc + item.url);
+                            sb.append('" target="_blank"><span class="glyphicon glyphicon-briefcase"></span>');
+                            sb.append(item.name);
+                            sb.append('</a></div>\n');
+                            sb.append('                                <div class="col-sm-12"><span class="kt-fc-desc">');
+                            sb.append(item.intro);
+                            sb.append('</span></div>\n');
+                            sb.append('                            </div>\n');
+                            sb.append('                        </li>\n');
+                        });
+                    } else {
+                        sb.append(ntHtml.toString());
+                    }
+
+                    listGroupEle.html(sb.toString());
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

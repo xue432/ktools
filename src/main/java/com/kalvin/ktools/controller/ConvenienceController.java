@@ -64,6 +64,12 @@ public class ConvenienceController {
     }
 
     @SiteStats
+    @GetMapping(value = "selectors")
+    public ModelAndView selectors() {
+        return new ModelAndView("convenience/selectors");
+    }
+
+    @SiteStats
     @PostMapping(value = "qrCode/2Image")
     public R qrCode2Image(String base64) {
         BufferedImage bufferedImage = ImageUtil.toImage(base64);
