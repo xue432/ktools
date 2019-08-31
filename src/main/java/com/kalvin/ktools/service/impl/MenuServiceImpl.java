@@ -72,11 +72,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
     }
 
     @Override
-    public List<Menu> listMenuByName(String name) {
-        if (StrUtil.isBlank(name)) {
+    public List<Menu> listMenuByKeyword(String keyword) {
+        if (StrUtil.isBlank(keyword)) {
             return new ArrayList<>();
         }
-        return super.list(new LambdaQueryWrapper<Menu>().like(Menu::getName, name));
+        return super.list(new LambdaQueryWrapper<Menu>().like(Menu::getName, keyword).or().like(Menu::getIntro, keyword));
     }
 
     /**

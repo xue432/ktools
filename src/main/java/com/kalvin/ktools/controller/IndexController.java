@@ -45,6 +45,6 @@ public class IndexController {
 
     @GetMapping(value = "search/tool")
     public R searchTool(String word) {
-        return R.ok(menuService.listMenuByName(word));
+        return R.ok(menuService.listMenuByKeyword(word));
     }
 }

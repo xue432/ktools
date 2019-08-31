@@ -34,6 +34,6 @@ public interface MenuService extends IService<Menu> {
      */
     void downLikeNum(Long id);
 
-    List<Menu> listMenuByName(String name);
+    List<Menu> listMenuByKeyword(String keyword);
 
 }
