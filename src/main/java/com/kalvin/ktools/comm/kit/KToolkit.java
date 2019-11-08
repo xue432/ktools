@@ -147,7 +147,7 @@ public class KToolkit {
                 size = 47;
                 df = 26;
             }
-            Font font = new Font("微软雅黑", Font.PLAIN, size);   // 45 25    size=27w/1280
+            Font font = new Font("宋体", Font.PLAIN, size);   // 45 25    size=27w/1280
             // 加水印
             BufferedImage bufImg = new BufferedImage(srcImgWidth, srcImgHeight, BufferedImage.TYPE_INT_RGB);
             Graphics2D g = bufImg.createGraphics();
@@ -157,7 +157,7 @@ public class KToolkit {
 
             // 设置水印的坐标
             int wh = g.getFontMetrics(g.getFont()).charsWidth(waterMarkContent.toCharArray(), 0, waterMarkContent.length());
-            int x = srcImgWidth - wh;
+            int x = srcImgWidth - wh - 10;
             int y = srcImgHeight - 2 * wh;
             g.drawString(waterMarkContent, x, srcImgHeight - df);  // 画出水印 24
             g.dispose();

@@ -106,7 +106,7 @@
 
         $('#upload').on('change', function () {
             var options = {
-                url: ktConfig.api.imageUpload, //上传文件的路径
+                url: ktConfig.api.imageUpload.replace('{type}', 0), //上传文件的路径
                 type: 'POST',
                 success:function(r) {
                     log(r);

@@ -609,3 +609,8 @@ a.kt-text-decoration {
     width: 100px!important;
     cursor: pointer;
 }
+
+/*为了解决fileinput上传插件，选择文件后样式显示不正常问题*/
+.file-drop-zone {
+    overflow: hidden;
+}

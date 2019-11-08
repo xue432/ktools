@@ -165,12 +165,12 @@ var ktUtils = {
             } else if ((divH - imgH) >= 0 && (divW - imgW) < 0) {   // img高小于外容器，宽大于外容器
                 fkiEle.attr('style', 'height:auto;width:' + divW + 'px;');
             } else if ((divH - imgH) < 0 && (divW - imgW) >= 0) {   // img高大于外容器，宽小于外容器
-                fkiEle.attr('style', 'width:auto;height:' + divH + 'px;');
+                fkiEle.attr('style', 'width:auto;height:' + (divH - 8) + 'px;');
             } else {    // img宽高都大于外容器
                 if (scaleImgHw > scaleDivHw) {
-                    fkiEle.attr('style', 'height:' + divH + 'px;width:auto');
+                    fkiEle.attr('style', 'height:' + (divH - 8) + 'px;width:auto');
                 } else {
-                    fkiEle.attr('style', 'height:' + divH + 'px;width:' + divW + 'px;');
+                    fkiEle.attr('style', 'height:' + (divH - 8) + 'px;width:' + divW + 'px;');
                 }
             }
         };
