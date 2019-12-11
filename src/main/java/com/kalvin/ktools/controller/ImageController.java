@@ -2,7 +2,6 @@ package com.kalvin.ktools.controller;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
-import cn.hutool.http.HttpUtil;
 import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.constant.Constant;
 import com.kalvin.ktools.comm.constant.KApi;
@@ -33,6 +32,9 @@ public class ImageController {
 
     @Resource
     private KApi kApi;
+
+    @Value(value = "${kt.kapi.token}")
+    private String reqToken;
 
     @Value(value = "${kt.image.upload.dir}")
     private String imageUploadDir;
@@ -138,7 +140,7 @@ public class ImageController {
         hashMap.put("filename", fileName);
         hashMap.put("image_type", type);
         hashMap.put("handle_dir", Constant.CLASSPATH_HANDLE_IMAGE_DIR);
-        String post = HttpUtil.post(kApi.getImgHandleUrl(), hashMap);
+        String post = KApiKit.post(kApi.getImgHandleUrl(), hashMap, reqToken);
         R r = KApiKit.respone2R(post);
         if (KApiKit.isSuccess(post)) {
             final String fileUrl = imageHandleDir + r.getData().toString();
@@ -191,7 +193,7 @@ public class ImageController {
         R upload = this.upload(file, 1);
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("filename", upload.getData());
-        String post = HttpUtil.post(kApi.getImg2AsciiUrl(), hashMap);
+        String post = KApiKit.post(kApi.getImg2AsciiUrl(), hashMap, reqToken);
         return KApiKit.respone2R(post);
     }
 
@@ -208,7 +210,7 @@ public class ImageController {
         hashMap.put("images", imageArr);
         hashMap.put("duration", duration);
         hashMap.put("handle_dir", Constant.CLASSPATH_HANDLE_IMAGE_DIR);
-        String post = HttpUtil.post(kApi.getImg2GifUrl(), hashMap);
+        String post = KApiKit.post(kApi.getImg2GifUrl(), hashMap, reqToken);
         R r = KApiKit.respone2R(post);
         if (KApiKit.isSuccess(post)) {
             // 返回处理后缩略gif相对路径(带_sl.gif)
@@ -230,7 +232,7 @@ public class ImageController {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("filename", fileName);
         hashMap.put("handle_dir", Constant.CLASSPATH_HANDLE_IMAGE_DIR);
-        String post = HttpUtil.post(kApi.getGif2AsciiUrl(), hashMap);
+        String post = KApiKit.post(kApi.getGif2AsciiUrl(), hashMap, reqToken);
         R r = KApiKit.respone2R(post);
         if (KApiKit.isSuccess(post)) {
             // 返回处理后缩略gif相对路径(带_sl.gif)
@@ -253,7 +255,7 @@ public class ImageController {
         hashMap.put("filename", fileName);
         hashMap.put("handle_dir", Constant.CLASSPATH_HANDLE_IMAGE_DIR);
         hashMap.put("useless", ""); // todo 无用的参数,为了让idea不显示重复代码（强迫症受不了）
-        String post = HttpUtil.post(kApi.getImg2ColorAsciiUrl(), hashMap);
+        String post = KApiKit.post(kApi.getImg2ColorAsciiUrl(), hashMap, reqToken);
         R r = KApiKit.respone2R(post);
         if (KApiKit.isSuccess(post)) {
             // 返回处理后缩略图相对路径(带_sl.png)
@@ -293,7 +295,7 @@ public class ImageController {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("filename", filename);
         hashMap.put("content", wordContent);
-        String post = HttpUtil.post(kApi.getImgGenerateWordCloudUrl(), hashMap);
+        String post = KApiKit.post(kApi.getImgGenerateWordCloudUrl(), hashMap, reqToken);
         R r = KApiKit.respone2R(post);
         if (KApiKit.isSuccess(post)) {
             final String fileUrl = imageHandleDir + r.getData().toString();

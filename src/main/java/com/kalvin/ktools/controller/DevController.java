@@ -1,7 +1,6 @@
 package com.kalvin.ktools.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.http.HttpUtil;
 import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.constant.KApi;
 import com.kalvin.ktools.comm.kit.KApiKit;
@@ -12,6 +11,7 @@ import com.kalvin.ktools.vo.StressTestingVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +37,9 @@ public class DevController {
 
     @Resource
     private KApi kApi;
+
+    @Value(value = "${kt.kapi.token}")
+    private String reqToken;
 
     @SiteStats
     @GetMapping(value = "stress/testing")
@@ -90,8 +93,8 @@ public class DevController {
         if (stressTestingVO.getConcurrent() > 300) { // 并发数最大限制300
             stressTestingVO.setConcurrent(300);
         }
-        String post = HttpUtil.post(kApi.getDevStressTestingUrl(), BeanUtil.beanToMap(stressTestingVO));
-        LOGGER.info("post={}", post);
+        String post = KApiKit.post(kApi.getDevStressTestingUrl(), BeanUtil.beanToMap(stressTestingVO), reqToken);
+//        LOGGER.info("post={}", post);
         return KApiKit.respone2R(post);
     }
 

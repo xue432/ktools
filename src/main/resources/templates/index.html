@@ -33,9 +33,9 @@
 
     <div class="container kt-layout-module mt-0">
         <div class="input-group">
-            <input id="word" type="text" class="form-control input-lg" placeholder="搜索一下你就知道了"><span id="search" class="input-group-addon btn btn-primary">搜索</span>
+            <input id="word" type="text" class="form-control input-lg" placeholder="工具搜索"><span id="search" class="input-group-addon btn btn-primary">搜索</span>
         </div>
-        <div class="hot">
+        <div class="hot">🔥
             <span class="badge badge-danger"><a th:href="@{/txt/ascii}">ASCII艺术字生成</a></span>
             <span class="badge badge-info"><a th:href="@{/image/wordcloud}">词云图生成</a></span>
             <span class="badge badge-dark"><a th:href="@{/convenience/selectors}">困难选择器</a></span>
@@ -88,6 +88,14 @@
         <blockquote class="blockquote">
             <p class="kt-fs13 kt-fc-desc" style="margin-bottom: 15px;">网站旨在集成更多有趣及实用方便的在线工具；如艺术图片生成、生成字符画、ASCII艺术字生成、颜色选择器、IP归属地查询、词云图生成、markdown在线编辑器、在线压力测试、JSON/代码格式化、字符统计等在线工具。工具在不断完善中。如您有宝贵的意见或建议，请<a href="mailto:1481397688@qq.com" title="您的宝贵意见是我前进的动力">点击这里</a>可告知我哟~~！</p>
         </blockquote>
+    </div>
+
+    <div class="container kt-ctx-bg mt-3 pt-3 pb-3">
+        <h4 class="kt-fs16 kt-fc-title">🙂友情链接</h4>
+        <hr>
+        <a href="javascript:void(0);" onclick="addLink()"><img src="/static/image/icon/add.png" style="width: 16px"></a>
+        <br>
+<!--        <a href="https://www.baidu.com">百度科技</a> | <a href="https://www.baidu.com">百度科技</a>-->
     </div>
 
     <footer th:replace="comm/base::footer"></footer>
@@ -159,6 +167,10 @@
             }
 
         });
+
+        function addLink() {
+            ktUtils.modalMsg('📢交换友链，请将你的网站相关信息发送到邮箱(1481397688@qq.com)，也可以直接加企鹅号(1481397688)联系我!☺');
+        }
     </script>
 </body>
 </html>

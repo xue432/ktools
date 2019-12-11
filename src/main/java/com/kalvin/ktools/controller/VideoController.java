@@ -1,6 +1,5 @@
 package com.kalvin.ktools.controller;
 
-import cn.hutool.http.HttpUtil;
 import com.kalvin.ktools.comm.constant.KApi;
 import com.kalvin.ktools.comm.kit.IoKit;
 import com.kalvin.ktools.comm.kit.KApiKit;
@@ -35,6 +34,9 @@ public class VideoController {
     @Resource
     private KApi kApi;
 
+    @Value(value = "${kt.kapi.token}")
+    private String reqToken;
+
     @GetMapping(value = "")
     public ModelAndView index() {
         return new ModelAndView("");
@@ -57,7 +59,7 @@ public class VideoController {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("video_name", upload.getData());
 
-        String post = HttpUtil.post(kApi.getVideo2AsciiGifUrl(), hashMap);
+        String post = KApiKit.post(kApi.getVideo2AsciiGifUrl(), hashMap, reqToken);
         return KApiKit.respone2R(post);
     }
 }

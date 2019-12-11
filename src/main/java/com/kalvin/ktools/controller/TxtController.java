@@ -1,10 +1,10 @@
 package com.kalvin.ktools.controller;
 
-import cn.hutool.http.HttpUtil;
 import com.kalvin.ktools.comm.annotation.SiteStats;
 import com.kalvin.ktools.comm.constant.KApi;
 import com.kalvin.ktools.comm.kit.KApiKit;
 import com.kalvin.ktools.dto.R;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +24,9 @@ public class TxtController {
     @Resource
     private KApi kApi;
 
+    @Value(value = "${kt.kapi.token}")
+    private String reqToken;
+
     @SiteStats
     @GetMapping(value = "ascii")
     public ModelAndView ascii() {
@@ -42,8 +45,7 @@ public class TxtController {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("txt", txt);
         hashMap.put("font", font);
-        String post = HttpUtil.post(kApi.getTxt2AsciiUrl(), hashMap);
-
+        String post = KApiKit.post(kApi.getTxt2AsciiUrl(), hashMap, reqToken);
         return KApiKit.respone2R(post);
     }
 
