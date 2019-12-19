@@ -40,6 +40,12 @@ public class TxtController {
     }
 
     @SiteStats
+    @GetMapping(value = "bullshitGenerator")
+    public ModelAndView bullshitGenerator() {
+        return new ModelAndView("txt/bullshit_generator");
+    }
+
+    @SiteStats
     @PostMapping(value = "to/ascii")
     public R toAscii(String txt, String font) {
         HashMap<String, Object> hashMap = new HashMap<>();

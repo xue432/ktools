@@ -27,3 +27,4 @@ INSERT INTO `sys_menu` VALUES (26, 13, 'JS/HTML/CSS格式化', '/dev/jsHtmlCss/f
 INSERT INTO `sys_menu` VALUES (27, 3, '字符统计', '/txt/charStatistics', 1, '', '/static/image/icon/char.png', '', '在线实时分析统计各类字符个数', 0, 0, 0, '2019-08-21 17:51:11');
 INSERT INTO `sys_menu` VALUES (28, 12, '困难选择器', '/convenience/selectors', 1, '', '/static/image/icon/diffc.png', '', '选择，交给我', 0, 0, 0, '2019-08-26 11:33:11');
 INSERT INTO `sys_menu` VALUES (29, 1, '图片压缩', '/image/compress', 1, '', '/static/image/icon/compress.png', '', '在线压缩图片', 0, 0, 0, '2019-08-28 10:57:23');
+INSERT INTO `sys_menu` VALUES (30, 3, '文章生成器', '/txt/bullshitGenerator', 1, '', '/static/image/icon/wz.png', '', '生成狗屁不通的文章', 0, 0, 0, '2019-12-19 11:17:01');

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5,user-scalable=no">
+    <title>文章生成器 - Kalvin在线工具</title>
+    <meta name="keywords" content="文章生成器、垃圾文章生成器、狗屁不通文章生成器">
+    <meta name="description" content="生成垃圾狗屁不通的文章，用于装逼娱乐，哈哈哈">
+    <link th:replace="comm/base::icon"/>
+    <static th:replace="comm/base::static"></static>
+    <style>
+        .文章容器初始高度 {
+            height: 100px;
+        }
+        #文章 {
+            background: #f8f8f8;
+            padding: 20px;
+            font-size: 14px;
+            color: #36735c;
+        }
+    </style>
+</head>
+<body class="kt-bg">
+
+<div th:replace="comm/base::head"></div>
+
+<div th:replace="comm/base::navbar"></div>
+
+<div class="container p-0">
+    <nav>
+        <ol class="breadcrumb mb-0 kt-bread-bg">
+            <li class="kt-fs13" style="float: left;"><span class='kt-position-title'>您的当前位置：</span></li>
+            <li class="breadcrumb-item kt-fs13"><a th:href="@{/}">首页</a></li>
+            <li class="breadcrumb-item kt-fs13"><a href="#">文字工具</a></li>
+            <li class="breadcrumb-item kt-fs13 active">文章生成器</li>
+        </ol>
+    </nav>
+</div>
+
+<!--更新日志通知条-->
+<div th:replace="comm/base::updateLog"></div>
+<div th:replace="comm/base::tab"></div>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container p-0 active" id="ascii">
+        <!--主要内容块-->
+        <div class="container kt-first-layout-module">
+            <div class="row">
+                <div class="col-sm-4 mt-3">
+                    <select class="form-control" onchange="选择文章类型事件(this)" id="文章类型" data-toggle="tooltip" data-placement="top" title="可选择文章类型">
+<!--                        <option value="">选择文章类型</option>-->
+                        <option value="culture">文化版</option>
+                        <option value="quality">素质版</option>
+                        <option value="english">英文版</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 mt-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">主题</span>
+                        </div>
+                        <input type="text" class="form-control" id="theme" placeholder="文章主题" aria-label="theme" aria-describedby="basic-addon1"  data-toggle="tooltip" data-placement="top" title="可自定义主题">
+                    </div>
+                </div>
+                <div class="col-sm-4 mt-3">
+                    <button class="btn btn-primary" onclick="生成文章()" style="margin-left: 0;">生成</button>
+                    <button class="btn btn-secondary" id="copy" style="" data-clipboard-action="copy" data-clipboard-target="#文章">复制</button>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-sm-12">
+                    <div id="文章" style="" class="文章容器初始高度">
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!--文字说明块-->
+        <div class="container kt-layout-module">
+            <h4 class="kt-fs16 kt-fc-title">工具简介</h4>
+            <hr>
+            <blockquote class="blockquote">
+                <p class="kt-fs13 kt-fc-desc">集合了多个版本的狗屁不通文章生成器，生成的文章只用于娱乐搞笑，请不要应用于正规用途。创意来源于<a href="https://github.com/menzi11/BullshitGenerator" target="_blank">BullshitGenerator</a>。 </p>
+            </blockquote>
+        </div>
+
+        <!--评论模块-->
+        <div class="container kt-layout-module">
+            <div th:replace="comm/base::comment"></div>
+        </div>
+
+    </div>
+</div>
+
+<!--网页footer-->
+<footer th:replace="comm/base::footer"></footer>
+
+<!--js脚本-->
+<script th:replace="comm/base::config"></script>
+<script th:replace="comm/base::jquery"></script>
+<script th:replace="comm/base::publicjs"></script>
+<script th:src="@{/static/js/clipboard.js}"></script>
+<script th:src="@{/static/js/bullshit-datas.js}"></script>
+<script>
+
+    window.dataLayer = window.dataLayer || [];
+    window._$ = function (selector) {
+        return document.querySelector(selector);
+    };
+    function 获取网址参数(参数) {
+        return new URL(window.location.href).searchParams.get(参数)
+    }
+
+    let 主题 = bullshits['culture'].theme;
+    let themeKey = bullshits['culture'].themeKey;
+    let 论述 = bullshits['culture'].argument;
+    let 名人名言 = bullshits['culture'].quotes;
+    let 后面垫话 = bullshits['culture'].after;
+    let 前面垫话 = bullshits['culture'].before;
+
+    function 选择文章类型事件(obj) {
+        主题 = bullshits[$(obj).val()].theme;
+        themeKey = bullshits[$(obj).val()].themeKey;
+        论述 = bullshits[$(obj).val()].argument;
+        名人名言 = bullshits[$(obj).val()].quotes;
+        后面垫话 = bullshits[$(obj).val()].after;
+        前面垫话 = bullshits[$(obj).val()].before;
+        _$('#theme').value = 主题;
+    }
+
+    _$('#theme').value = 主题;
+
+    let 下取整 = Math.floor;
+    let 同余乘数 = 214013;
+    let 同余加数 = 2531011;
+    let 同余模 = Math.pow(2,32);
+    let 随机种子 = 获取网址参数('随机种子') || 下取整( 随便取一个数(0, 同余模, Math.random) );
+    function 同余发生器() {
+        随机种子 = ( 随机种子 * 同余乘数 + 同余加数 ) % 同余模;
+        return 随机种子 / 同余模;
+    };
+    function 随便取一句(列表){
+        let 坐标 = 下取整( 同余发生器() * 列表.length );
+        return 列表[坐标];
+    }
+    function 随便取一个数(最小值 = 0,最大值 = 100,随机数函数 = 同余发生器){
+        let 数字 = 随机数函数() * ( 最大值 - 最小值 ) + 最小值;
+        return 数字;
+    }
+    function 来点名人名言(){
+        let 名言 = 随便取一句(名人名言)
+        名言 = 名言.replace('恁野爹曾经说过', 随便取一句(前面垫话) )
+        名言 = 名言.replace('这不禁令恁野爹深思', 随便取一句(后面垫话) )
+        return 名言
+    }
+    function 来点论述() {
+        let 句子 = 随便取一句(论述);
+        句子 = 句子.replace(RegExp(themeKey, 'g'), 主题);
+        return 句子;
+    }
+    function 增加段落(段落){
+        if(段落[段落.length-1] === ' '){
+            段落 = 段落.slice(0,-2)
+        }
+        return '　　' + 段落 + '。 '
+    }
+    function 生成文章(){
+        主题 = _$('#theme').value
+        history.pushState({url: window.location.href}, null ,'?主题=' + 主题 + '&随机种子=' + 随机种子);
+        let 文章 = []
+        let 段落 = '';
+        let 文章长度 = 0;
+        while( 文章长度 < 12000 ){
+            let 随机数 = 随便取一个数();
+            if(随机数 < 5 && 段落.length > 200){
+                段落 = 增加段落(段落);
+                文章.push(段落);
+                段落 = '';
+            }else if(随机数 < 20){
+                let 句子 = 来点名人名言();
+                文章长度 = 文章长度 + 句子.length;
+                段落 = 段落 + 句子;
+            }else{
+                let 句子 = 来点论述();
+                文章长度 = 文章长度 + 句子.length;
+                段落 = 段落 + 句子;
+            }
+        }
+        段落 = 增加段落(段落);
+        文章.push(段落);
+        let 文章主题 = '<div style="text-align: center"><h2>《' + 主题 + '》</h2></div>';
+        let 排版 = '<div>' + 文章.join('</div><div>') + '</div>';
+        $('#文章').removeClass('文章容器初始高度');
+        _$('#文章').innerHTML = 文章主题 + 排版;
+    }
+
+    $(document).ready(function() {
+        init();
+
+        // 复制到剪贴板
+        var clipboard = new ClipboardJS('#copy');
+        clipboard.on('success', function(e) {
+            alert('复制成功');
+            e.clearSelection();
+        });
+
+        /**
+         * 初始化代码
+         */
+        function init() {
+            // 渲染页签
+            ktUtils.renderNavTab(ktConfig.moduleType.txt);
+            ktUtils.initComments();
+        }
+    });
+</script>
+
+</body>
+</html>

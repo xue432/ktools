@@ -135,7 +135,7 @@
 
         $('#picker2').bigColorpicker(function (el, hex, rgb) {
             var $codeEle = $('#colorCode2').find('input');
-            $codeEle.attr('style', 'border-color: #' + hex);
+            $codeEle.attr('style', 'border-color: ' + hex);
             $codeEle.eq(0).val(hex);
             $codeEle.eq(1).val(rgb.r + ',' + rgb.g + ',' + rgb.b);
         }, 'L', 10, true);
